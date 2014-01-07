@@ -21,43 +21,100 @@
  under the terms of the GNU General Public License version 2.
  -->
 
-<project name="Scientific Data Formats extension for gvSIG 1.12" default="generate-without-source" basedir=".">
+<project name="Scientific Data Formats extension for gvSIG 1.12" 
+  default="generate-without-source" basedir=".">
+
 	<description>
-		Extensión para el el manejo de formatos de datos científicos en el gvSIG 1.12.
-		  - Soporte para archivos netCDF.
-	</description>
+    Extensión para el el manejo de formatos de datos científicos en el gvSIG 1.12.
+      - Soporte para archivos netCDF.
+    </description>
 
-	<!-- set global properties for this build -->
-	<property name="src" location="src" />
-	<property name="build" location="bin" />
-	<property name="dist" location="dist" />
-	<property name="plugin" value="uclv.gvsig.extsdf" />
-	<property name="extension-dir" location="${GVSIG_INSTALL_DIR}/bin/gvSIG/extensiones" />
+  <!-- Propiedades generales para la compilación del proyecto -->
+  <property name="src" location="src" />
+  <property name="build" location="bin" />
+	<property name="dist-base" location="dist" />
+  <property name="dist" location="${dist-base}/pkg" />
+	<property name="doc" location="${dist-base}/doc" />
+  <property name="plugin" value="uclv.gvsig.extsdf" />
+  <property name="extension-dir" location="${GVSIG_INSTALL_DIR}/bin/gvSIG/extensiones" />
 
-	<target name="init">
-		<!-- Create the time stamp -->
-		<tstamp />
-		<!-- Create the build directory structure used by compile -->
-		<mkdir dir="${build}" />
-		<mkdir dir="${dist}" />
-		<buildnumber />
-	</target>
+  <!-- Propiedades para compilar el driver para el formato de archivos NetCDF -->
+  <property name="driver" value="netcdf" />
+  <property name="driver-dir" 
+    location="${GVSIG_INSTALL_DIR}/bin/gvSIG/extensiones/com.iver.cit.gvsig/drivers" />
 
-	<target name="generate-without-source" description="generate the distribution without the source file">
-		<!-- Create the distribution directory -->
-		<mkdir dir="${dist}" />
+  <!-- Target para inicializar los directorios de compilación -->
+  <target name="init">
+    <!-- Create the time stamp -->
+    <tstamp />
+    <!-- Create the build directory structure used by compile -->
+    <mkdir dir="${build}" />
+  	<mkdir dir="${dist-base}" />
+    <mkdir dir="${dist}" />
+    <mkdir dir="${doc}" />
+    <buildnumber />
+  </target>
 
-		<!-- Put everything in ${build} into the extSDF-${DSTAMP}.jar file -->
-		<jar jarfile="${dist}/${plugin}.jar" basedir="${build}" />
-		<copy file="config/config.xml" todir="${dist}" />
-		<copy file="LICENSE.txt" todir="${dist}" />
+  <!-- Target para compilar e instalar la extensión
+         - Genera e instala el Driver para leer archivos NetCDF
+         - Genera e instala la extensión para el manejo de datos científicos
+  -->
+  <target name="generate-without-source" 
+    description="Genera la distribución de la extensión sin los códigos fuentes"
+  	depends="init">
 
-		<copy todir="${dist}">
-			<fileset dir="." includes="text*.properties" />
-		</copy>
+    <!-- Generar el JAR del driver para leer archivos NetCDF en el archivo 
+    ${driver}.jar -->
+    <jar destfile="${dist}/${driver}.jar"
+      basedir="${build}"
+      includes="uclv/gvsig/extsdf/driver/**"
+    />
 
-		<move todir="${extension-dir}/${plugin}/">
-			<fileset dir="${dist}" includes="**/**" />
-		</move>
-	</target>
+    <!-- Instala el driver para leer archivos NetCDF -->
+    <move todir="${driver-dir}/${driver}/">
+      <fileset dir="${dist}" includes="${driver}.jar" />
+    </move>
+    <copy file="LICENSE.txt" todir="${driver-dir}/${driver}/" />
+
+    <!-- Genera el JAR de la extensión en el archivo ${plugin}.jar -->
+    <jar jarfile="${dist}/${plugin}.jar" 
+      basedir="${build}" 
+      excludes="uclv/gvsig/extsdf/driver/**"
+    />
+
+    <!-- Copia otros archivos necesarios por la extensión -->
+    <copy file="config/config.xml" todir="${dist}" />
+    <copy file="LICENSE.txt" todir="${dist}" />
+    <copy todir="${dist}">
+      <fileset dir="." includes="text*.properties" />
+    </copy>
+
+    <!-- Instala la extensión -->
+    <move todir="${extension-dir}/${plugin}/">
+      <fileset dir="${dist}" includes="**/**" />
+    </move>
+  </target>
+
+  <!-- Target para limpiar los archivos de compilación del proyecto -->
+  <target name="clean" description="Limpia los archivos de compilación del proyecto">
+    <delete dir="${build}"/>
+    <delete dir="${dist-base}"/>
+  </target>
+
+  <!-- Target para generar la documentación JavaDoc del proyecto de 
+  la extensión en el directorio ${doc}-->
+  <target name="generate-documentation" depends="init" 
+    description="Genera la documentación de JavaDoc">
+    <javadoc sourcepath="${src}" destdir="${doc}" />
+  </target>
+
+  <!-- Target para generar la documentación comprimida en un archivo ZIP -->
+  <target name="generate-zip-documentation" depends="generate-documentation" 
+    description="Genera la documentación de JavaDoc comprimida en un Zip">
+    <zip destfile="${dist-base}/docs.zip" basedir="${doc}" />
+    <checksum file="${dist-base}/docs.zip" forceOverwrite="true"/>
+	  <checksum file="${dist-base}/docs.zip" forceOverwrite="true"  
+	    algorithm="SHA1"/>
+  </target>
+
 </project>
