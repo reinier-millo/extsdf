@@ -63,24 +63,8 @@
     description="Genera la distribución de la extensión sin los códigos fuentes"
   	depends="init">
 
-    <!-- Generar el JAR del driver para leer archivos NetCDF en el archivo 
-    ${driver}.jar -->
-    <jar destfile="${dist}/${driver}.jar"
-      basedir="${build}"
-      includes="uclv/gvsig/extsdf/driver/**"
-    />
-
-    <!-- Instala el driver para leer archivos NetCDF -->
-    <move todir="${driver-dir}/${driver}/">
-      <fileset dir="${dist}" includes="${driver}.jar" />
-    </move>
-    <copy file="LICENSE.txt" todir="${driver-dir}/${driver}/" />
-
     <!-- Genera el JAR de la extensión en el archivo ${plugin}.jar -->
-    <jar jarfile="${dist}/${plugin}.jar" 
-      basedir="${build}" 
-      excludes="uclv/gvsig/extsdf/driver/**"
-    />
+    <jar jarfile="${dist}/${plugin}.jar" basedir="${build}" />
 
     <!-- Copia otros archivos necesarios por la extensión -->
     <copy file="config/config.xml" todir="${dist}" />

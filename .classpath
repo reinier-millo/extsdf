@@ -2,9 +2,16 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="var" path="GVSIG_INSTALL_DIR/bin/andami.jar"/>
-	<classpathentry kind="var" path="GVSIG_INSTALL_DIR/bin/gvSIG/extensiones/com.iver.cit.gvsig/lib/driver-manager-1.1.jar"/>
-	<classpathentry kind="var" path="GVSIG_INSTALL_DIR/bin/gvSIG/extensiones/com.iver.cit.gvsig/lib/fmap.jar"/>
-	<classpathentry kind="var" path="GVSIG_INSTALL_DIR/bin/gvSIG/extensiones/com.iver.cit.gvsig/lib/gdbms-0.8-SNAPSHOT.jar"/>
+	<classpathentry kind="var" path="GVSIG_INSTALL_DIR/bin/andami.jar" sourcepath="/GVSIG_INSTALL_DIR/src"/>
+	<classpathentry kind="var" path="GVSIG_INSTALL_DIR/bin/gvSIG/extensiones/com.iver.cit.gvsig/lib/driver-manager-1.1.jar" sourcepath="/GVSIG_INSTALL_DIR/src"/>
+	<classpathentry kind="var" path="GVSIG_INSTALL_DIR/bin/gvSIG/extensiones/com.iver.cit.gvsig/lib/fmap.jar" sourcepath="/GVSIG_INSTALL_DIR/src"/>
+	<classpathentry kind="var" path="GVSIG_INSTALL_DIR/bin/gvSIG/extensiones/com.iver.cit.gvsig/lib/gdbms-0.8-SNAPSHOT.jar" sourcepath="/GVSIG_INSTALL_DIR/src"/>
+	<classpathentry kind="var" path="GVSIG_INSTALL_DIR/bin/gvSIG/extensiones/com.iver.cit.gvsig/lib/org.cresques.cts.jar" sourcepath="/GVSIG_INSTALL_DIR/src"/>
+	<classpathentry kind="var" path="GVSIG_INSTALL_DIR/bin/gvSIG/extensiones/com.iver.cit.gvsig/lib/com.iver.cit.gvsig.jar" sourcepath="/GVSIG_INSTALL_DIR/src"/>
+	<classpathentry kind="var" path="GVSIG_INSTALL_DIR/bin/gvSIG/extensiones/com.iver.cit.gvsig/lib/org.gvsig.fmap.raster.jar" sourcepath="/GVSIG_INSTALL_DIR/src"/>
+	<classpathentry kind="var" path="GVSIG_INSTALL_DIR/bin/gvSIG/extensiones/com.iver.cit.gvsig/lib/org.gvsig.raster.gui.jar" sourcepath="/GVSIG_INSTALL_DIR/src"/>
+	<classpathentry kind="var" path="GVSIG_INSTALL_DIR/bin/gvSIG/extensiones/com.iver.cit.gvsig/lib/org.gvsig.raster.jar" sourcepath="/GVSIG_INSTALL_DIR/src"/>
+	<classpathentry kind="var" path="GVSIG_INSTALL_DIR/bin/lib/hdf/netcdf.jar" sourcepath="/GVSIG_INSTALL_DIR/src"/>
+	<classpathentry kind="var" path="GVSIG_INSTALL_DIR/bin/gvSIG/extensiones/org.gvsig.rastertools/org.gvsig.rastertools.jar" sourcepath="/GVSIG_INSTALL_DIR/src"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
