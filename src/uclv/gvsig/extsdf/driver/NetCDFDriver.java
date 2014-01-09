@@ -72,6 +72,8 @@ public class NetCDFDriver extends AbstractFileOpen {
      */
     @Override
     public File post(File file) throws LoadLayerException {
+
+        // Verifica si el archivo seleccionado no es null
         if (file == null || file.getAbsoluteFile() == null)
             return null;
 
