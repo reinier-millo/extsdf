@@ -51,6 +51,7 @@
     <mkdir dir="${build}" />
   	<mkdir dir="${dist-base}" />
     <mkdir dir="${dist}" />
+  	<mkdir dir="${dist}/lib" />
     <mkdir dir="${doc}" />
     <buildnumber />
   </target>
@@ -64,7 +65,7 @@
   	depends="init">
 
     <!-- Genera el JAR de la extensión en el archivo ${plugin}.jar -->
-    <jar jarfile="${dist}/${plugin}.jar" basedir="${build}" />
+    <jar jarfile="${dist}/lib/${plugin}.jar" basedir="${build}" />
 
     <!-- Copia otros archivos necesarios por la extensión -->
     <copy file="config/config.xml" todir="${dist}" />
@@ -72,6 +73,12 @@
     <copy todir="${dist}">
       <fileset dir="." includes="text*.properties" />
     </copy>
+  	<copy todir="${dist}/lib">
+  	   <fileset dir="lib/" includes="*.jar" />
+  	</copy>
+  	<copy todir="${dist}/images">
+  	       <fileset dir="images" includes="*.*" />
+  	</copy>
 
     <!-- Instala la extensión -->
     <move todir="${extension-dir}/${plugin}/">
