@@ -30,5 +30,7 @@ package uclv.gvsig.extsdf.properties;
  *
  */
 public class PropertiesNetCDFRaster {
-
+	/**
+	 * 
+	 */
 }
