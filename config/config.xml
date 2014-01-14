@@ -10,5 +10,29 @@
       active="true"
       priority="999">
     </extension>
+    
+    <extension	class-name="uclv.gvsig.extsdf.animation.AnimationExtension"
+    			description="animation_description"
+    			active="true"
+    			priority="999">
+	<!--
+		<menu	text="OJO_DEFINIR"
+				key="t" 
+				mnemonic="t"
+				tooltip="animation_tooltip"
+				action-command="animation-command" 
+				icon="images/animation.png">
+		</menu>
+	-->
+		<tool-bar	name="animation-toolbar" 
+					position="6">
+			<action-tool	icon="images/animation.png" 
+							tooltip="animation_tooltip"
+							action-command="animation-command" 
+							position="1">
+			</action-tool>
+		</tool-bar>
+    </extension>
+        
   </extensions>
 </plugin-config>
