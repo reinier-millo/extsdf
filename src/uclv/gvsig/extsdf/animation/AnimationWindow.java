@@ -109,7 +109,7 @@ public class AnimationWindow extends JPanel implements IWindow{
 	 */
 	private void initialize() {
 		setBounds(0, 0, 500, 500);
-		add(new JButton("Testing this shit!!"));		
+		add(new JButton("Hello gvSIG extension!!"));		
 	}
 	
 	/**
