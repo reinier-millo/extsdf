@@ -25,19 +25,20 @@
 
 package uclv.gvsig.extsdf.animation;
 
+import org.gvsig.fmap.raster.layers.FLyrRasterSE;
+
 import uclv.gvsig.extsdf.raster.FlyrNetCDFRaster;
 
 import com.iver.andami.PluginServices;
 import com.iver.andami.ui.mdiManager.IWindow;
-import com.iver.cit.gvsig.fmap.layers.FLayer;
+import com.iver.cit.gvsig.fmap.layers.FLayers;
 import com.iver.cit.gvsig.project.documents.view.gui.View;
 import com.iver.andami.plugins.Extension;
 
 /**
- * Extension para anadir los controles de la animacion del raster NetCDF
+ * Extensión para añadir los controles de la animación del raster NetCDF.
  * @author afmoya
  * @version 1.0.0
- * revision afmoya 201401141337
  */
 public class AnimationExtension extends Extension{
 
@@ -51,24 +52,25 @@ public class AnimationExtension extends Extension{
 	/**
 	 * @author afmoya
 	 * @version 1.0.0
-	 * revision afmoya 201401141336
 	 */
 	public void execute(String actionCommand) {
 		// TODO Auto-generated method stub
-		IWindow iWindow = PluginServices.getMDIManager().getActiveWindow();
-		if(iWindow instanceof View) {
-			View view = (View)iWindow;
-//			OJO: consultar si la capa raster del netcdf es la que esta 
-//			en el top del MapContext o solamente debe estar activa?
-			FLayer[] fLayers = view.getMapControl().getMapContext().getLayers().getActives();
-			FlyrNetCDFRaster cdfRaster;
+		IWindow activeWindow = PluginServices.getMDIManager().getActiveWindow();
+		if(activeWindow instanceof View) {
+			View activeView = (View)activeWindow;
+			FLayers fLayers = activeView.getMapControl().getMapContext().getLayers();
+			int layersCount = fLayers.getLayersCount();
 			
-			for(FLayer fLayer : fLayers) {
+			FlyrNetCDFRaster cdfRaster = null;
+			
+			for(int i=0; i<layersCount; ++i) {
 //				if(fLayer instanceof FlyrNetCDFRaster) {
 //					cdfRaster = (FlyrNetCDFRaster)fLayer;
-					AnimationWindow window = new AnimationWindow();
-//					window.setNetCDFRasterLayer(cdfRaster);
-					PluginServices.getMDIManager().addWindow(window);
+					AnimationWindow animationWindow = new AnimationWindow();
+					animationWindow.setNetCDFRasterLayer(cdfRaster);
+					animationWindow.setRelatedWindow(activeWindow);
+					PluginServices.getMDIManager().addWindow(animationWindow);
+					break;
 //				}				
 			}
 		}
@@ -76,15 +78,25 @@ public class AnimationExtension extends Extension{
 
 	@Override
 	/**
+	 * Chequear si la vista activa ya tiene asociada una ventana de administración
+	 * de la animación.
 	 * @author afmoya
 	 * @version 1.0.0
-	 * revision afmoya 201401140840
 	 */
 	public boolean isEnabled() {
 		// TODO Auto-generated method stub
-//		chequear si la vista ya tiene una ventana de animacion asociada
-//		para evitar levantar multiples instancias de animaciones que manipulen
-//		la misma capa raster
+		IWindow activeWindow = PluginServices.getMDIManager().getActiveWindow();
+		if(activeWindow instanceof View) {
+//			View view = (View)activeWindow;
+			IWindow[] allWindows = PluginServices.getMDIManager().getAllWindows();
+			for(IWindow analized : allWindows) {
+				if(analized instanceof AnimationWindow) {
+					if(activeWindow.equals(((AnimationWindow)analized).getRelatedWindow())) {
+						return false;
+					}
+				}				
+			}
+		}
 		return true;
 	}
 
@@ -92,30 +104,20 @@ public class AnimationExtension extends Extension{
 	/**
 	 * @author afmoya
 	 * @version 1.0.0
-	 * revision afmoya 201401140831
 	 */
 	public boolean isVisible() {
 		// TODO Auto-generated method stub
-		IWindow[] i = PluginServices.getMDIManager().getAllWindows();		
-		for(IWindow iWindow : i) {
-			if(iWindow instanceof View) {
-//				OJO: consultar si la capa raster del netcdf es la que esta 
-//				en el top del MapContext o solamente debe estar activa?
-				FLayer[] fLayers = ((View)iWindow).getMapControl().getMapContext().getLayers().getActives();
-//				Se chequea cual de las capas son del tipo que visualiza los 
-//				datos del SDT NetCDF.				
-				for(FLayer fLayer : fLayers) {
-//					Anadir aqui la condicion de chequeo para el tipo de 
-//					capa que se defina en el complemento					
-//					if(fLayer instanceof FlyrNetCDFRaster) {
-//						return true;
-//					}
+		IWindow iWindow = PluginServices.getMDIManager().getActiveWindow();		
+		if(iWindow instanceof View) {
+			FLayers fLayers = ((View)iWindow).getMapControl().getMapContext().getLayers();
+			int numberOfLayers = fLayers.getLayersCount();
+			for(int index=0; index<numberOfLayers; ++index) {
+				// OJO: Suprimir FLyrRasterSE por la capa que se defina en el plugin
+				if(fLayers.getLayer(index) instanceof FLyrRasterSE) {
 					return true;
 				}
-			}
-		}
-		
+			}			
+		}		
 		return false;
 	}
-
 }

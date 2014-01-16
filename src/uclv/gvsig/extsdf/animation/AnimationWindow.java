@@ -34,12 +34,13 @@ import uclv.gvsig.extsdf.raster.FlyrNetCDFRaster;
 import com.iver.andami.PluginServices;
 import com.iver.andami.ui.mdiManager.IWindow;
 import com.iver.andami.ui.mdiManager.WindowInfo;
+import com.iver.cit.gvsig.project.documents.view.gui.View;
 
 /**
- * Ventana con los controles y parametros para administrar la animacion
+ * Ventana con los controles y parámetros para administrar la animación
+ * de la capa raster del formato NetCDF.
  * @author afmoya
  * @version 1.0.0
- * revision afmoya 201401141340
  */
 public class AnimationWindow extends JPanel implements IWindow{
 	/**
@@ -48,14 +49,19 @@ public class AnimationWindow extends JPanel implements IWindow{
 	private static final long serialVersionUID = 1L;
 	
 	/**
-	 * Atributo para definir la informacion de la ventana
+	 * Atributo para definir la información de la ventana
 	 */
 	private WindowInfo windowInfo = null;
 	
 	/**
-	 * Tipo de capa manipulable por la extension
+	 * Tipo de capa manipulable por la extensión
 	 */
-	private FlyrNetCDFRaster cdfRaster;	
+	private FlyrNetCDFRaster cdfRaster;
+	
+	/**
+	 * Vista sobre la que actúa la ventana de animación
+	 */
+	private IWindow relatedWindow = null;
 	
 	public AnimationWindow() {
 		super();
@@ -63,13 +69,18 @@ public class AnimationWindow extends JPanel implements IWindow{
 	}
 	
 	@Override
+	/**
+	 * Método que devuelve las propiedades de la ventana de animación.
+	 * @author afmoya
+	 * @version 1.0.0
+	 */
 	public WindowInfo getWindowInfo() {
 		// TODO Auto-generated method stub
 		if (windowInfo == null){
 			windowInfo = new WindowInfo(WindowInfo.ICONIFIABLE);
 			windowInfo.setWidth(this.getWidth());
 			windowInfo.setHeight(this.getHeight());
-			windowInfo.setTitle(PluginServices.getText(this, "Animation_Timer"));
+			windowInfo.setTitle(relatedWindow.getWindowInfo().getTitle());
 		}
 		
 		return windowInfo;
@@ -82,22 +93,46 @@ public class AnimationWindow extends JPanel implements IWindow{
 	}
 	
 	/**
-	 * Metodo para asignarle valor al atributo cdfRaster
-	 * @param cdfRaster Capa raster basado en el tipo de dato cientifico NetCDF
+	 * Método para asignarle valor al atributo cdfRaster.
+	 * @param cdfRaster Capa raster basado en el tipo de dato científico NetCDF
 	 * @author afmoya
 	 * @version 1.0.0
-	 * revision 201401141325*/
+	 */
 	public void setNetCDFRasterLayer(FlyrNetCDFRaster cdfRaster) {
 		this.cdfRaster = cdfRaster;
 	}
 	
 	/**
-	 * Metodo que inicia los componentes visuales de la ventana
+	 * Método que inicia los componentes visuales de la ventana.
 	 * @author afmoya
 	 * @version 1.0.0
-	 * revision 201401141430*/
+	 */
 	private void initialize() {
-		add(new JButton("Testing this shit!!"));
+		setBounds(0, 0, 500, 500);
+		add(new JButton("Testing this shit!!"));		
+	}
+	
+	/**
+	 * Método para asignarle a la ventana de animación la ventana sobre la cual 
+	 * está actuando. Esto se realiza para controlar si el componente puede estar
+	 * activo o no para la correspondiente vista.
+	 * @param view Vista sobre la cual actúa la ventana de animación.
+	 * @author afmoya
+	 * @version 1.0.0
+	 */
+	public void setRelatedWindow(IWindow iWindow) {
+			relatedWindow = iWindow;		
 	}
 
+	/**
+	 * Método que devuelve la ventana asociada a la ventana de animación. 
+	 * Esto se realiza para controlar si el componente estará activo o no 
+	 * para la correspondiente vista.
+	 * @param view Vista sobre la cual actua la ventana de animacion.
+	 * @author afmoya
+	 * @version 1.0.0
+	 */
+	public IWindow getRelatedWindow() {
+		return relatedWindow;		
+	}
 }
