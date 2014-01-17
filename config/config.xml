@@ -11,24 +11,24 @@
       priority="999">
     </extension>
     
-    <extension	class-name="uclv.gvsig.extsdf.animation.AnimationExtension"
-    			description="animation_description"
+    <extension	class-name="uclv.gvsig.extsdf.timeslider.TimeSliderExtension"
+    			description="time_slider_description"
     			active="true"
     			priority="999">
 	<!--
 		<menu	text="OJO_DEFINIR"
 				key="t" 
 				mnemonic="t"
-				tooltip="animation_tooltip"
-				action-command="animation-command" 
-				icon="images/animation.png">
+				tooltip="time_slider_tooltip"
+				action-command="time_slider-command" 
+				icon="images/time_slider.png">
 		</menu>
 	-->
-		<tool-bar	name="animation-toolbar" 
+		<tool-bar	name="time_slider-toolbar" 
 					position="6">
-			<action-tool	icon="images/animation.png" 
-							tooltip="animation_tooltip"
-							action-command="animation-command" 
+			<action-tool	icon="images/time_slider.png" 
+							tooltip="time_slider_tooltip"
+							action-command="time_slider-command" 
 							position="1">
 			</action-tool>
 		</tool-bar>
