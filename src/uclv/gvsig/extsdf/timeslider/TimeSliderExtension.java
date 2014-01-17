@@ -66,10 +66,10 @@ public class TimeSliderExtension extends Extension{
 			for(int i=0; i<layersCount; ++i) {
 //				if(fLayer instanceof FlyrNetCDFRaster) {
 //					cdfRaster = (FlyrNetCDFRaster)fLayer;
-					TimeSliderWindow animationWindow = new TimeSliderWindow();
-					animationWindow.setNetCDFRasterLayer(cdfRaster);
-					animationWindow.setRelatedWindow(activeWindow);
-					PluginServices.getMDIManager().addWindow(animationWindow);
+					TimeSliderWindow timeSliderWindow = new TimeSliderWindow();
+					timeSliderWindow.setNetCDFRasterLayer(cdfRaster);
+					timeSliderWindow.setRelatedWindow(activeWindow);
+					PluginServices.getMDIManager().addWindow(timeSliderWindow);
 					break;
 //				}				
 			}

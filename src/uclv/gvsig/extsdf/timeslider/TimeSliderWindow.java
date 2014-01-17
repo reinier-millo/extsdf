@@ -80,7 +80,8 @@ public class TimeSliderWindow extends JPanel implements IWindow{
 			windowInfo = new WindowInfo(WindowInfo.PALETTE);
 			windowInfo.setWidth(this.getWidth());
 			windowInfo.setHeight(this.getHeight());
-			windowInfo.setTitle(relatedWindow.getWindowInfo().getTitle());
+			windowInfo.setTitle(PluginServices.getText(this, "time_slider_window_title") + 
+								" -> " + relatedWindow.getWindowInfo().getTitle());
 		}
 		
 		return windowInfo;
