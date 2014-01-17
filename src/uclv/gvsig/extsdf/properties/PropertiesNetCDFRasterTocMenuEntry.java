@@ -34,6 +34,9 @@ import com.iver.cit.gvsig.project.documents.view.toc.AbstractTocContextMenuActio
 import com.iver.cit.gvsig.project.documents.view.toc.ITocItem;
 
 /**
+ * Entrada en el menu contextual del TOC correspondiente al cuadro de
+ * propiedades del raster
+ * 
  * @author dcardoso
  *
  */
