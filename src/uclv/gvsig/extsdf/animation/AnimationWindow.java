@@ -77,7 +77,7 @@ public class AnimationWindow extends JPanel implements IWindow{
 	public WindowInfo getWindowInfo() {
 		// TODO Auto-generated method stub
 		if (windowInfo == null){
-			windowInfo = new WindowInfo(WindowInfo.ICONIFIABLE);
+			windowInfo = new WindowInfo(WindowInfo.PALETTE);
 			windowInfo.setWidth(this.getWidth());
 			windowInfo.setHeight(this.getHeight());
 			windowInfo.setTitle(relatedWindow.getWindowInfo().getTitle());
