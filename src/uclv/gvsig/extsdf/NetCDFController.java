@@ -45,18 +45,15 @@ import ucar.nc2.dataset.CoordinateAxis1D;
 import ucar.nc2.dataset.CoordinateAxis1DTime;
 import ucar.nc2.dataset.CoordinateSystem;
 import ucar.nc2.dataset.NetcdfDataset;
-import ucar.nc2.dataset.VariableDS;
 
 import com.iver.cit.gvsig.fmap.drivers.db.utils.SingleDBConnectionManager;
 
 /**
- * Clase para manejar el flujo de datos entre la aplicación y el archivo NetCDF
- * de la capa Raster
- * 
- * <code>sadas</code>
+ * <p>Clase para manejar el flujo de datos entre la aplicación y el archivo NetCDF
+ * de la capa Raster</p>
  * 
  * @author millo
- * @version 1.0.0
+ * @version 1.0.2
  */
 public class NetCDFController {
 
@@ -82,22 +79,23 @@ public class NetCDFController {
     ArrayList<CoordinateSystem> datas = null;
 
     /**
-     * Índice del sistema de coordenadas que se está empleando
+     * Índice del sistema de coordenadas que se est&aacute; empleando
      */
     private int dataIdx = -1;
     /**
-     * Sistema de coordenada que se está empleando en la renderización
+     * Sistema de coordenada que se est&aacute; empleando en la
+     * renderizaci&oacute;n
      */
     private CoordinateSystem data = null;
 
     /**
      * Variables cuyos valores representan representan valores de longitud en un
-     * sistema de coordenadas geográficas
+     * sistema de coordenadas geogr&aacute;ficas
      */
     private CoordinateAxis1D lon = null;
     /**
      * Variables cuyos valores representan representan valores de latitud en un
-     * sistema de coordenadas geográficas
+     * sistema de coordenadas geogr&aacute;ficas
      */
     private CoordinateAxis1D lat = null;
     /**
@@ -109,9 +107,15 @@ public class NetCDFController {
      * Variables cuyos valores son renderizados en el Raster
      */
     private Variable dataVar;
-
-    private Object [][] dData;
+    /**
+     * Buffer donde se cargan los datos de la variable del NetCDF
+     */
+    private Object[][] dData;
+    /**
+     * Valor de relleno definido en el NetCDF
+     */
     private double missing;
+
     /**
      * <p>
      * Constructor de la clase
@@ -128,17 +132,22 @@ public class NetCDFController {
      */
     public NetCDFController(String filename) throws IOException {
         this.filename = filename;
-        //file = NetcdfFile.open(filename);
-        //file.close();
         loadDefaults();
     }
-    
-    public NetCDFController(String filename, boolean test) throws IOException {
-        this.filename = filename;
-        loadDefaults();
-    }
-    
 
+    /**
+     * <p>
+     * Carga la informaci&oacute;n por defecto de un archivo NetCDF
+     * </p>
+     * 
+     * La informaci&oacute;n por defecto incluye las variables de coordenada
+     * para la ubicaci&oacute;n geogr&aacute;fica, las variables que representan
+     * unidades de medidas variables (como tiempo o altura), y la variable de
+     * datos a renderizar.
+     * 
+     * @throws IOException
+     *             Error de lectura del archivo NetCDF
+     */
     private void loadDefaults() throws IOException {
         logger.info("Inicializando informaci\u00F3n del archivo NetCDF: ("
                 + filename + ")");
@@ -187,7 +196,7 @@ public class NetCDFController {
 
         }
         findMissind();
-readData();
+        readData();
     }
 
     /**
@@ -199,26 +208,26 @@ readData();
      * variable a redenrizar. Los tipos de datos num&eacute;ricos admitidos por
      * el formato NetDCF son:
      * <ul>
-     *  <li>DataType.BYTE</li>
-     *  <li>DataType.CHAR</li>
-     *  <li>DataType.DOUBLE</li>
-     *  <li>DataType.FLOAT</li>
-     *  <li>DataType.INT</li>
-     *  <li>DataType.LONG</li>
+     * <li>DataType.BYTE</li>
+     * <li>DataType.CHAR</li>
+     * <li>DataType.DOUBLE</li>
+     * <li>DataType.FLOAT</li>
+     * <li>DataType.INT</li>
+     * <li>DataType.LONG</li>
      * <li>DataType.SHORT</li>
      * </ul>
-     * A cada uno de estos tipos de datos se le hace corresponder un tipo de 
+     * A cada uno de estos tipos de datos se le hace corresponder un tipo de
      * dato en el gvSIG. Los tipos de datos admitidos por el gvSIG son:
      * <ul>
-     *  <li>IBuffer.TYPE_BYTE</li>
-     *  <li>IBuffer.TYPE_DOUBLE</li>
-     *  <li>IBuffer.TYPE_FLOAT</li>
-     *  <li>IBuffer.TYPE_INT</li>
-     *  <li>IBuffer.TYPE_SHORT</li>
+     * <li>IBuffer.TYPE_BYTE</li>
+     * <li>IBuffer.TYPE_DOUBLE</li>
+     * <li>IBuffer.TYPE_FLOAT</li>
+     * <li>IBuffer.TYPE_INT</li>
+     * <li>IBuffer.TYPE_SHORT</li>
      * </ul>
      * Por defecto cuando no se ha podido identificar la variable a renderizar
      * se asume como tipo de datos IBuffer.TYPE_DOUBLE
-     *
+     * 
      * @return tipo de dato de la variable renderizada<br/>
      * 
      * @see ucar.ma2.DataType
@@ -291,7 +300,7 @@ readData();
     public void close() throws IOException {
         logger.info("Inicializando informaci\u00F3n del archivo NetCDF: ("
                 + filename + ")");
-        //  Libera la memoria
+        // Libera la memoria
         filename = null;
         file = null;
         fileDataSet = null;
@@ -301,9 +310,9 @@ readData();
         lat = null;
         time = null;
         dataVar = null;
-        
+
         // Cierra el archivo
-        if(file!=null)
+        if (file != null)
             file.close();
     }
 
@@ -329,7 +338,7 @@ readData();
             }
         }
     }
-    
+
     /**
      * <p>
      * Devuelve el valor de relleno de la variable de datos
@@ -354,35 +363,35 @@ readData();
      * @return información de metadatos
      */
     public String[] getFileMetadata() {
-        if(fileDataSet == null)
+        if (fileDataSet == null)
             return new String[0];
-        
+
         // Crea la lista de metadatos
         ArrayList<String> metadata = new ArrayList<String>();
-        
+
         // Toma todos los atributos del archivo NetCDF
         List<Attribute> attrs = fileDataSet.getGlobalAttributes();
         // Recorre todos los atributos del archivo
-        for(Attribute attr : attrs){
+        for (Attribute attr : attrs) {
             // Nombre del atributo
             StringBuilder sb = new StringBuilder();
             sb.append(attr.getName());
             sb.append("=");
-            
+
             // El valor del atributo es de tipo cadena
-            if(attr.isString()){
+            if (attr.isString()) {
                 sb.append(attr.getStringValue(0));
                 // Verifica si el valor del atributo es un arreglo
-                for(int i=0; i<attr.getLength(); ++i){
+                for (int i = 0; i < attr.getLength(); ++i) {
                     sb.append(",");
                     sb.append(attr.getStringValue(i));
                 }
-                
-            // El valor del atributo es de tipo numérico
-            }else{
+
+                // El valor del atributo es de tipo numérico
+            } else {
                 sb.append(attr.getNumericValue(0).doubleValue());
                 // Verifica si el valor del atributo es un arreglo
-                for(int i=0; i<attr.getLength(); ++i){
+                for (int i = 0; i < attr.getLength(); ++i) {
                     sb.append(",");
                     sb.append(attr.getNumericValue(i).doubleValue());
                 }
@@ -391,16 +400,16 @@ readData();
         }
 
         return metadata.toArray(new String[0]);
-    }    
-    
-    public void readData(){
+    }
+
+    public void readData() {
         // Inicializa la matriz de datos
         dData = new Object[getHeight()][getWidth()];
-       
+
         try {
             // Toma los rangos de las variables, de solo lectura
             List<Range> ranges = dataVar.getRanges();
-            
+
             // Crea una estructura con los rangos leidos
             ArrayList<Range> newRanges = new ArrayList<Range>();
             newRanges.add(ranges.get(0));
@@ -408,26 +417,31 @@ readData();
             newRanges.add(ranges.get(2));
 
             // Selecciona los rango que se van a tomar
+            // TODO Tomar el rango de tiempo según el orden de las dimensiones
             newRanges.set(0, new Range(0, 0));
 
             // Lee los datos para cada instante de tiempo
             Array arr = dataVar.read(newRanges);
             // Toma el índice del arreglo de datos
             Index idx = arr.getIndex();
+
             // Recorre todas las latitudes
+            // TODO Tomar las dimensiones según las variables de lon y lat
             for (int lat = 0; lat < 360; ++lat) {
-            for (int lon = 0; lon < 720; ++lon) {
-                idx.set(0, lat, lon); // tiempo, latitud, longitud
-                
-                // Lee el valor correspondiente teniendo en cuenta el tipo de dato
-                dData[lat][lon] = readData(arr, idx);
-            }
+                for (int lon = 0; lon < 720; ++lon) {
+                    // TODO Tomar los índices según el orden de las dimensiones
+                    idx.set(0, lat, lon); // tiempo, latitud, longitud
+
+                    // Lee el valor correspondiente teniendo en cuenta el tipo
+                    // de dato
+                    dData[lat][lon] = readData(arr, idx);
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
-    
+
     /**
      * <p>
      * Lee un valor del archivo NetCDF seg&uacute;n el tipo de dato
@@ -455,54 +469,146 @@ readData();
             return arr.getByte(idx);
         }
     }
-    
-    
-    public Object getValue(int line, int col){
-        return dData[line][col];
-    }
-    
+
     /**
-     * Lee un conjunto de datos desde el archiv NetCDF
+     * <p>
+     * Devuelve el valor correspondiente a un punto dentro del conjunto de datos
+     * </p>
      * 
      * @param line
+     *            l&iacute;nea o fila dentro de la variable de datos
+     * @param col
+     *            columna dentro de la variable de datos
+     * 
+     * @return valor correspondiente a la posici&oacute;n fila x columna
+     */
+    public Object getValue(int line, int col) {
+        return dData[line][col];
+    }
+
+    /**
+     * <p>
+     * Lee una l&iacute;nea de datos de tipo <i>double</i> dentro del conjunto
+     * de datos del archivo NetCDF
+     * </p>
+     * 
+     * @param line
+     *            l&iacute;nea a leer
      * @param buf
+     *            b&uacute;fer para guardar la l&iacute;nea leida
      */
     public void readLine(int line, double[] buf) {
+        // TODO Chequear el tipo de datos de la variable
         try {
-            // Toma los rangos de las variables, de solo lectura
-         //   List<Range> ranges = dataVar.getRanges();
-            // Crea una estructura con los rangos leidos
-           // ArrayList<Range> newRanges = new ArrayList<Range>();
-            //newRanges.add(ranges.get(0));
-            //newRanges.add(ranges.get(1));
-            //newRanges.add(ranges.get(2));
-
-            // Selecciona los rango que se van a tomar
-            //newRanges.set(0, new Range(0, 0));
-            //newRanges.set(1, new Range(line, line));
-
-            // Lee los datos para cada instante de tiempo
-            //Array arr = dataVar.read(newRanges);
-            // Toma el índice del arreglo de datos
-            //Index idx = arr.getIndex();
-            // Recorre todas las latitudes
-            Object [] tline = dData[line];
+            Object[] tline = dData[line];
+            // TODO Tomar las dimensiones según la variable de lat y lon
             for (int lon = 0; lon < 720; ++lon) {
-                //idx.set(0, 0, lon); // tiempo, latitud, longitud
-                //double val = arr.getDouble(idx);
-                double val = (Double)tline[lon];
-                
-                if (val == missing)
-                    buf[lon] = RasterLibrary.defaultNoDataValue;
-                else
-                    buf[lon] = val;
-
+                double val = (Double) tline[lon];
+                buf[lon] = val;
             }
         } catch (Exception e) {
             e.printStackTrace();
-
         }
+    }
 
+    /**
+     * <p>
+     * Lee una l&iacute;nea de datos de tipo <i>float</i> dentro del conjunto de
+     * datos del archivo NetCDF
+     * </p>
+     * 
+     * @param line
+     *            l&iacute;nea a leer
+     * @param buf
+     *            b&uacute;fer para guardar la l&iacute;nea leida
+     */
+    public void readLine(int line, float[] buf) {
+        // TODO Chequear el tipo de datos de la variable
+        try {
+            Object[] tline = dData[line];
+            // TODO Tomar las dimensiones según la variable de lat y lon
+            for (int lon = 0; lon < 720; ++lon) {
+                float val = (Float) tline[lon];
+                buf[lon] = val;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * <p>
+     * Lee una l&iacute;nea de datos de tipo <i>int</i> dentro del conjunto de
+     * datos del archivo NetCDF
+     * </p>
+     * 
+     * @param line
+     *            l&iacute;nea a leer
+     * @param buf
+     *            b&uacute;fer para guardar la l&iacute;nea leida
+     */
+    public void readLine(int line, int[] buf) {
+        // TODO Chequear el tipo de datos de la variable
+        try {
+            Object[] tline = dData[line];
+            // TODO Tomar las dimensiones según la variable de lat y lon
+            for (int lon = 0; lon < 720; ++lon) {
+                int val = (Integer) tline[lon];
+                buf[lon] = val;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * <p>
+     * Lee una l&iacute;nea de datos de tipo <i>short</i> dentro del conjunto de
+     * datos del archivo NetCDF
+     * </p>
+     * 
+     * @param line
+     *            l&iacute;nea a leer
+     * @param buf
+     *            b&uacute;fer para guardar la l&iacute;nea leida
+     */
+    public void readLine(int line, short[] buf) {
+        // TODO Chequear el tipo de datos de la variable
+        try {
+            Object[] tline = dData[line];
+            // TODO Tomar las dimensiones según la variable de lat y lon
+            for (int lon = 0; lon < 720; ++lon) {
+                short val = (Short) tline[lon];
+                buf[lon] = val;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * <p>
+     * Lee una l&iacute;nea de datos de tipo <i>byte</i> dentro del conjunto de
+     * datos del archivo NetCDF
+     * </p>
+     * 
+     * @param line
+     *            l&iacute;nea a leer
+     * @param buf
+     *            b&uacute;fer para guardar la l&iacute;nea leida
+     */
+    public void readLine(int line, byte[] buf) {
+        // TODO Chequear el tipo de datos de la variable
+        try {
+            Object[] tline = dData[line];
+            // TODO Tomar las dimensiones según la variable de lat y lon
+            for (int lon = 0; lon < 720; ++lon) {
+                byte val = (Byte) tline[lon];
+                buf[lon] = val;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 }
