@@ -38,12 +38,14 @@ import ucar.ma2.Array;
 import ucar.ma2.DataType;
 import ucar.ma2.Index;
 import ucar.ma2.Range;
+import ucar.nc2.Attribute;
 import ucar.nc2.NetcdfFile;
 import ucar.nc2.Variable;
 import ucar.nc2.dataset.CoordinateAxis1D;
 import ucar.nc2.dataset.CoordinateAxis1DTime;
 import ucar.nc2.dataset.CoordinateSystem;
 import ucar.nc2.dataset.NetcdfDataset;
+import ucar.nc2.dataset.VariableDS;
 
 import com.iver.cit.gvsig.fmap.drivers.db.utils.SingleDBConnectionManager;
 
@@ -108,6 +110,8 @@ public class NetCDFController {
      */
     private Variable dataVar;
 
+    private Object [][] dData;
+    private double missing;
     /**
      * <p>
      * Constructor de la clase
@@ -124,8 +128,14 @@ public class NetCDFController {
      */
     public NetCDFController(String filename) throws IOException {
         this.filename = filename;
+        //file = NetcdfFile.open(filename);
+        //file.close();
         loadDefaults();
-        
+    }
+    
+    public NetCDFController(String filename, boolean test) throws IOException {
+        this.filename = filename;
+        loadDefaults();
     }
     
 
@@ -176,7 +186,8 @@ public class NetCDFController {
             }
 
         }
-
+        findMissind();
+readData();
     }
 
     /**
@@ -292,9 +303,164 @@ public class NetCDFController {
         dataVar = null;
         
         // Cierra el archivo
-        file.close();
+        if(file!=null)
+            file.close();
     }
 
+    /**
+     * <p>
+     * Busca el valor de relleno de la variable de datos
+     * </p>
+     * 
+     * Primero busca el atributo <i>_FillValue</i> de la variables. Si este no
+     * se ha podido encontrar entonces busca el atributo <i>missing_value</i>,
+     * si no, toma el valor por defecto del gvSIG
+     */
+    private void findMissind() {
+        Attribute attr = dataVar.findAttributeIgnoreCase("_FillValue");
+        if (attr != null) {
+            missing = attr.getNumericValue().doubleValue();
+        } else {
+            attr = dataVar.findAttributeIgnoreCase("missing_value");
+            if (attr != null) {
+                missing = attr.getNumericValue().doubleValue();
+            } else {
+                missing = RasterLibrary.defaultNoDataValue;
+            }
+        }
+    }
+    
+    /**
+     * <p>
+     * Devuelve el valor de relleno de la variable de datos
+     * </p>
+     * 
+     * Primero busca el atributo <i>_FillValue</i> de la variables. Si este no
+     * se ha podido encontrar entonces busca el atributo <i>missing_value</i>,
+     * si no, toma el valor por defecto del gvSIG
+     * 
+     * @return valor de relleno
+     */
+    public double getMissing() {
+        return missing;
+    }
+
+    /**
+     * <p>
+     * Devuelve la información obtenida de los atributos del archivo NetCDF
+     * </p>
+     * .
+     * 
+     * @return información de metadatos
+     */
+    public String[] getFileMetadata() {
+        if(fileDataSet == null)
+            return new String[0];
+        
+        // Crea la lista de metadatos
+        ArrayList<String> metadata = new ArrayList<String>();
+        
+        // Toma todos los atributos del archivo NetCDF
+        List<Attribute> attrs = fileDataSet.getGlobalAttributes();
+        // Recorre todos los atributos del archivo
+        for(Attribute attr : attrs){
+            // Nombre del atributo
+            StringBuilder sb = new StringBuilder();
+            sb.append(attr.getName());
+            sb.append("=");
+            
+            // El valor del atributo es de tipo cadena
+            if(attr.isString()){
+                sb.append(attr.getStringValue(0));
+                // Verifica si el valor del atributo es un arreglo
+                for(int i=0; i<attr.getLength(); ++i){
+                    sb.append(",");
+                    sb.append(attr.getStringValue(i));
+                }
+                
+            // El valor del atributo es de tipo numérico
+            }else{
+                sb.append(attr.getNumericValue(0).doubleValue());
+                // Verifica si el valor del atributo es un arreglo
+                for(int i=0; i<attr.getLength(); ++i){
+                    sb.append(",");
+                    sb.append(attr.getNumericValue(i).doubleValue());
+                }
+            }
+            metadata.add(sb.toString());
+        }
+
+        return metadata.toArray(new String[0]);
+    }    
+    
+    public void readData(){
+        // Inicializa la matriz de datos
+        dData = new Object[getHeight()][getWidth()];
+       
+        try {
+            // Toma los rangos de las variables, de solo lectura
+            List<Range> ranges = dataVar.getRanges();
+            
+            // Crea una estructura con los rangos leidos
+            ArrayList<Range> newRanges = new ArrayList<Range>();
+            newRanges.add(ranges.get(0));
+            newRanges.add(ranges.get(1));
+            newRanges.add(ranges.get(2));
+
+            // Selecciona los rango que se van a tomar
+            newRanges.set(0, new Range(0, 0));
+
+            // Lee los datos para cada instante de tiempo
+            Array arr = dataVar.read(newRanges);
+            // Toma el índice del arreglo de datos
+            Index idx = arr.getIndex();
+            // Recorre todas las latitudes
+            for (int lat = 0; lat < 360; ++lat) {
+            for (int lon = 0; lon < 720; ++lon) {
+                idx.set(0, lat, lon); // tiempo, latitud, longitud
+                
+                // Lee el valor correspondiente teniendo en cuenta el tipo de dato
+                dData[lat][lon] = readData(arr, idx);
+            }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    
+    /**
+     * <p>
+     * Lee un valor del archivo NetCDF seg&uacute;n el tipo de dato
+     * </p>
+     * 
+     * @param arr
+     *            Array del NetCDF desde donde se leen los datos
+     * @param idx
+     *            &Iacute;ndice del Array que se debe leer
+     * 
+     * @return el dato leido
+     */
+    private Object readData(Array arr, Index idx) {
+        int type = getDataType();
+        switch (type) {
+        case IBuffer.TYPE_DOUBLE:
+            return arr.getDouble(idx);
+        case IBuffer.TYPE_FLOAT:
+            return arr.getFloat(idx);
+        case IBuffer.TYPE_INT:
+            return arr.getInt(idx);
+        case IBuffer.TYPE_SHORT:
+            return arr.getShort(idx);
+        default:
+            return arr.getByte(idx);
+        }
+    }
+    
+    
+    public Object getValue(int line, int col){
+        return dData[line][col];
+    }
+    
     /**
      * Lee un conjunto de datos desde el archiv NetCDF
      * 
@@ -304,30 +470,33 @@ public class NetCDFController {
     public void readLine(int line, double[] buf) {
         try {
             // Toma los rangos de las variables, de solo lectura
-            List<Range> ranges = dataVar.getRanges();
+         //   List<Range> ranges = dataVar.getRanges();
             // Crea una estructura con los rangos leidos
-            ArrayList<Range> newRanges = new ArrayList<Range>();
-            newRanges.add(ranges.get(0));
-            newRanges.add(ranges.get(1));
-            newRanges.add(ranges.get(2));
+           // ArrayList<Range> newRanges = new ArrayList<Range>();
+            //newRanges.add(ranges.get(0));
+            //newRanges.add(ranges.get(1));
+            //newRanges.add(ranges.get(2));
 
             // Selecciona los rango que se van a tomar
-            newRanges.set(0, new Range(0, 0));
-            newRanges.set(1, new Range(line, line));
+            //newRanges.set(0, new Range(0, 0));
+            //newRanges.set(1, new Range(line, line));
 
             // Lee los datos para cada instante de tiempo
-            Array arr = dataVar.read(newRanges);
+            //Array arr = dataVar.read(newRanges);
             // Toma el índice del arreglo de datos
-            Index idx = arr.getIndex();
+            //Index idx = arr.getIndex();
             // Recorre todas las latitudes
+            Object [] tline = dData[line];
             for (int lon = 0; lon < 720; ++lon) {
-                idx.set(0, 0, lon); // tiempo, latitud, longitud
-                double val = arr.getDouble(idx);
+                //idx.set(0, 0, lon); // tiempo, latitud, longitud
+                //double val = arr.getDouble(idx);
+                double val = (Double)tline[lon];
                 
-                if (Math.abs(val) < 100)
-                    buf[lon] = val;
-                else
+                if (val == missing)
                     buf[lon] = RasterLibrary.defaultNoDataValue;
+                else
+                    buf[lon] = val;
+
             }
         } catch (Exception e) {
             e.printStackTrace();
