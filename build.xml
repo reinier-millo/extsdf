@@ -36,12 +36,10 @@
   <property name="dist" location="${dist-base}/pkg" />
 	<property name="doc" location="${dist-base}/doc" />
   <property name="plugin" value="uclv.gvsig.extsdf" />
+	<!-- La variable GVSIG_INSTALL_DIR se debe definir en las propiedades del 
+	RunConfiguration del Ant. Toma como valor el valor de la propia variable del
+	Eclipse -->
   <property name="extension-dir" location="${GVSIG_INSTALL_DIR}/bin/gvSIG/extensiones" />
-
-  <!-- Propiedades para compilar el driver para el formato de archivos NetCDF -->
-  <property name="driver" value="netcdf" />
-  <property name="driver-dir" 
-    location="${GVSIG_INSTALL_DIR}/bin/gvSIG/extensiones/com.iver.cit.gvsig/drivers" />
 
   <!-- Target para inicializar los directorios de compilación -->
   <target name="init">
@@ -57,7 +55,6 @@
   </target>
 
   <!-- Target para compilar e instalar la extensión
-         - Genera e instala el Driver para leer archivos NetCDF
          - Genera e instala la extensión para el manejo de datos científicos
   -->
   <target name="generate-without-source" 
