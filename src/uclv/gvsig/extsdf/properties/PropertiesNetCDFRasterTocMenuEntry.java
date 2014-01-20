@@ -26,8 +26,12 @@
 package uclv.gvsig.extsdf.properties;
 
 import javax.swing.Icon;
+import javax.swing.JDialog;
 
+import org.gvsig.fmap.raster.layers.FLyrRasterSE;
+import org.gvsig.fmap.raster.layers.ILayerState;
 import org.gvsig.raster.gui.IGenericToolBarMenuItem;
+import org.gvsig.raster.util.RasterToolsUtil;
 
 import com.iver.cit.gvsig.fmap.layers.FLayer;
 import com.iver.cit.gvsig.project.documents.view.toc.AbstractTocContextMenuAction;
@@ -40,7 +44,7 @@ import com.iver.cit.gvsig.project.documents.view.toc.ITocItem;
  * @author dcardoso
  *
  */
-public class PropertiesNetCDFRasterTocMenuEntry extends 	AbstractTocContextMenuAction 
+public class PropertiesNetCDFRasterTocMenuEntry extends 	AbstractTocContextMenuAction
 												implements 	IGenericToolBarMenuItem{
 
 	static private PropertiesNetCDFRasterTocMenuEntry singleton  = null;
@@ -74,15 +78,21 @@ public class PropertiesNetCDFRasterTocMenuEntry extends 	AbstractTocContextMenuA
 	@Override
 	public String getText() {
 		// TODO Auto-generated method stub
-		return null;
+		return "Properties NetCDF";
 	}
 
-	/* (non-Javadoc)
-	 * @see com.iver.cit.gvsig.project.documents.view.toc.AbstractTocContextMenuAction#execute(com.iver.cit.gvsig.project.documents.view.toc.ITocItem, com.iver.cit.gvsig.fmap.layers.FLayer[])
+	/**
+	 * Gestiona la apertura del dialogo de propiedades de raster cuando se pulsa
+	 * la opcion asignando a este las propiedades iniciales.
 	 */
 	@Override
 	public void execute(ITocItem item, FLayer[] selectedItems) {
 		// TODO Auto-generated method stub
+		/*
+		JDialog jd=new JDialog();
+		jd.setSize(800, 600);
+		jd.setVisible(true);
+		*/
 		
 	}
 
@@ -92,9 +102,32 @@ public class PropertiesNetCDFRasterTocMenuEntry extends 	AbstractTocContextMenuA
 	@Override
 	public Icon getIcon() {
 		// TODO Auto-generated method stub
-		return null;
+		return RasterToolsUtil.getIcon("properties-icon");
 	}
 	
+	/**
+	 *  dice si el item esta habilitado
+	 */
+	public boolean isEnabled(ITocItem item, FLayer[] selectedItems) {
+        if ((selectedItems == null) || (selectedItems.length != 1))
+            return false;
+        if (selectedItems[0] instanceof ILayerState) {
+            if (!((ILayerState) selectedItems[0]).isOpen())
+                return false;
+            return true;
+        }
+        return false;
+    }
 	
+	/**
+	 * 
+	 */
+	public boolean isVisible(ITocItem item, FLayer[] selectedItems) {
+		if ((selectedItems == null) || (selectedItems.length != 1))
+			return false;
+		if (selectedItems[0] instanceof FLyrRasterSE)
+			return true;
+		return false;
+	}
 	
 }
