@@ -30,10 +30,17 @@ import javax.swing.JDialog;
 
 import org.gvsig.fmap.raster.layers.FLyrRasterSE;
 import org.gvsig.fmap.raster.layers.ILayerState;
+import org.gvsig.gui.beans.panelGroup.PanelGroupManager;
+import org.gvsig.gui.beans.panelGroup.tabbedPanel.TabbedPanel;
 import org.gvsig.raster.gui.IGenericToolBarMenuItem;
 import org.gvsig.raster.util.RasterToolsUtil;
+import org.gvsig.rastertools.RasterModule;
 
+import com.iver.andami.PluginServices;
+import com.iver.andami.ui.mdiManager.WindowInfo;
 import com.iver.cit.gvsig.fmap.layers.FLayer;
+import com.iver.cit.gvsig.panelGroup.PanelGroupDialog;
+import com.iver.cit.gvsig.panelGroup.loaders.PanelGroupLoaderFromExtensionPoint;
 import com.iver.cit.gvsig.project.documents.view.toc.AbstractTocContextMenuAction;
 import com.iver.cit.gvsig.project.documents.view.toc.ITocItem;
 
@@ -47,9 +54,9 @@ import com.iver.cit.gvsig.project.documents.view.toc.ITocItem;
 public class PropertiesNetCDFRasterTocMenuEntry extends 	AbstractTocContextMenuAction
 												implements 	IGenericToolBarMenuItem{
 
-	static private PropertiesNetCDFRasterTocMenuEntry singleton  = null;
-	                         
-
+	static private PropertiesNetCDFRasterTocMenuEntry 	singleton  = null;
+	private PanelGroupDialog                    		properties = null;                         
+	FLayer 													   lyr = null;
 	/**
 	 * Variable para controlar si los eventos de los paneles se deben interpretar.
 	 * En la carga inicial se deben desactivar todos los eventos
@@ -87,13 +94,32 @@ public class PropertiesNetCDFRasterTocMenuEntry extends 	AbstractTocContextMenuA
 	 */
 	@Override
 	public void execute(ITocItem item, FLayer[] selectedItems) {
-		// TODO Auto-generated method stub
-		/*
-		JDialog jd=new JDialog();
-		jd.setSize(800, 600);
-		jd.setVisible(true);
-		*/
-		
+		if ((selectedItems == null) || (selectedItems.length != 1))
+			return;
+
+		lyr = selectedItems[0];
+
+		try {
+			enableEvents = false;
+
+			PanelGroupManager manager = PanelGroupManager.getManager();
+
+			manager.registerPanelGroup(TabbedPanel.class);
+			manager.setDefaultType(TabbedPanel.class);
+
+			TabbedPanel panelGroup = (TabbedPanel) manager.getPanelGroup(lyr);
+			PanelGroupLoaderFromExtensionPoint loader = new PanelGroupLoaderFromExtensionPoint("RasterSEPropertiesDialog");
+
+			properties = new PanelGroupDialog(lyr.getName() ,PluginServices.getText(this,"NetCDF_properties"), 550, 450, (byte) (WindowInfo.MODELESSDIALOG | WindowInfo.RESIZABLE | WindowInfo.MAXIMIZABLE), panelGroup);
+			properties.loadPanels(loader);
+			enableEvents = true;
+			//RasterToolsUtil.addWindow(properties);
+			PluginServices.getMDIManager().addWindow(properties);
+		} catch (Exception e) {
+			RasterToolsUtil.messageBoxInfo("error_props_tabs", this, e);
+		} finally  {
+			enableEvents = true;
+		}
 	}
 
 	/* (non-Javadoc)
@@ -102,32 +128,48 @@ public class PropertiesNetCDFRasterTocMenuEntry extends 	AbstractTocContextMenuA
 	@Override
 	public Icon getIcon() {
 		// TODO Auto-generated method stub
-		return RasterToolsUtil.getIcon("properties-icon");
+		return null;
 	}
 	
-	/**
-	 *  dice si el item esta habilitado
+	
+	/* (non-Javadoc)
+	 * @see com.iver.cit.gvsig.project.documents.view.toc.AbstractTocContextMenuAction#isEnabled(com.iver.cit.gvsig.project.documents.view.toc.ITocItem, com.iver.cit.gvsig.fmap.layers.FLayer[])
 	 */
 	public boolean isEnabled(ITocItem item, FLayer[] selectedItems) {
-        if ((selectedItems == null) || (selectedItems.length != 1))
+		if ((selectedItems == null) || (selectedItems.length != 1))
             return false;
-        if (selectedItems[0] instanceof ILayerState) {
-            if (!((ILayerState) selectedItems[0]).isOpen())
-                return false;
+        FLayer lyr = getNodeLayer(item);
+        if (lyr instanceof FLyrRasterSE) {
             return true;
         }
         return false;
     }
 	
 	/**
-	 * 
-	 */
-	public boolean isVisible(ITocItem item, FLayer[] selectedItems) {
-		if ((selectedItems == null) || (selectedItems.length != 1))
-			return false;
-		if (selectedItems[0] instanceof FLyrRasterSE)
-			return true;
-		return false;
-	}
+     * Verifica si el menú puede mostrarse o no
+     *
+     * @param item
+     *            elemento del menu
+     * @param selectedItems
+     *            conjunto de capas seleccionadas
+     *
+     * @return <b>true</b> si la capa seleccionada es un raster de un NetCDF<br />
+     *         <b>false</b> en cualquier otro caso
+     *
+     * @see com.iver.cit.gvsig.project.documents.view.toc.AbstractTocContextMenuAction#isVisible(com.iver.cit.gvsig.project.documents.view.toc.ITocItem,
+     *      com.iver.cit.gvsig.fmap.layers.FLayer[])
+     */
+    public boolean isVisible(ITocItem item, FLayer[] selectedItems) {
+        if ((selectedItems == null) || (selectedItems.length != 1))
+            return false;
+        FLayer lyr = getNodeLayer(item);
+        if (lyr instanceof FLyrRasterSE) {
+            FLyrRasterSE fr = (FLyrRasterSE) lyr;
+       //     return fr.getDataSource().getDataset(0)[0] instanceof MMMC;
+            return true;
+        }
+        return false;
+    }
+
 	
 }
