@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="src" path="src-test"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="var" path="GVSIG_INSTALL_DIR"/>
 	<classpathentry kind="var" path="GVSIG_INSTALL_DIR/bin/andami.jar" sourcepath="/GVSIG_INSTALL_DIR/src"/>
