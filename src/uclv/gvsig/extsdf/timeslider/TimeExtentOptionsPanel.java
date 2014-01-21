@@ -26,11 +26,17 @@
 package uclv.gvsig.extsdf.timeslider;
 
 import javax.swing.JPanel;
+
 import java.awt.GridBagLayout;
+
 import javax.swing.JLabel;
+
 import java.awt.GridBagConstraints;
+
 import javax.swing.JComboBox;
+
 import java.awt.Insets;
+
 import javax.swing.JTextField;
 import javax.swing.JSpinner;
 import javax.swing.JButton;
@@ -66,7 +72,7 @@ public class TimeExtentOptionsPanel extends JPanel {
 		gridBagLayout.rowWeights = new double[]{0.0, 0.0, 0.0, Double.MIN_VALUE};
 		setLayout(gridBagLayout);
 		
-		lblRestrictFullTime = new JLabel("Restrict full time extent to:");
+		lblRestrictFullTime = new JLabel(PluginServices.getText(this, "restrict_full_time_extent")); //$NON-NLS-1$
 		GridBagConstraints gbc_lblRestrictFullTime = new GridBagConstraints();
 		gbc_lblRestrictFullTime.insets = new Insets(0, 0, 5, 5);
 		gbc_lblRestrictFullTime.anchor = GridBagConstraints.WEST;
@@ -82,7 +88,7 @@ public class TimeExtentOptionsPanel extends JPanel {
 		gbc_comboBox.gridy = 0;
 		add(comboBox, gbc_comboBox);
 		
-		lblStartTime = new JLabel("Start time:");
+		lblStartTime = new JLabel(PluginServices.getText(this, "start_time")); //$NON-NLS-1$
 		GridBagConstraints gbc_lblStartTime = new GridBagConstraints();
 		gbc_lblStartTime.anchor = GridBagConstraints.WEST;
 		gbc_lblStartTime.insets = new Insets(0, 0, 5, 5);
@@ -106,7 +112,7 @@ public class TimeExtentOptionsPanel extends JPanel {
 		gbc_spinner.gridy = 1;
 		add(spinner, gbc_spinner);
 		
-		btnMinTime = new JButton("Min time");
+		btnMinTime = new JButton(PluginServices.getText(this, "min_time")); //$NON-NLS-1$
 		GridBagConstraints gbc_btnMinTime = new GridBagConstraints();
 		gbc_btnMinTime.insets = new Insets(0, 0, 5, 0);
 		gbc_btnMinTime.gridx = 3;
@@ -129,7 +135,7 @@ public class TimeExtentOptionsPanel extends JPanel {
 		gbc_spinner_1.gridy = 2;
 		add(spinner_1, gbc_spinner_1);
 		
-		btnMaxTime = new JButton("Max time");
+		btnMaxTime = new JButton(PluginServices.getText(this, "max_time")); //$NON-NLS-1$
 		GridBagConstraints gbc_btnMaxTime = new GridBagConstraints();
 		gbc_btnMaxTime.gridx = 3;
 		gbc_btnMaxTime.gridy = 2;

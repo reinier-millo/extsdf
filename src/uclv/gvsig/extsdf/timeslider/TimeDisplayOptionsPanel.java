@@ -26,14 +26,22 @@
 package uclv.gvsig.extsdf.timeslider;
 
 import javax.swing.JPanel;
+
 import java.awt.GridBagLayout;
+
 import javax.swing.JLabel;
+
 import java.awt.GridBagConstraints;
+
 import javax.swing.JComboBox;
+
 import java.awt.Insets;
+
 import javax.swing.JCheckBox;
 import javax.swing.JTextField;
 import javax.swing.JButton;
+
+import com.iver.andami.PluginServices;
 
 /**
  * @author rmartinez
@@ -70,7 +78,7 @@ public class TimeDisplayOptionsPanel extends JPanel {
 		gridBagLayout.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
 		setLayout(gridBagLayout);
 		
-		lblTimeZone = new JLabel("Time Zone:");
+		lblTimeZone = new JLabel(PluginServices.getText(this, "time_zone")); //$NON-NLS-1$
 		GridBagConstraints gbc_lblTimeZone = new GridBagConstraints();
 		gbc_lblTimeZone.insets = new Insets(0, 0, 5, 5);
 		gbc_lblTimeZone.anchor = GridBagConstraints.WEST;
@@ -87,7 +95,7 @@ public class TimeDisplayOptionsPanel extends JPanel {
 		gbc_comboBox.gridy = 0;
 		add(comboBox, gbc_comboBox);
 		
-		chckbxNewCheckBox = new JCheckBox("Adjust for daylight saving changes");
+		chckbxNewCheckBox = new JCheckBox(PluginServices.getText(this, "adjust_for_daylight_saving")); //$NON-NLS-1$
 		GridBagConstraints gbc_chckbxNewCheckBox = new GridBagConstraints();
 		gbc_chckbxNewCheckBox.gridwidth = 3;
 		gbc_chckbxNewCheckBox.insets = new Insets(0, 0, 5, 0);
@@ -96,7 +104,7 @@ public class TimeDisplayOptionsPanel extends JPanel {
 		gbc_chckbxNewCheckBox.gridy = 1;
 		add(chckbxNewCheckBox, gbc_chckbxNewCheckBox);
 		
-		lblTimeStepInterval = new JLabel("Time Step Interval:");
+		lblTimeStepInterval = new JLabel(PluginServices.getText(this, "time_step_interval")); //$NON-NLS-1$
 		GridBagConstraints gbc_lblTimeStepInterval = new GridBagConstraints();
 		gbc_lblTimeStepInterval.anchor = GridBagConstraints.WEST;
 		gbc_lblTimeStepInterval.insets = new Insets(0, 0, 5, 5);
@@ -121,14 +129,14 @@ public class TimeDisplayOptionsPanel extends JPanel {
 		gbc_comboBox_1.gridy = 2;
 		add(comboBox_1, gbc_comboBox_1);
 		
-		btnRestoreDefault = new JButton("Restore Default");
+		btnRestoreDefault = new JButton(PluginServices.getText(this, "restore_default")); //$NON-NLS-1$
 		GridBagConstraints gbc_btnRestoreDefault = new GridBagConstraints();
 		gbc_btnRestoreDefault.insets = new Insets(0, 0, 5, 0);
 		gbc_btnRestoreDefault.gridx = 3;
 		gbc_btnRestoreDefault.gridy = 2;
 		add(btnRestoreDefault, gbc_btnRestoreDefault);
 		
-		lblTimeWindow = new JLabel("Time Window:");
+		lblTimeWindow = new JLabel(PluginServices.getText(this, "time_window")); //$NON-NLS-1$
 		GridBagConstraints gbc_lblTimeWindow = new GridBagConstraints();
 		gbc_lblTimeWindow.anchor = GridBagConstraints.WEST;
 		gbc_lblTimeWindow.insets = new Insets(0, 0, 5, 5);
@@ -145,14 +153,14 @@ public class TimeDisplayOptionsPanel extends JPanel {
 		add(textField_1, gbc_textField_1);
 		textField_1.setColumns(10);
 		
-		lblYears = new JLabel("Years");
+		lblYears = new JLabel(PluginServices.getText(this, "years")); //$NON-NLS-1$
 		GridBagConstraints gbc_lblYears = new GridBagConstraints();
 		gbc_lblYears.insets = new Insets(0, 0, 5, 5);
 		gbc_lblYears.gridx = 2;
 		gbc_lblYears.gridy = 3;
 		add(lblYears, gbc_lblYears);
 		
-		lblDisplayDateFormat = new JLabel("Display date format:");
+		lblDisplayDateFormat = new JLabel(PluginServices.getText(this, "display_date_format")); //$NON-NLS-1$
 		GridBagConstraints gbc_lblDisplayDateFormat = new GridBagConstraints();
 		gbc_lblDisplayDateFormat.anchor = GridBagConstraints.EAST;
 		gbc_lblDisplayDateFormat.insets = new Insets(0, 0, 5, 5);
@@ -169,7 +177,7 @@ public class TimeDisplayOptionsPanel extends JPanel {
 		gbc_comboBox_2.gridy = 4;
 		add(comboBox_2, gbc_comboBox_2);
 		
-		lblDisplayTimeFormat = new JLabel("Display time format:");
+		lblDisplayTimeFormat = new JLabel(PluginServices.getText(this, "display_time_format")); //$NON-NLS-1$
 		GridBagConstraints gbc_lblDisplayTimeFormat = new GridBagConstraints();
 		gbc_lblDisplayTimeFormat.anchor = GridBagConstraints.EAST;
 		gbc_lblDisplayTimeFormat.insets = new Insets(0, 0, 0, 5);

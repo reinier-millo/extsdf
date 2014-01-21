@@ -26,17 +26,23 @@
 package uclv.gvsig.extsdf.timeslider;
 
 import javax.swing.JPanel;
+
 import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
+
 import javax.swing.border.TitledBorder;
 import javax.swing.JRadioButton;
 import javax.swing.JSlider;
+
 import java.awt.FlowLayout;
+
 import javax.swing.JLabel;
 import javax.swing.JSpinner;
 import javax.swing.JComboBox;
 import javax.swing.JCheckBox;
+
+import com.iver.andami.PluginServices;
 
 /**
  * @author rmartinez
@@ -72,7 +78,7 @@ public class PlaybackOptionsPanel extends JPanel {
 		setLayout(gridBagLayout);
 		
 		panel = new JPanel();
-		panel.setBorder(new TitledBorder(null, "", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+		panel.setBorder(new TitledBorder(null, "", TitledBorder.LEADING, TitledBorder.TOP, null, null)); //$NON-NLS-1$
 		GridBagConstraints gbc_panel = new GridBagConstraints();
 		gbc_panel.gridwidth = 2;
 		gbc_panel.insets = new Insets(0, 0, 5, 0);
@@ -87,7 +93,7 @@ public class PlaybackOptionsPanel extends JPanel {
 		gbl_panel.rowWeights = new double[]{0.0, 0.0, 0.0, Double.MIN_VALUE};
 		panel.setLayout(gbl_panel);
 		
-		rdbtnDisplayForEach = new JRadioButton("Display for each timestamp");
+		rdbtnDisplayForEach = new JRadioButton(PluginServices.getText(this, "display_for_each_timestamp")); //$NON-NLS-1$
 		rdbtnDisplayForEach.setSelected(true);
 		GridBagConstraints gbc_rdbtnDisplayForEach = new GridBagConstraints();
 		gbc_rdbtnDisplayForEach.anchor = GridBagConstraints.WEST;
@@ -106,7 +112,7 @@ public class PlaybackOptionsPanel extends JPanel {
 		panel.add(panel_1, gbc_panel_1);
 		panel_1.setLayout(new FlowLayout(FlowLayout.TRAILING, 5, 5));
 		
-		lblSpeed = new JLabel("Speed");
+		lblSpeed = new JLabel(PluginServices.getText(this, "speed")); //$NON-NLS-1$
 		panel_1.add(lblSpeed);
 		
 		speedSlider = new JSlider();
@@ -120,13 +126,13 @@ public class PlaybackOptionsPanel extends JPanel {
 		panel.add(panel_2, gbc_panel_2);
 		panel_2.setLayout(new FlowLayout(FlowLayout.LEADING, 5, 5));
 		
-		rdbtnNewRadioButton = new JRadioButton("Play in specified duration (seconds)");
+		rdbtnNewRadioButton = new JRadioButton(PluginServices.getText(this, "play_in_specified_duration")); //$NON-NLS-1$
 		panel_2.add(rdbtnNewRadioButton);
 		
 		durationSpinner = new JSpinner();
 		panel_2.add(durationSpinner);
 		
-		lblAfterPlayingOnce = new JLabel("After playing once ");
+		lblAfterPlayingOnce = new JLabel(PluginServices.getText(this, "after_playing_once")); //$NON-NLS-1$
 		GridBagConstraints gbc_lblAfterPlayingOnce = new GridBagConstraints();
 		gbc_lblAfterPlayingOnce.insets = new Insets(0, 0, 5, 5);
 		gbc_lblAfterPlayingOnce.anchor = GridBagConstraints.WEST;
@@ -142,7 +148,7 @@ public class PlaybackOptionsPanel extends JPanel {
 		gbc_actionAfterPlayingCB.gridy = 1;
 		add(actionAfterPlayingCB, gbc_actionAfterPlayingCB);
 		
-		refreshCheckBox = new JCheckBox("Refresh the display when dragging the slider interactively.");
+		refreshCheckBox = new JCheckBox(PluginServices.getText(this, "refresh_when_dragging")); //$NON-NLS-1$
 		GridBagConstraints gbc_refreshCheckBox = new GridBagConstraints();
 		gbc_refreshCheckBox.anchor = GridBagConstraints.WEST;
 		gbc_refreshCheckBox.gridwidth = 2;
