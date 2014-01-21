@@ -45,14 +45,17 @@ public class TimeSliderPanel extends JPanel {
 		
 		JButton timeOnMapButton = new JButton("");
 		timeOnMapButton.setIcon(PluginServices.getIconTheme().get("Time-On-Map-32"));
+		timeOnMapButton.setToolTipText(PluginServices.getText(this, "enable_time_on_map"));
 		toolBar.add(timeOnMapButton);
 		
 		JButton optionsButton = new JButton("");
 		optionsButton.setIcon(PluginServices.getIconTheme().get("Settings-32"));
+		optionsButton.setToolTipText(PluginServices.getText(this, "options"));
 		toolBar.add(optionsButton);
 		
 		JButton exportButton = new JButton("");
 		exportButton.setIcon(PluginServices.getIconTheme().get("Video-32"));
+		exportButton.setToolTipText(PluginServices.getText(this, "export_video"));
 		toolBar.add(exportButton);
 		
 		textField = new JTextField();
@@ -63,14 +66,17 @@ public class TimeSliderPanel extends JPanel {
 		
 		JButton decreaseExtentButton = new JButton("");
 		decreaseExtentButton.setIcon(PluginServices.getIconTheme().get("Decrease-32"));
+		decreaseExtentButton.setToolTipText(PluginServices.getText(this, "decrease_time_extent"));
 		toolBar.add(decreaseExtentButton);
 		
 		JButton increaseExtentButton = new JButton("");
 		increaseExtentButton.setIcon(PluginServices.getIconTheme().get("Increase-32"));
+		increaseExtentButton.setToolTipText(PluginServices.getText(this, "increase_time_extent"));
 		toolBar.add(increaseExtentButton);
 		
 		JButton fullExtentButton = new JButton("");
 		exportButton.setIcon(PluginServices.getIconTheme().get("Full-32"));
+		exportButton.setToolTipText(PluginServices.getText(this, "full_time_extent"));
 		toolBar.add(fullExtentButton);
 		
 		JPanel panel = new JPanel();
