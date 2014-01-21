@@ -41,6 +41,8 @@ import javax.swing.JTextField;
 import javax.swing.JSpinner;
 import javax.swing.JButton;
 
+import com.iver.andami.PluginServices;
+
 /**
  * @author rmartinez
  *
