@@ -81,7 +81,7 @@ public class PlaybackOptionsPanel extends JPanel {
 		panel.setBorder(new TitledBorder(null, "", TitledBorder.LEADING, TitledBorder.TOP, null, null)); //$NON-NLS-1$
 		GridBagConstraints gbc_panel = new GridBagConstraints();
 		gbc_panel.gridwidth = 2;
-		gbc_panel.insets = new Insets(0, 0, 5, 0);
+		gbc_panel.insets = new Insets(5, 5, 5, 5);
 		gbc_panel.fill = GridBagConstraints.BOTH;
 		gbc_panel.gridx = 0;
 		gbc_panel.gridy = 0;
@@ -97,7 +97,7 @@ public class PlaybackOptionsPanel extends JPanel {
 		rdbtnDisplayForEach.setSelected(true);
 		GridBagConstraints gbc_rdbtnDisplayForEach = new GridBagConstraints();
 		gbc_rdbtnDisplayForEach.anchor = GridBagConstraints.WEST;
-		gbc_rdbtnDisplayForEach.insets = new Insets(0, 0, 5, 0);
+		gbc_rdbtnDisplayForEach.insets = new Insets(5, 5, 5, 5);
 		gbc_rdbtnDisplayForEach.gridx = 0;
 		gbc_rdbtnDisplayForEach.gridy = 0;
 		panel.add(rdbtnDisplayForEach, gbc_rdbtnDisplayForEach);
@@ -105,7 +105,7 @@ public class PlaybackOptionsPanel extends JPanel {
 		panel_1 = new JPanel();
 		panel_1.setBorder(null);
 		GridBagConstraints gbc_panel_1 = new GridBagConstraints();
-		gbc_panel_1.insets = new Insets(0, 0, 5, 0);
+		gbc_panel_1.insets = new Insets(5, 5, 5, 5);
 		gbc_panel_1.fill = GridBagConstraints.BOTH;
 		gbc_panel_1.gridx = 0;
 		gbc_panel_1.gridy = 1;
@@ -134,7 +134,7 @@ public class PlaybackOptionsPanel extends JPanel {
 		
 		lblAfterPlayingOnce = new JLabel(PluginServices.getText(this, "after_playing_once")); //$NON-NLS-1$
 		GridBagConstraints gbc_lblAfterPlayingOnce = new GridBagConstraints();
-		gbc_lblAfterPlayingOnce.insets = new Insets(0, 0, 5, 5);
+		gbc_lblAfterPlayingOnce.insets = new Insets(5, 5, 5, 5);
 		gbc_lblAfterPlayingOnce.anchor = GridBagConstraints.WEST;
 		gbc_lblAfterPlayingOnce.gridx = 0;
 		gbc_lblAfterPlayingOnce.gridy = 1;
@@ -142,7 +142,7 @@ public class PlaybackOptionsPanel extends JPanel {
 		
 		actionAfterPlayingCB = new JComboBox();
 		GridBagConstraints gbc_actionAfterPlayingCB = new GridBagConstraints();
-		gbc_actionAfterPlayingCB.insets = new Insets(0, 0, 5, 0);
+		gbc_actionAfterPlayingCB.insets = new Insets(5, 5, 5, 5);
 		gbc_actionAfterPlayingCB.anchor = GridBagConstraints.WEST;
 		gbc_actionAfterPlayingCB.gridx = 1;
 		gbc_actionAfterPlayingCB.gridy = 1;
@@ -152,7 +152,7 @@ public class PlaybackOptionsPanel extends JPanel {
 		GridBagConstraints gbc_refreshCheckBox = new GridBagConstraints();
 		gbc_refreshCheckBox.anchor = GridBagConstraints.WEST;
 		gbc_refreshCheckBox.gridwidth = 2;
-		gbc_refreshCheckBox.insets = new Insets(0, 0, 0, 5);
+		gbc_refreshCheckBox.insets = new Insets(5, 5, 5, 5);
 		gbc_refreshCheckBox.gridx = 0;
 		gbc_refreshCheckBox.gridy = 2;
 		add(refreshCheckBox, gbc_refreshCheckBox);

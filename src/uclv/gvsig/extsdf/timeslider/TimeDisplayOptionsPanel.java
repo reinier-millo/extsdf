@@ -80,7 +80,7 @@ public class TimeDisplayOptionsPanel extends JPanel {
 		
 		lblTimeZone = new JLabel(PluginServices.getText(this, "time_zone")); //$NON-NLS-1$
 		GridBagConstraints gbc_lblTimeZone = new GridBagConstraints();
-		gbc_lblTimeZone.insets = new Insets(0, 0, 5, 5);
+		gbc_lblTimeZone.insets = new Insets(5, 5, 5, 5);
 		gbc_lblTimeZone.anchor = GridBagConstraints.WEST;
 		gbc_lblTimeZone.gridx = 0;
 		gbc_lblTimeZone.gridy = 0;
@@ -89,7 +89,7 @@ public class TimeDisplayOptionsPanel extends JPanel {
 		comboBox = new JComboBox();
 		GridBagConstraints gbc_comboBox = new GridBagConstraints();
 		gbc_comboBox.gridwidth = 3;
-		gbc_comboBox.insets = new Insets(0, 0, 5, 0);
+		gbc_comboBox.insets = new Insets(5, 5, 5, 5);
 		gbc_comboBox.fill = GridBagConstraints.HORIZONTAL;
 		gbc_comboBox.gridx = 1;
 		gbc_comboBox.gridy = 0;
@@ -98,7 +98,7 @@ public class TimeDisplayOptionsPanel extends JPanel {
 		chckbxNewCheckBox = new JCheckBox(PluginServices.getText(this, "adjust_for_daylight_saving")); //$NON-NLS-1$
 		GridBagConstraints gbc_chckbxNewCheckBox = new GridBagConstraints();
 		gbc_chckbxNewCheckBox.gridwidth = 3;
-		gbc_chckbxNewCheckBox.insets = new Insets(0, 0, 5, 0);
+		gbc_chckbxNewCheckBox.insets = new Insets(5, 5, 5, 5);
 		gbc_chckbxNewCheckBox.anchor = GridBagConstraints.WEST;
 		gbc_chckbxNewCheckBox.gridx = 1;
 		gbc_chckbxNewCheckBox.gridy = 1;
@@ -107,14 +107,14 @@ public class TimeDisplayOptionsPanel extends JPanel {
 		lblTimeStepInterval = new JLabel(PluginServices.getText(this, "time_step_interval")); //$NON-NLS-1$
 		GridBagConstraints gbc_lblTimeStepInterval = new GridBagConstraints();
 		gbc_lblTimeStepInterval.anchor = GridBagConstraints.WEST;
-		gbc_lblTimeStepInterval.insets = new Insets(0, 0, 5, 5);
+		gbc_lblTimeStepInterval.insets = new Insets(5, 5, 5, 5);
 		gbc_lblTimeStepInterval.gridx = 0;
 		gbc_lblTimeStepInterval.gridy = 2;
 		add(lblTimeStepInterval, gbc_lblTimeStepInterval);
 		
 		textField = new JTextField();
 		GridBagConstraints gbc_textField = new GridBagConstraints();
-		gbc_textField.insets = new Insets(0, 0, 5, 5);
+		gbc_textField.insets = new Insets(5, 5, 5, 5);
 		gbc_textField.fill = GridBagConstraints.HORIZONTAL;
 		gbc_textField.gridx = 1;
 		gbc_textField.gridy = 2;
@@ -123,7 +123,7 @@ public class TimeDisplayOptionsPanel extends JPanel {
 		
 		comboBox_1 = new JComboBox();
 		GridBagConstraints gbc_comboBox_1 = new GridBagConstraints();
-		gbc_comboBox_1.insets = new Insets(0, 0, 5, 5);
+		gbc_comboBox_1.insets = new Insets(5, 5, 5, 5);
 		gbc_comboBox_1.fill = GridBagConstraints.HORIZONTAL;
 		gbc_comboBox_1.gridx = 2;
 		gbc_comboBox_1.gridy = 2;
@@ -139,14 +139,14 @@ public class TimeDisplayOptionsPanel extends JPanel {
 		lblTimeWindow = new JLabel(PluginServices.getText(this, "time_window")); //$NON-NLS-1$
 		GridBagConstraints gbc_lblTimeWindow = new GridBagConstraints();
 		gbc_lblTimeWindow.anchor = GridBagConstraints.WEST;
-		gbc_lblTimeWindow.insets = new Insets(0, 0, 5, 5);
+		gbc_lblTimeWindow.insets = new Insets(5, 5, 5, 5);
 		gbc_lblTimeWindow.gridx = 0;
 		gbc_lblTimeWindow.gridy = 3;
 		add(lblTimeWindow, gbc_lblTimeWindow);
 		
 		textField_1 = new JTextField();
 		GridBagConstraints gbc_textField_1 = new GridBagConstraints();
-		gbc_textField_1.insets = new Insets(0, 0, 5, 5);
+		gbc_textField_1.insets = new Insets(5, 5, 5, 5);
 		gbc_textField_1.fill = GridBagConstraints.HORIZONTAL;
 		gbc_textField_1.gridx = 1;
 		gbc_textField_1.gridy = 3;
@@ -155,7 +155,7 @@ public class TimeDisplayOptionsPanel extends JPanel {
 		
 		lblYears = new JLabel(PluginServices.getText(this, "years")); //$NON-NLS-1$
 		GridBagConstraints gbc_lblYears = new GridBagConstraints();
-		gbc_lblYears.insets = new Insets(0, 0, 5, 5);
+		gbc_lblYears.insets = new Insets(5, 5, 5, 5);
 		gbc_lblYears.gridx = 2;
 		gbc_lblYears.gridy = 3;
 		add(lblYears, gbc_lblYears);
@@ -163,7 +163,7 @@ public class TimeDisplayOptionsPanel extends JPanel {
 		lblDisplayDateFormat = new JLabel(PluginServices.getText(this, "display_date_format")); //$NON-NLS-1$
 		GridBagConstraints gbc_lblDisplayDateFormat = new GridBagConstraints();
 		gbc_lblDisplayDateFormat.anchor = GridBagConstraints.EAST;
-		gbc_lblDisplayDateFormat.insets = new Insets(0, 0, 5, 5);
+		gbc_lblDisplayDateFormat.insets = new Insets(5, 5, 5, 5);
 		gbc_lblDisplayDateFormat.gridx = 0;
 		gbc_lblDisplayDateFormat.gridy = 4;
 		add(lblDisplayDateFormat, gbc_lblDisplayDateFormat);
@@ -171,7 +171,7 @@ public class TimeDisplayOptionsPanel extends JPanel {
 		comboBox_2 = new JComboBox();
 		GridBagConstraints gbc_comboBox_2 = new GridBagConstraints();
 		gbc_comboBox_2.gridwidth = 3;
-		gbc_comboBox_2.insets = new Insets(0, 0, 5, 5);
+		gbc_comboBox_2.insets = new Insets(5, 5, 5, 5);
 		gbc_comboBox_2.fill = GridBagConstraints.HORIZONTAL;
 		gbc_comboBox_2.gridx = 1;
 		gbc_comboBox_2.gridy = 4;
@@ -180,7 +180,7 @@ public class TimeDisplayOptionsPanel extends JPanel {
 		lblDisplayTimeFormat = new JLabel(PluginServices.getText(this, "display_time_format")); //$NON-NLS-1$
 		GridBagConstraints gbc_lblDisplayTimeFormat = new GridBagConstraints();
 		gbc_lblDisplayTimeFormat.anchor = GridBagConstraints.EAST;
-		gbc_lblDisplayTimeFormat.insets = new Insets(0, 0, 0, 5);
+		gbc_lblDisplayTimeFormat.insets = new Insets(5, 5, 5, 5);
 		gbc_lblDisplayTimeFormat.gridx = 0;
 		gbc_lblDisplayTimeFormat.gridy = 5;
 		add(lblDisplayTimeFormat, gbc_lblDisplayTimeFormat);
@@ -188,7 +188,7 @@ public class TimeDisplayOptionsPanel extends JPanel {
 		comboBox_3 = new JComboBox();
 		GridBagConstraints gbc_comboBox_3 = new GridBagConstraints();
 		gbc_comboBox_3.gridwidth = 3;
-		gbc_comboBox_3.insets = new Insets(0, 0, 0, 5);
+		gbc_comboBox_3.insets = new Insets(5, 5, 5, 5);
 		gbc_comboBox_3.fill = GridBagConstraints.HORIZONTAL;
 		gbc_comboBox_3.gridx = 1;
 		gbc_comboBox_3.gridy = 5;

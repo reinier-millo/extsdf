@@ -76,7 +76,7 @@ public class TimeExtentOptionsPanel extends JPanel {
 		
 		lblRestrictFullTime = new JLabel(PluginServices.getText(this, "restrict_full_time_extent")); //$NON-NLS-1$
 		GridBagConstraints gbc_lblRestrictFullTime = new GridBagConstraints();
-		gbc_lblRestrictFullTime.insets = new Insets(0, 0, 5, 5);
+		gbc_lblRestrictFullTime.insets = new Insets(5, 5, 5, 5);
 		gbc_lblRestrictFullTime.anchor = GridBagConstraints.WEST;
 		gbc_lblRestrictFullTime.gridx = 0;
 		gbc_lblRestrictFullTime.gridy = 0;
@@ -84,7 +84,8 @@ public class TimeExtentOptionsPanel extends JPanel {
 		
 		comboBox = new JComboBox();
 		GridBagConstraints gbc_comboBox = new GridBagConstraints();
-		gbc_comboBox.insets = new Insets(0, 0, 5, 5);
+		gbc_comboBox.gridwidth = 3;
+		gbc_comboBox.insets = new Insets(5, 5, 5, 5);
 		gbc_comboBox.fill = GridBagConstraints.HORIZONTAL;
 		gbc_comboBox.gridx = 1;
 		gbc_comboBox.gridy = 0;
@@ -93,14 +94,14 @@ public class TimeExtentOptionsPanel extends JPanel {
 		lblStartTime = new JLabel(PluginServices.getText(this, "start_time")); //$NON-NLS-1$
 		GridBagConstraints gbc_lblStartTime = new GridBagConstraints();
 		gbc_lblStartTime.anchor = GridBagConstraints.WEST;
-		gbc_lblStartTime.insets = new Insets(0, 0, 5, 5);
+		gbc_lblStartTime.insets = new Insets(5, 5, 5, 5);
 		gbc_lblStartTime.gridx = 0;
 		gbc_lblStartTime.gridy = 1;
 		add(lblStartTime, gbc_lblStartTime);
 		
 		textField = new JTextField();
 		GridBagConstraints gbc_textField = new GridBagConstraints();
-		gbc_textField.insets = new Insets(0, 0, 5, 5);
+		gbc_textField.insets = new Insets(5, 5, 5, 5);
 		gbc_textField.fill = GridBagConstraints.HORIZONTAL;
 		gbc_textField.gridx = 1;
 		gbc_textField.gridy = 1;
@@ -109,21 +110,21 @@ public class TimeExtentOptionsPanel extends JPanel {
 		
 		spinner = new JSpinner();
 		GridBagConstraints gbc_spinner = new GridBagConstraints();
-		gbc_spinner.insets = new Insets(0, 0, 5, 5);
+		gbc_spinner.insets = new Insets(5, 5, 5, 5);
 		gbc_spinner.gridx = 2;
 		gbc_spinner.gridy = 1;
 		add(spinner, gbc_spinner);
 		
 		btnMinTime = new JButton(PluginServices.getText(this, "min_time")); //$NON-NLS-1$
 		GridBagConstraints gbc_btnMinTime = new GridBagConstraints();
-		gbc_btnMinTime.insets = new Insets(0, 0, 5, 0);
+		gbc_btnMinTime.insets = new Insets(5, 5, 5, 5);
 		gbc_btnMinTime.gridx = 3;
 		gbc_btnMinTime.gridy = 1;
 		add(btnMinTime, gbc_btnMinTime);
 		
 		textField_1 = new JTextField();
 		GridBagConstraints gbc_textField_1 = new GridBagConstraints();
-		gbc_textField_1.insets = new Insets(0, 0, 0, 5);
+		gbc_textField_1.insets = new Insets(5, 5, 5, 5);
 		gbc_textField_1.fill = GridBagConstraints.HORIZONTAL;
 		gbc_textField_1.gridx = 1;
 		gbc_textField_1.gridy = 2;
@@ -132,7 +133,7 @@ public class TimeExtentOptionsPanel extends JPanel {
 		
 		spinner_1 = new JSpinner();
 		GridBagConstraints gbc_spinner_1 = new GridBagConstraints();
-		gbc_spinner_1.insets = new Insets(0, 0, 0, 5);
+		gbc_spinner_1.insets = new Insets(5, 5, 5, 5);
 		gbc_spinner_1.gridx = 2;
 		gbc_spinner_1.gridy = 2;
 		add(spinner_1, gbc_spinner_1);
