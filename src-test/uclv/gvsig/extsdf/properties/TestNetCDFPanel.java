@@ -1,6 +1,6 @@
 
 /*
- * TestTimePanel.java
+ * TestNetCDFPanel.java
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -23,7 +23,7 @@
  * This file is part of the gvSIG extension extSDF, which is distributed
  * under the terms of the GNU General Public License version 2.
  */
-package uclv.gvsig.extsdf;
+package uclv.gvsig.extsdf.properties;
 
 import java.awt.Dimension;
 import java.awt.Toolkit;
@@ -31,42 +31,39 @@ import java.awt.Toolkit;
 import javax.swing.JFrame;
 import javax.swing.UIManager;
 
-import uclv.gvsig.extsdf.properties.panels.TimePanel;
+import uclv.gvsig.extsdf.properties.panels.NetCDFPanel;
+
 
 
 /**
- * Test para el panel time que hay en propiedades
  * @author dcardoso
  *
  */
-public class TestTimePanel extends JFrame{
+public class TestNetCDFPanel extends JFrame{
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
 	/**
-	 * constructor
+	 * @param args
 	 */
-	public TestTimePanel(){
+	public TestNetCDFPanel(){
 		setPreferredSize(new Dimension(500,390));
-		TimePanel panel = new TimePanel();
+		NetCDFPanel panel = new NetCDFPanel();
 		add(panel);
 		setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 		pack();
 		setVisible(true);
 	}
-	
-	/**
-	 * @param args
-	 */
 	public static void main(String[] args) {
 		Toolkit.getDefaultToolkit().setDynamicLayout(true);
 		try {
-			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-		} catch (Exception e) {
+			UIManager.setLookAndFeel("com.jgoodies.looks.plastic.PlasticXPLookAndFeel");
+		} catch( Exception e ) {
+			System.err.println( "No se puede cambiar al LookAndFeel");
 		}
-		new TestTimePanel();
+		new TestNetCDFPanel();
 	}
 
 }
