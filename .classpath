@@ -2,6 +2,7 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="var" path="GVSIG_INSTALL_DIR"/>
 	<classpathentry kind="var" path="GVSIG_INSTALL_DIR/bin/andami.jar" sourcepath="/GVSIG_INSTALL_DIR/src"/>
 	<classpathentry kind="var" path="GVSIG_INSTALL_DIR/bin/gvSIG/extensiones/com.iver.cit.gvsig/lib/driver-manager-1.1.jar" sourcepath="/GVSIG_INSTALL_DIR/src"/>
 	<classpathentry kind="var" path="GVSIG_INSTALL_DIR/bin/gvSIG/extensiones/com.iver.cit.gvsig/lib/fmap.jar" sourcepath="/GVSIG_INSTALL_DIR/src"/>
