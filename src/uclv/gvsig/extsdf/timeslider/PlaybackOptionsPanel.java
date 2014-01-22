@@ -55,11 +55,11 @@ public class PlaybackOptionsPanel extends JPanel {
 	 */
 	private static final long serialVersionUID = 1L;
 	private JPanel panel;
-	private JRadioButton rdbtnDisplayForEach;
+	private JRadioButton displayForEachRB;
 	private JSlider speedSlider;
 	private JPanel panel_1;
 	private JLabel lblSpeed;
-	private JRadioButton rdbtnNewRadioButton;
+	private JRadioButton playSpecifiedRB;
 	private JPanel panel_2;
 	private JSpinner durationSpinner;
 	private JLabel lblAfterPlayingOnce;
@@ -93,14 +93,12 @@ public class PlaybackOptionsPanel extends JPanel {
 		gbl_panel.rowWeights = new double[]{0.0, 0.0, 0.0, Double.MIN_VALUE};
 		panel.setLayout(gbl_panel);
 		
-		rdbtnDisplayForEach = new JRadioButton(PluginServices.getText(this, "display_for_each_timestamp")); //$NON-NLS-1$
-		rdbtnDisplayForEach.setSelected(true);
-		GridBagConstraints gbc_rdbtnDisplayForEach = new GridBagConstraints();
-		gbc_rdbtnDisplayForEach.anchor = GridBagConstraints.WEST;
-		gbc_rdbtnDisplayForEach.insets = new Insets(5, 5, 5, 5);
-		gbc_rdbtnDisplayForEach.gridx = 0;
-		gbc_rdbtnDisplayForEach.gridy = 0;
-		panel.add(rdbtnDisplayForEach, gbc_rdbtnDisplayForEach);
+		GridBagConstraints gbc_displayForEachRB = new GridBagConstraints();
+		gbc_displayForEachRB.anchor = GridBagConstraints.WEST;
+		gbc_displayForEachRB.insets = new Insets(5, 5, 5, 5);
+		gbc_displayForEachRB.gridx = 0;
+		gbc_displayForEachRB.gridy = 0;
+		panel.add(getDisplayForEachRB(), gbc_displayForEachRB);
 		
 		panel_1 = new JPanel();
 		panel_1.setBorder(null);
@@ -126,11 +124,8 @@ public class PlaybackOptionsPanel extends JPanel {
 		panel.add(panel_2, gbc_panel_2);
 		panel_2.setLayout(new FlowLayout(FlowLayout.LEADING, 5, 5));
 		
-		rdbtnNewRadioButton = new JRadioButton(PluginServices.getText(this, "play_in_specified_duration")); //$NON-NLS-1$
-		panel_2.add(rdbtnNewRadioButton);
-		
-		durationSpinner = new JSpinner();
-		panel_2.add(durationSpinner);
+		panel_2.add(getPlaySpecifiedRB());
+		panel_2.add(getDurationSpinner());
 		
 		lblAfterPlayingOnce = new JLabel(PluginServices.getText(this, "after_playing_once")); //$NON-NLS-1$
 		GridBagConstraints gbc_lblAfterPlayingOnce = new GridBagConstraints();
@@ -140,23 +135,72 @@ public class PlaybackOptionsPanel extends JPanel {
 		gbc_lblAfterPlayingOnce.gridy = 1;
 		add(lblAfterPlayingOnce, gbc_lblAfterPlayingOnce);
 		
-		actionAfterPlayingCB = new JComboBox();
 		GridBagConstraints gbc_actionAfterPlayingCB = new GridBagConstraints();
 		gbc_actionAfterPlayingCB.insets = new Insets(5, 5, 5, 5);
 		gbc_actionAfterPlayingCB.anchor = GridBagConstraints.WEST;
 		gbc_actionAfterPlayingCB.gridx = 1;
 		gbc_actionAfterPlayingCB.gridy = 1;
-		add(actionAfterPlayingCB, gbc_actionAfterPlayingCB);
+		add(getActionAfterPlayingCB(), gbc_actionAfterPlayingCB);
 		
-		refreshCheckBox = new JCheckBox(PluginServices.getText(this, "refresh_when_dragging")); //$NON-NLS-1$
 		GridBagConstraints gbc_refreshCheckBox = new GridBagConstraints();
 		gbc_refreshCheckBox.anchor = GridBagConstraints.WEST;
 		gbc_refreshCheckBox.gridwidth = 2;
 		gbc_refreshCheckBox.insets = new Insets(5, 5, 5, 5);
 		gbc_refreshCheckBox.gridx = 0;
 		gbc_refreshCheckBox.gridy = 2;
-		add(refreshCheckBox, gbc_refreshCheckBox);
+		add(getRefreshCheckBox(), gbc_refreshCheckBox);
 
+	}
+
+	/**
+	 * @return the displayForEachRB
+	 */
+	private JRadioButton getDisplayForEachRB() {
+		if(displayForEachRB == null) {
+			displayForEachRB = new JRadioButton(PluginServices.getText(this, "display_for_each_timestamp")); //$NON-NLS-1$
+			displayForEachRB.setSelected(true);
+		}
+		return displayForEachRB;
+	}
+
+	/**
+	 * @return the playSpecifiedRB
+	 */
+	private JRadioButton getPlaySpecifiedRB() {
+		if(playSpecifiedRB == null) {
+			playSpecifiedRB = new JRadioButton(PluginServices.getText(this, "play_in_specified_duration")); //$NON-NLS-1$
+		}
+		return playSpecifiedRB;
+	}
+
+	/**
+	 * @return the durationSpinner
+	 */
+	private JSpinner getDurationSpinner() {
+		if(durationSpinner == null) {
+			durationSpinner = new JSpinner();
+		}
+		return durationSpinner;
+	}
+
+	/**
+	 * @return the actionAfterPlayingCB
+	 */
+	private JComboBox getActionAfterPlayingCB() {
+		if(actionAfterPlayingCB == null) {
+			actionAfterPlayingCB = new JComboBox();
+		}
+		return actionAfterPlayingCB;
+	}
+
+	/**
+	 * @return the refreshCheckBox
+	 */
+	private JCheckBox getRefreshCheckBox() {
+		if(refreshCheckBox == null) {
+			refreshCheckBox = new JCheckBox(PluginServices.getText(this, "refresh_when_dragging")); //$NON-NLS-1$
+		}
+		return refreshCheckBox;
 	}
 
 }
