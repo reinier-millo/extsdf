@@ -59,21 +59,23 @@ import uclv.gvsig.extsdf.NetCDFController;
 public class NetCDFRasterDataset extends RasterDataset {
 	/**
 	 * Controlador del archivo NetCDF
+	 * 
+	 * @see uclv.gvsig.extsdf.NetCDFController
 	 */
 	private NetCDFController controller;
 
 	/**
-	 * 
+	 * @see org.gvsig.raster.datastruct.Transparency
 	 */
 	private Transparency fileTransparency = null;
 
 	/**
-	 * 
+	 * @see org.gvsig.raster.datastruct.Extent
 	 */
 	private Extent viewRequest = null;
 
 	/**
-	 * 
+	 * @see org.gvsig.raster.dataset.properties.DatasetColorInterpretation
 	 */
 	private DatasetColorInterpretation colorInterpr = null;
 
