@@ -54,14 +54,14 @@ public class TimeExtentOptionsPanel extends JPanel {
 	 */
 	private static final long serialVersionUID = 1L;
 	private JLabel lblRestrictFullTime;
-	private JComboBox comboBox;
+	private JComboBox restrictFullTimeExtentCB;
 	private JLabel lblStartTime;
-	private JTextField textField;
-	private JSpinner spinner;
-	private JButton btnMinTime;
-	private JTextField textField_1;
-	private JSpinner spinner_1;
-	private JButton btnMaxTime;
+	private JTextField startDateField;
+	private JSpinner startTimeField;
+	private JButton minTimeBtn;
+	private JTextField endDateField;
+	private JSpinner endTimeField;
+	private JButton maxTimeBtn;
 
 	/**
 	 * Create the panel.
@@ -82,14 +82,13 @@ public class TimeExtentOptionsPanel extends JPanel {
 		gbc_lblRestrictFullTime.gridy = 0;
 		add(lblRestrictFullTime, gbc_lblRestrictFullTime);
 		
-		comboBox = new JComboBox();
-		GridBagConstraints gbc_comboBox = new GridBagConstraints();
-		gbc_comboBox.gridwidth = 3;
-		gbc_comboBox.insets = new Insets(5, 5, 5, 5);
-		gbc_comboBox.fill = GridBagConstraints.HORIZONTAL;
-		gbc_comboBox.gridx = 1;
-		gbc_comboBox.gridy = 0;
-		add(comboBox, gbc_comboBox);
+		GridBagConstraints gbc_restrictFullTimeExtentCB = new GridBagConstraints();
+		gbc_restrictFullTimeExtentCB.gridwidth = 3;
+		gbc_restrictFullTimeExtentCB.insets = new Insets(5, 5, 5, 5);
+		gbc_restrictFullTimeExtentCB.fill = GridBagConstraints.HORIZONTAL;
+		gbc_restrictFullTimeExtentCB.gridx = 1;
+		gbc_restrictFullTimeExtentCB.gridy = 0;
+		add(getRestrictFullTimeExtentCB(), gbc_restrictFullTimeExtentCB);
 		
 		lblStartTime = new JLabel(PluginServices.getText(this, "start_time")); //$NON-NLS-1$
 		GridBagConstraints gbc_lblStartTime = new GridBagConstraints();
@@ -99,51 +98,117 @@ public class TimeExtentOptionsPanel extends JPanel {
 		gbc_lblStartTime.gridy = 1;
 		add(lblStartTime, gbc_lblStartTime);
 		
-		textField = new JTextField();
-		GridBagConstraints gbc_textField = new GridBagConstraints();
-		gbc_textField.insets = new Insets(5, 5, 5, 5);
-		gbc_textField.fill = GridBagConstraints.HORIZONTAL;
-		gbc_textField.gridx = 1;
-		gbc_textField.gridy = 1;
-		add(textField, gbc_textField);
-		textField.setColumns(10);
+		GridBagConstraints gbc_startDateField = new GridBagConstraints();
+		gbc_startDateField.insets = new Insets(5, 5, 5, 5);
+		gbc_startDateField.fill = GridBagConstraints.HORIZONTAL;
+		gbc_startDateField.gridx = 1;
+		gbc_startDateField.gridy = 1;
+		add(getStartDateField(), gbc_startDateField);
+		getStartDateField().setColumns(10);
 		
-		spinner = new JSpinner();
-		GridBagConstraints gbc_spinner = new GridBagConstraints();
-		gbc_spinner.insets = new Insets(5, 5, 5, 5);
-		gbc_spinner.gridx = 2;
-		gbc_spinner.gridy = 1;
-		add(spinner, gbc_spinner);
+		GridBagConstraints gbc_startTimeField = new GridBagConstraints();
+		gbc_startTimeField.insets = new Insets(5, 5, 5, 5);
+		gbc_startTimeField.gridx = 2;
+		gbc_startTimeField.gridy = 1;
+		add(getStartTimeField(), gbc_startTimeField);
 		
-		btnMinTime = new JButton(PluginServices.getText(this, "min_time")); //$NON-NLS-1$
-		GridBagConstraints gbc_btnMinTime = new GridBagConstraints();
-		gbc_btnMinTime.insets = new Insets(5, 5, 5, 5);
-		gbc_btnMinTime.gridx = 3;
-		gbc_btnMinTime.gridy = 1;
-		add(btnMinTime, gbc_btnMinTime);
+		GridBagConstraints gbc_minTimeBtn = new GridBagConstraints();
+		gbc_minTimeBtn.insets = new Insets(5, 5, 5, 5);
+		gbc_minTimeBtn.gridx = 3;
+		gbc_minTimeBtn.gridy = 1;
+		add(getMinTimeBtn(), gbc_minTimeBtn);
 		
-		textField_1 = new JTextField();
-		GridBagConstraints gbc_textField_1 = new GridBagConstraints();
-		gbc_textField_1.insets = new Insets(5, 5, 5, 5);
-		gbc_textField_1.fill = GridBagConstraints.HORIZONTAL;
-		gbc_textField_1.gridx = 1;
-		gbc_textField_1.gridy = 2;
-		add(textField_1, gbc_textField_1);
-		textField_1.setColumns(10);
+		GridBagConstraints gbc_endDateField = new GridBagConstraints();
+		gbc_endDateField.insets = new Insets(5, 5, 5, 5);
+		gbc_endDateField.fill = GridBagConstraints.HORIZONTAL;
+		gbc_endDateField.gridx = 1;
+		gbc_endDateField.gridy = 2;
+		add(getEndDateField(), gbc_endDateField);
+		getEndDateField().setColumns(10);
 		
-		spinner_1 = new JSpinner();
-		GridBagConstraints gbc_spinner_1 = new GridBagConstraints();
-		gbc_spinner_1.insets = new Insets(5, 5, 5, 5);
-		gbc_spinner_1.gridx = 2;
-		gbc_spinner_1.gridy = 2;
-		add(spinner_1, gbc_spinner_1);
+		GridBagConstraints gbc_endTimeField = new GridBagConstraints();
+		gbc_endTimeField.insets = new Insets(5, 5, 5, 5);
+		gbc_endTimeField.gridx = 2;
+		gbc_endTimeField.gridy = 2;
+		add(getEndTimeField(), gbc_endTimeField);
 		
-		btnMaxTime = new JButton(PluginServices.getText(this, "max_time")); //$NON-NLS-1$
-		GridBagConstraints gbc_btnMaxTime = new GridBagConstraints();
-		gbc_btnMaxTime.gridx = 3;
-		gbc_btnMaxTime.gridy = 2;
-		add(btnMaxTime, gbc_btnMaxTime);
+		GridBagConstraints gbc_maxTimeBtn = new GridBagConstraints();
+		gbc_maxTimeBtn.gridx = 3;
+		gbc_maxTimeBtn.gridy = 2;
+		add(getMaxTimeBtn(), gbc_maxTimeBtn);
 
 	}
+	
+	/**
+	 * @return the restrictFullTimeExtentCB
+	 */
+	private JComboBox getRestrictFullTimeExtentCB() {
+		if(restrictFullTimeExtentCB == null) {
+			restrictFullTimeExtentCB = new JComboBox();
+		}
+		return restrictFullTimeExtentCB;
+	}
+
+	/**
+	 * @return the startDateField
+	 */
+	private JTextField getStartDateField() {
+		if(startDateField == null) {
+			startDateField = new JTextField();
+		}
+		return startDateField;
+	}
+
+	/**
+	 * @return the startTimeField
+	 */
+	private JSpinner getStartTimeField() {
+		if(startTimeField == null) {
+			startTimeField = new JSpinner();
+		}
+		return startTimeField;
+	}
+
+	/**
+	 * @return the minTimeBtn
+	 */
+	private JButton getMinTimeBtn() {
+		if(minTimeBtn == null) {
+			minTimeBtn = new JButton(PluginServices.getText(this, "min_time")); //$NON-NLS-1$
+		}
+		return minTimeBtn;
+	}
+
+	/**
+	 * @return the endDateField
+	 */
+	private JTextField getEndDateField() {
+		if(endDateField == null) {
+			endDateField = new JTextField();
+		}
+		return endDateField;
+	}
+
+	/**
+	 * @return the endTimeField
+	 */
+	private JSpinner getEndTimeField() {
+		if(endTimeField == null) {
+			endTimeField = new JSpinner();
+		}
+		return endTimeField;
+	}
+
+	/**
+	 * @return the maxTimeBtn
+	 */
+	private JButton getMaxTimeBtn() {
+		if(maxTimeBtn == null) {
+			maxTimeBtn = new JButton(PluginServices.getText(this, "max_time")); //$NON-NLS-1$
+		}
+		return maxTimeBtn;
+	}
+
+
 
 }

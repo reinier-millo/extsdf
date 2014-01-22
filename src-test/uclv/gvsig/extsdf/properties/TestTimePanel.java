@@ -35,6 +35,7 @@ import uclv.gvsig.extsdf.properties.panels.TimePanel;
 
 
 /**
+ * 
  * Test para el panel time que hay en propiedades
  * @author dcardoso
  *
@@ -49,7 +50,7 @@ public class TestTimePanel extends JFrame{
 	 * constructor
 	 */
 	public TestTimePanel(){
-		setPreferredSize(new Dimension(500,390));
+		setSize(new Dimension(500,390));
 		TimePanel panel = new TimePanel();
 		add(panel);
 		setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
