@@ -26,15 +26,18 @@
 package uclv.gvsig.extsdf.raster;
 
 import java.awt.geom.AffineTransform;
+import java.io.File;
 import java.io.IOException;
 
 import org.cresques.cts.ICoordTrans;
+import org.cresques.cts.IProjection;
 import org.gvsig.raster.dataset.BandAccessException;
 import org.gvsig.raster.dataset.BandList;
 import org.gvsig.raster.dataset.FileNotOpenException;
 import org.gvsig.raster.dataset.GeoInfo;
 import org.gvsig.raster.dataset.IBuffer;
 import org.gvsig.raster.dataset.InvalidSetViewException;
+import org.gvsig.raster.dataset.NotSupportedExtensionException;
 import org.gvsig.raster.dataset.RasterDataset;
 import org.gvsig.raster.dataset.io.RasterDriverException;
 import org.gvsig.raster.dataset.properties.DatasetColorInterpretation;
@@ -73,6 +76,52 @@ public class NetCDFRasterDataset extends RasterDataset {
 	 * 
 	 */
 	private DatasetColorInterpretation colorInterpr = null;
+
+	/**
+	 * Constructor. Abre el dataset.
+	 * 
+	 * @param proj
+	 *            Proyecci&oacute;n
+	 * @param fName
+	 *            Nombre del fichero ecw
+	 * @throws NotSupportedExtensionException
+	 */
+	public NetCDFRasterDataset(IProjection proj, Object param)
+			throws NotSupportedExtensionException {
+		super(proj, ((String) param));
+
+		setParam(param);
+		try {
+			// Verifica que el archivo exista y todo eso
+			if (!new File(((String) param)).exists())
+				throw new NotSupportedExtensionException(
+						"Extension not supported");
+
+			// Inicializa el controlador de archivos NetCDF
+			controller = new NetCDFController((String) param);
+
+			// Inicializa la capa y la cantidad de bandas (siempre es 1)
+			load();
+			bandCount = 1;
+
+			// Inicializa la transparencia de la capa
+			getTransparencyDatasetStatus();
+
+			// Establece el tipo de dato según la variable de dato
+			int[] dt = new int[bandCount];
+			for (int i = 0; i < bandCount; i++)
+				dt[i] = controller.getDataType();
+			setDataType(dt);
+			try {
+				loadFromRmf(getRmfBlocksManager());
+			} catch (Exception e) {
+				// No lee desde rmf
+			}
+			super.init();
+		} catch (Exception e) {
+			throw new NotSupportedExtensionException("Extension not supported");
+		}
+	}
 
 	/**
 	 * Crea las transformaciones de la capa raster.
