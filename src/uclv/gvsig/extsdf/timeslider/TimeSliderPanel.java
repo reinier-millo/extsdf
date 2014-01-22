@@ -1,3 +1,28 @@
+/*
+ * TimeSliderPanel.java
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+ * MA 02110-1301, USA.
+ * 
+ * Copyright (C) 2014 Rainer Martinez Fraga <rmartinez@uclv.edu.cu>
+ *                    Universidad Central "Marta Abreu" de Las Villas
+ *
+ * This file is part of the gvSIG extension extSDF, which is distributed
+ * under the terms of the GNU General Public License version 2.
+ */
+
 package uclv.gvsig.extsdf.timeslider;
 
 import java.awt.Color;
@@ -10,8 +35,6 @@ import javax.swing.JPanel;
 import javax.swing.JSlider;
 import javax.swing.JTextField;
 import javax.swing.JToolBar;
-
-import org.gvsig.raster.util.RasterToolsUtil;
 
 import com.iver.andami.PluginServices;
 
@@ -44,17 +67,17 @@ public class TimeSliderPanel extends JPanel {
 		add(toolBar, gbc_toolBar);
 		
 		JButton timeOnMapButton = new JButton("");
-		timeOnMapButton.setIcon(PluginServices.getIconTheme().get("Time-On-Map-32"));
+		timeOnMapButton.setIcon(PluginServices.getIconTheme().get("time-on-map-icon"));
 		timeOnMapButton.setToolTipText(PluginServices.getText(this, "enable_time_on_map"));
 		toolBar.add(timeOnMapButton);
 		
 		JButton optionsButton = new JButton("");
-		optionsButton.setIcon(PluginServices.getIconTheme().get("Settings-32"));
+		optionsButton.setIcon(PluginServices.getIconTheme().get("settings-icon"));
 		optionsButton.setToolTipText(PluginServices.getText(this, "options"));
 		toolBar.add(optionsButton);
 		
 		JButton exportButton = new JButton("");
-		exportButton.setIcon(PluginServices.getIconTheme().get("Video-32"));
+		exportButton.setIcon(PluginServices.getIconTheme().get("video-icon"));
 		exportButton.setToolTipText(PluginServices.getText(this, "export_video"));
 		toolBar.add(exportButton);
 		
@@ -65,17 +88,17 @@ public class TimeSliderPanel extends JPanel {
 		textField.setColumns(10);
 		
 		JButton decreaseExtentButton = new JButton("");
-		decreaseExtentButton.setIcon(PluginServices.getIconTheme().get("Decrease-32"));
+		decreaseExtentButton.setIcon(PluginServices.getIconTheme().get("decrease-icon"));
 		decreaseExtentButton.setToolTipText(PluginServices.getText(this, "decrease_time_extent"));
 		toolBar.add(decreaseExtentButton);
 		
 		JButton increaseExtentButton = new JButton("");
-		increaseExtentButton.setIcon(PluginServices.getIconTheme().get("Increase-32"));
+		increaseExtentButton.setIcon(PluginServices.getIconTheme().get("increase-icon"));
 		increaseExtentButton.setToolTipText(PluginServices.getText(this, "increase_time_extent"));
 		toolBar.add(increaseExtentButton);
 		
 		JButton fullExtentButton = new JButton("");
-		exportButton.setIcon(PluginServices.getIconTheme().get("Full-32"));
+		exportButton.setIcon(PluginServices.getIconTheme().get("full-icon"));
 		exportButton.setToolTipText(PluginServices.getText(this, "full_time_extent"));
 		toolBar.add(fullExtentButton);
 		
@@ -94,7 +117,7 @@ public class TimeSliderPanel extends JPanel {
 		panel.setLayout(gbl_panel);
 		
 		JButton skipBackwardButton = new JButton("");
-		skipBackwardButton.setIcon(PluginServices.getIconTheme().get("Skip-Backward-32"));
+		skipBackwardButton.setIcon(PluginServices.getIconTheme().get("skip-backward-icon"));
 		GridBagConstraints gbc_skipBackwardButton = new GridBagConstraints();
 		gbc_skipBackwardButton.fill = GridBagConstraints.HORIZONTAL;
 		gbc_skipBackwardButton.insets = new Insets(0, 0, 5, 5);
@@ -112,7 +135,7 @@ public class TimeSliderPanel extends JPanel {
 		panel.add(slider, gbc_slider);
 		
 		JButton skipForwardButton = new JButton("");
-		skipForwardButton.setIcon(PluginServices.getIconTheme().get("Skip-Forward-32"));
+		skipForwardButton.setIcon(PluginServices.getIconTheme().get("skip-forward-icon"));
 		GridBagConstraints gbc_skipForwardButton = new GridBagConstraints();
 		gbc_skipForwardButton.fill = GridBagConstraints.HORIZONTAL;
 		gbc_skipForwardButton.insets = new Insets(0, 0, 5, 5);
@@ -121,7 +144,7 @@ public class TimeSliderPanel extends JPanel {
 		panel.add(skipForwardButton, gbc_skipForwardButton);
 		
 		JButton playPauseButton = new JButton("");
-		playPauseButton.setIcon(PluginServices.getIconTheme().get("Start-32"));
+		playPauseButton.setIcon(PluginServices.getIconTheme().get("start-icon"));
 		GridBagConstraints gbc_playPauseButton = new GridBagConstraints();
 		gbc_playPauseButton.fill = GridBagConstraints.HORIZONTAL;
 		gbc_playPauseButton.insets = new Insets(0, 0, 5, 0);
@@ -130,7 +153,7 @@ public class TimeSliderPanel extends JPanel {
 		panel.add(playPauseButton, gbc_playPauseButton);
 		
 		JButton seekBackwardButton = new JButton("");
-		skipBackwardButton.setIcon(PluginServices.getIconTheme().get("Seek-Backward-32"));
+		skipBackwardButton.setIcon(PluginServices.getIconTheme().get("seek-backward-icon"));
 		GridBagConstraints gbc_seekBackwardButton = new GridBagConstraints();
 		gbc_seekBackwardButton.fill = GridBagConstraints.HORIZONTAL;
 		gbc_seekBackwardButton.insets = new Insets(0, 0, 0, 5);
@@ -139,7 +162,7 @@ public class TimeSliderPanel extends JPanel {
 		panel.add(seekBackwardButton, gbc_seekBackwardButton);
 		
 		JButton seekForwardButton = new JButton("");
-		seekForwardButton.setIcon(PluginServices.getIconTheme().get("Seek-Forward-32"));
+		seekForwardButton.setIcon(PluginServices.getIconTheme().get("seek-forward-icon"));
 		GridBagConstraints gbc_seekForwardButton = new GridBagConstraints();
 		gbc_seekForwardButton.fill = GridBagConstraints.HORIZONTAL;
 		gbc_seekForwardButton.insets = new Insets(0, 0, 0, 5);

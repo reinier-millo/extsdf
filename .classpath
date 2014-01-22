@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="src" path="src-test"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="var" path="GVSIG_INSTALL_DIR"/>
 	<classpathentry kind="var" path="GVSIG_INSTALL_DIR/bin/andami.jar" sourcepath="/GVSIG_INSTALL_DIR/src"/>
@@ -15,5 +16,6 @@
 	<classpathentry kind="var" path="GVSIG_INSTALL_DIR/bin/gvSIG/extensiones/org.gvsig.rastertools/org.gvsig.rastertools.jar" sourcepath="/GVSIG_INSTALL_DIR/src"/>
 	<classpathentry kind="lib" path="lib/netcdf-4.2.jar"/>
 	<classpathentry kind="lib" path="lib/slf4j-api-1.7.5.jar"/>
+	<classpathentry kind="lib" path="forms-1.3.0.jar" sourcepath="forms-1.3.0-src.zip"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

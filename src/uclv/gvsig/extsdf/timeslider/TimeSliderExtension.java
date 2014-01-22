@@ -44,8 +44,7 @@ public class TimeSliderExtension extends Extension{
 
 	@Override
 	public void initialize() {
-		// TODO Auto-generated method stub
-		
+		registerIcons();
 	}
 
 	@Override
@@ -118,5 +117,41 @@ public class TimeSliderExtension extends Extension{
 			}			
 		}		
 		return false;
+	}
+	
+	private void registerIcons() {
+		String[] icons = new String[] {
+				"decrease-icon",
+				"increase-icon",
+				"seek-backward-icon",
+				"seek-forward-icon",
+				"settings-icon",
+				"skip-backward-icon",
+				"skip-forward-icon",
+				"start-icon",
+				"time-on-map-icon",
+				"video-icon"
+		};
+		String[] resources = new String[] {
+				"Decrease-32.png",
+				"Increase-32.png",
+				"Seek-Backward-32.png",
+				"Seek-Forward-32.png",
+				"Settings-32.png",
+				"Skip-Backward-32.png",
+				"Skip-Forward-32.png",
+				"Start-32.png",
+				"Time-On-Map-32.png",
+				"Video-32.png"
+		};
+		
+		for(int i = 0; i < icons.length; i++) {
+			if(!PluginServices.getIconTheme().exists(icons[i])) {
+				PluginServices.getIconTheme().registerDefault(
+						icons[i],
+						this.getClass().getClassLoader().getResource("images/" + resources[i])
+				);
+			}
+		}
 	}
 }
