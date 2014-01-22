@@ -138,6 +138,14 @@ public class NetCDFController {
      * renderizar
      */
     private int idxTime;
+    /**
+     * Valor m&iacute;nimo de la variable de datos renderizada
+     */
+    private Object min;
+    /**
+     * Valor m&aacute;ximo de la variable de datos renderizada
+     */
+    private Object max;
     
     /**
      * <p>
@@ -215,6 +223,9 @@ public class NetCDFController {
 
         // Calcula los índices de cada uno de los ejes de coordenadas
         findVariableIndex();
+
+        // Calcula los valores mínimos y máximos de la variable
+        //calculaMinMax();
 
         // Lee la primera capa correspondiente al archivo NetCDF
         readData();
@@ -1051,5 +1062,245 @@ public class NetCDFController {
         findVariableIndex();
         // Lee la primera capa correspondiente al archivo NetCDF
         readData();
+    }
+
+    /**
+     * Inicializa los valores m&iacute;nimos y m&aacute;ximos de la variable a
+     * renderizar en dependencia del tipo de dato
+     */
+    private void initMinMax() {
+        int type = getDataType();
+        switch (type) {
+        // Tipo de dato double
+            case IBuffer.TYPE_DOUBLE:
+                min = Double.MAX_VALUE;
+                max = Double.MIN_VALUE;
+                break;
+            // Tipo de dato float
+            case IBuffer.TYPE_FLOAT:
+                min = Float.MAX_VALUE;
+                max = Float.MIN_VALUE;
+                break;
+            // Tipo de dato int
+            case IBuffer.TYPE_INT:
+                min = Integer.MAX_VALUE;
+                max = Integer.MIN_VALUE;
+                break;
+            // Tipo de dato short
+            case IBuffer.TYPE_SHORT:
+                min = Short.MAX_VALUE;
+                max = Short.MIN_VALUE;
+                break;
+            // Tipo de dato byte
+            default:
+                min = Byte.MAX_VALUE;
+                max = Byte.MIN_VALUE;
+        }
+    }
+    
+    /**
+     * Devuelve si un valor pasado como par&aacute;metro es igual al valor de
+     * relleno empleado en la renderizaci&oacute;n
+     * 
+     * @param val
+     *            valor a verificar
+     * 
+     * @return <b>true</b> si el valor indicado es igual al valor de relleno<br />
+     *         <b>false</b> en cualquier otro caso
+     */
+    private boolean isDataFillValue(Object val) {
+        int type = getDataType();
+        switch (type) {
+        // Tipo de dato double
+            case IBuffer.TYPE_DOUBLE:
+                return (getMissing() == ((Double) val));
+                // Tipo de dato float
+            case IBuffer.TYPE_FLOAT:
+                return (getMissing() == ((Float) val));
+                // Tipo de dato int
+            case IBuffer.TYPE_INT:
+                return (getMissing() == ((Integer) val));
+                // Tipo de dato short
+            case IBuffer.TYPE_SHORT:
+                return (getMissing() == ((Short) val));
+                // Tipo de dato byte
+            default:
+                return (getMissing() == ((Byte) val));
+        }
+    }
+
+    /**
+     * Compara un valor con el valor m&iacute;nimo de la variable renderizada,
+     * si este es menor, actualiza el valor m&iacute;nimo
+     * 
+     * @param val
+     *            valor a verificar
+     */
+    private void compareDataMin(Object val) {
+        int type = getDataType();
+        switch (type) {
+        // Tipo de dato double
+            case IBuffer.TYPE_DOUBLE:
+                if (((Double) min) > ((Double) val))
+                    min = val;
+                break;
+            // Tipo de dato float
+            case IBuffer.TYPE_FLOAT:
+                if (((Float) min) > ((Float) val))
+                    min = val;
+                break;
+            // Tipo de dato int
+            case IBuffer.TYPE_INT:
+                if (((Integer) min) > ((Integer) val))
+                    min = val;
+                break;
+            // Tipo de dato short
+            case IBuffer.TYPE_SHORT:
+                if (((Short) min) > ((Short) val))
+                    min = val;
+                break;
+            // Tipo de dato byte
+            default:
+                if (((Byte) min) > ((Byte) val))
+                    min = val;
+        }
+    }
+
+    /**
+     * Compara un valor con el valor m&aacute;ximo de la variable renderizada,
+     * si este es menor, actualiza el valor m&aacute;ximo
+     * 
+     * @param val
+     *            valor a verificar
+     */
+    private void compareDataMax(Object val){
+        int type = getDataType();
+        switch (type) {
+        // Tipo de dato double
+            case IBuffer.TYPE_DOUBLE:
+                if(((Double)max)<((Double)val))
+                    max = val;
+                break;
+            // Tipo de dato float
+            case IBuffer.TYPE_FLOAT:
+                if(((Float)max)<((Float)val))
+                    max = val;
+                break;
+            // Tipo de dato int
+            case IBuffer.TYPE_INT:
+                if(((Integer)max)<((Integer)val))
+                    max = val;
+                break;
+            // Tipo de dato short
+            case IBuffer.TYPE_SHORT:
+                if(((Short)max)<((Short)val))
+                    max = val;
+                break;
+            // Tipo de dato byte
+            default:
+                if(((Byte)max)<((Byte)val))
+                    max = val;
+        }
+    }
+
+    /**
+     * Lee una capa del archiv NetCDF y actualiza los valores m&iacute;nimos y
+     * m&aacute;ximos de la variable a renderizar
+     * 
+     * @param ranges
+     *            rangos de datos que se leer&aacute;n del archiv NetCDF
+     * @param latMax
+     *            cantidad m&aacute;xima de valores de latitud
+     * @param lonMax
+     *            cantidad m&aacute;xima de valores de longitud
+     * 
+     * @throws IOException
+     *             error de entrada salida
+     * @throws InvalidRangeException
+     *             formato de archivo NetCDF no soportado
+     */
+    private void readData(ArrayList<Range> ranges, int latMax, int lonMax)
+            throws IOException, InvalidRangeException {
+        // Lee los valores desde el archivo NetCDF
+        Array arr = dataVar.read(ranges);
+        Index idx = arr.getIndex();
+
+        // Si existe la dimensión de tiempo establece el índice como 0
+        if (idxTime != -1)
+            idx.setDim(idxTime, 0);
+
+        // Recorre la dimensión correspondiente a la latitud
+        for (int i = 0; i < latMax; ++i) {
+            idx.setDim(idxLat, i);
+            // Recorre la dimensión correspondiente a la longitud
+            for (int j = 0; j < lonMax; ++j) {
+                idx.setDim(idxLon, j);
+                // Lee el valor correspondiente
+                Object val = readData(arr, idx);
+                // Verifica si no es un valor de relleno y compara con el mínimo
+                // y el máximo
+                if (!isDataFillValue(val)) {
+                    compareDataMin(val);
+                    compareDataMax(val);
+                }
+            }
+        }
+    }
+
+    /**
+     * Calcula los valores m&iacute;nimos y m&aacute;ximos de la variable a
+     * renderizar
+     * 
+     * @throws IOException
+     *             error de entrada salida
+     * @throws InvalidRangeException
+     *             formato de archivo NetCDF no soportado
+     */
+    public void calculaMinMax() throws IOException, InvalidRangeException {
+        // Inicializa los valores mínimos y máximos
+        initMinMax();
+        // Inicializa los rangos de la variable renderizada para leer los
+        // valores desde el archivo NetCDF
+        List<Range> roRanges = dataVar.getRanges();
+        ArrayList<Range> ranges = new ArrayList<Range>();
+        ranges.addAll(roRanges);
+        // Calcula la cantidad de valores de latitud y longitud
+        int lonMax = lon.getDimension(0).getLength();
+        int latMax = lat.getDimension(0).getLength();
+
+        // Verifica si existe un parámetro variable (tiempo, altura...)
+        if (idxTime != -1) {
+            // Toma la cantidad máxima de valores del parámetro
+            int tmax = time.getDimension(0).getLength();
+            // Recorre cada uno de los valores del parámetro
+            for (int i = 0; i < tmax; ++i) {
+                // Lee los datos de la capa correspondiente al variar el
+                // parámetro
+                ranges.set(idxTime, new Range(i, i));
+                readData(ranges, latMax, lonMax);
+            }
+            // No existe parámetro variable, por lo que se lee una sola capa del
+            // archivo NetCDF
+        } else {
+            readData(ranges, latMax, lonMax);
+        }
+    }
+
+    /**
+     * Devuelve el valor m&iacute;nimo de la variable renderizada
+     * 
+     * @return valor m&iacute;nimo
+     */
+    public Object getMinValue() {
+        return min;
+    }
+
+    /**
+     * Devuelve el valor m&aacute;ximo de la variable renderizada
+     * 
+     * @return valor m&aacute;ximo
+     */
+    public Object getMaxValue() {
+        return max;
     }
 }
