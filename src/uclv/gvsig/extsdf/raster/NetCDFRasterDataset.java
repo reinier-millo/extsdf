@@ -35,7 +35,12 @@ import org.gvsig.raster.dataset.InvalidSetViewException;
 import org.gvsig.raster.dataset.RasterDataset;
 import org.gvsig.raster.dataset.io.RasterDriverException;
 import org.gvsig.raster.datastruct.Extent;
+import org.gvsig.raster.util.extensionPoints.ExtensionPoint;
 
+
+/**
+ * Clase para manipular el datasource del raster del NetCDF.
+ * */
 public class NetCDFRasterDataset extends RasterDataset{
 
 	@Override
@@ -177,5 +182,12 @@ public class NetCDFRasterDataset extends RasterDataset{
 		// TODO Auto-generated method stub
 		return false;
 	}
-
+	
+	/**
+	 * Metodo para registrar el data source de la capa raster del NetCDF.
+	 * */
+	public static void registerDriver() {
+	    ExtensionPoint point = ExtensionPoint.getExtensionPoint("RasterReader");
+	    point.register("nc", NetCDFRasterDataset.class);
+	  }
 }
