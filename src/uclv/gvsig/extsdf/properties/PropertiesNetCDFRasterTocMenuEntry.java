@@ -108,7 +108,7 @@ public class PropertiesNetCDFRasterTocMenuEntry extends 	AbstractTocContextMenuA
 			manager.setDefaultType(TabbedPanel.class);
 
 			TabbedPanel panelGroup = (TabbedPanel) manager.getPanelGroup(lyr);
-			PanelGroupLoaderFromExtensionPoint loader = new PanelGroupLoaderFromExtensionPoint("RasterSEPropertiesDialog");
+			PanelGroupLoaderFromExtensionPoint loader = new PanelGroupLoaderFromExtensionPoint("NetCDFPropertiesDialog");
 
 			properties = new PanelGroupDialog(lyr.getName() ,PluginServices.getText(this,"NetCDF_properties"), 550, 450, (byte) (WindowInfo.MODELESSDIALOG | WindowInfo.RESIZABLE | WindowInfo.MAXIMIZABLE), panelGroup);
 			properties.loadPanels(loader);

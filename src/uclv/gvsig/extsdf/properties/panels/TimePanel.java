@@ -388,7 +388,7 @@ public class TimePanel extends AbstractPanel {
 		return textField_2;
 	}
 	private JComboBox getComboBox_4() {
-		String []cad={"Perro","escuelas"};
+		String []cad={"Perro","escuelaseeeeeeeeee"};
 		if (comboBox_4 == null) {
 			comboBox_4 = new JComboBox();
 			comboBox_4.setModel(new DefaultComboBoxModel(cad));
