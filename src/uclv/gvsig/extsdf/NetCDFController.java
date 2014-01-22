@@ -878,6 +878,7 @@ public class NetCDFController {
      *            &iacute;ndice del sistema de coordenada seleccionado
      * 
      * @throws IOException
+     *             error de entrada/salida del archivo NetCDF
      */
     public void setCoordinateSystem(int dataIdx) throws IOException,
             RasterDriverException {
@@ -889,4 +890,131 @@ public class NetCDFController {
         loadDefaultCoordinates();
     }
 
+    /**
+     * Devuelve una lista de variables que pueden ser representadas en un
+     * sistema de coordenadas
+     * 
+     * @param system
+     *            sistema de coordenadas
+     * 
+     * @return lista de variables
+     */
+    public Variable[] getVariablesForCoordinateSystem(CoordinateSystem system) {
+        ArrayList<Variable> vars = new ArrayList<Variable>();
+        // Toma todas las variables definidas en el archivo NetCDF
+        List<Variable> allVars = fileDataSet.getVariables();
+
+        // Recorre todas las variables
+        for (Variable var : allVars) {
+            // Verifica si la variable se puede representar con el sistema de
+            // coordenadas
+            if (system.isCoordinateSystemFor(var)) {
+                vars.add(var);
+            }
+        }
+        return vars.toArray(new Variable[0]);
+    }
+
+    /**
+     * Devuelve el eje de coordenadas de latitud asociado a un sistema de
+     * coordenadas
+     * 
+     * @param system
+     *            sistema de coordenadas
+     * 
+     * @return eje de coordenadas
+     * 
+     * @throws RasterDriverException
+     *             formato de archivo NetCDF no soportado
+     */
+    public CoordinateAxis1D getLatitudeForCoordinateSystem(
+            CoordinateSystem system) throws RasterDriverException {
+        // Verifica si el sistema está georeferenciado por latitud/longitud
+        if (system.isLatLon()) {
+            return new CoordinateAxis1D(fileDataSet, system.getLatAxis());
+            // Verifica si el sistema está georeferenciado por X/Y
+        } else if (system.isGeoXY()) {
+            return new CoordinateAxis1D(fileDataSet, system.getYaxis());
+        } else {
+            throw new RasterDriverException("Formato incorrecto o no soportado");
+        }
+    }
+
+    /**
+     * Devuelve el eje de coordenadas de longitud asociado a un sistema de
+     * coordenadas
+     * 
+     * @param system
+     *            sistema de coordenadas
+     * 
+     * @return eje de coordenadas
+     * 
+     * @throws RasterDriverException
+     *             formato de archivo NetCDF no soportado
+     */
+    public CoordinateAxis1D getLongitudeForCoordinateSystem(
+            CoordinateSystem system) throws RasterDriverException {
+        // Verifica si el sistema está georeferenciado por latitud/longitud
+        if (system.isLatLon()) {
+            return new CoordinateAxis1D(fileDataSet, system.getLonAxis());
+            // Verifica si el sistema está georeferenciado por X/Y
+        } else if (system.isGeoXY()) {
+            return new CoordinateAxis1D(fileDataSet, system.getXaxis());
+        } else {
+            throw new RasterDriverException("Formato incorrecto o no soportado");
+        }
+    }
+
+    /**
+     * Devuelve el eje de coordenadas correspondiente a una variable tomada como
+     * par&aacute;metro variable, asociado a un sistema de coordenadas
+     * 
+     * @param system
+     *            sistema de coordenadas
+     * 
+     * @return eje de coordenadas
+     * 
+     * @throws IOException
+     *             error de entrada/salida del archivo NetCDF
+     */
+    public CoordinateAxis1DTime getParameterForCoordinateSystem(
+            CoordinateSystem system) throws IOException {
+        // Verifica si el sistema coordenado tiene un eje de tiempo
+        if (system.hasTimeAxis()) {
+            return CoordinateAxis1DTime.factory(fileDataSet, data.getTaxis(),
+                    new Formatter());
+        }
+        return null;
+    }
+
+    /**
+     * Devuelve la variable que se est&aacute; renderizando en la capa Raster
+     * 
+     * @return variable renderizada
+     */
+    public Variable getSelectedVariable() {
+        return dataVar;
+    }
+
+    /**
+     * Establece la variable que se renderizar&aacute; en la capa Raster
+     * 
+     * @param dataVar
+     *            variable a renderizar
+     * 
+     * @throws IOException
+     *             error de entrada/salida del archivo NetCDF
+     * @throws InvalidRangeException
+     *             formato de archivo NetCDF no soportado
+     * @throws RasterDriverException
+     *             formato de archivo NetCDF no soportado
+     */
+    public void setSelectedVariable(Variable dataVar) throws IOException,
+            InvalidRangeException, RasterDriverException {
+        this.dataVar = dataVar;
+        // Determina el valor numérico empleado para relleno
+        findMissind();
+        // Lee la primera capa correspondiente al archivo NetCDF
+        readData();
+    }
 }
