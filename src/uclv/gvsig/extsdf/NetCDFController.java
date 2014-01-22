@@ -1035,9 +1035,45 @@ public class NetCDFController {
      * Devuelve la variable que se est&aacute; renderizando en la capa Raster
      * 
      * @return variable renderizada
+     * 
+     * @throws RasterDriverException
+     *             formato de archivo NetCDF no soportado
      */
-    public Variable getSelectedVariable() {
+    public Variable getSelectedVariable() throws RasterDriverException {
+        if (dataVar == null)
+            throw new RasterDriverException(
+                    "Formato de archivo NetCDF no soportado");
         return dataVar;
+    }
+
+    /**
+     * Devuelve la variable correpondiente al eje de coordenadas de latitud
+     * 
+     * @return variable latitud
+     * 
+     * @throws RasterDriverException
+     *             formato de archivo NetCDF no soportado
+     */
+    public CoordinateAxis1D getSelectedLat() throws RasterDriverException {
+        if (lat == null)
+            throw new RasterDriverException(
+                    "Formato de archivo NetCDF no soportado");
+        return lat;
+    }
+
+    /**
+     * Devuelve la variable correpondiente al eje de coordenadas de longitud
+     * 
+     * @return variable longitud
+     * 
+     * @throws RasterDriverException
+     *             formato de archivo NetCDF no soportado
+     */
+    public CoordinateAxis1D getSelectedLon() throws RasterDriverException {
+        if (lon == null)
+            throw new RasterDriverException(
+                    "Formato de archivo NetCDF no soportado");
+        return lon;
     }
 
     /**
