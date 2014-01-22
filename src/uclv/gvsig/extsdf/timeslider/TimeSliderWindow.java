@@ -29,16 +29,16 @@ import javax.swing.JPanel;
 
 import org.gvsig.gui.beans.swing.JButton;
 
-import uclv.gvsig.extsdf.raster.FlyrNetCDFRaster;
-
 import com.iver.andami.PluginServices;
 import com.iver.andami.ui.mdiManager.IWindow;
 import com.iver.andami.ui.mdiManager.WindowInfo;
-import com.iver.cit.gvsig.project.documents.view.gui.View;
 
 /**
- * Ventana con los controles y parámetros para el deslizador de tiempo
+ * <p>
+ * Ventana con los controles y par&aacute;metros para el deslizador de tiempo
  * de la capa raster del formato NetCDF.
+ * </p>
+ * 
  * @author afmoya
  * @version 1.0.0
  */
@@ -49,17 +49,12 @@ public class TimeSliderWindow extends JPanel implements IWindow{
 	private static final long serialVersionUID = 1L;
 	
 	/**
-	 * Atributo para definir la información de la ventana.
+	 * Atributo para definir la informaci&oacute;n de la ventana.
 	 */
 	private WindowInfo windowInfo = null;
 	
 	/**
-	 * Tipo de capa manipulable por la extensión.
-	 */
-	private FlyrNetCDFRaster cdfRaster;
-	
-	/**
-	 * Vista sobre la que actúa la ventana del deslizador de tiempo.
+	 * Ventana sobre la que act&uacute;a la ventana del deslizador de tiempo.
 	 */
 	private IWindow relatedWindow = null;
 	
@@ -68,12 +63,12 @@ public class TimeSliderWindow extends JPanel implements IWindow{
 		initialize();
 	}
 	
-	@Override
 	/**
-	 * Método que devuelve las propiedades de la ventana del deslizador de tiempo.
-	 * @author afmoya
-	 * @version 1.0.0
+	 * (non javadoc)
+	 * 
+	 * @see com.iver.andami.ui.mdiManager.IWindow#getWindowInfo()
 	 */
+	@Override
 	public WindowInfo getWindowInfo() {
 		// TODO Auto-generated method stub
 		if (windowInfo == null){
@@ -87,6 +82,11 @@ public class TimeSliderWindow extends JPanel implements IWindow{
 		return windowInfo;
 	}
 
+	/**
+	 * (non javadoc)
+	 * 
+	 * @see com.iver.andami.ui.mdiManager.IWindow#getWindowProfile()
+	 */
 	@Override
 	public Object getWindowProfile() {
 		// TODO Auto-generated method stub
@@ -94,19 +94,9 @@ public class TimeSliderWindow extends JPanel implements IWindow{
 	}
 	
 	/**
-	 * Método para asignarle valor al atributo cdfRaster.
-	 * @param cdfRaster Capa raster basado en el tipo de dato científico NetCDF
-	 * @author afmoya
-	 * @version 1.0.0
-	 */
-	public void setNetCDFRasterLayer(FlyrNetCDFRaster cdfRaster) {
-		this.cdfRaster = cdfRaster;
-	}
-	
-	/**
-	 * Método que inicia los componentes visuales de la ventana.
-	 * @author afmoya
-	 * @version 1.0.0
+	 * <p>
+	 * Inicializa los componentes visuales de la ventana.
+	 * </p>
 	 */
 	private void initialize() {
 		setBounds(0, 0, 500, 500);
@@ -114,23 +104,29 @@ public class TimeSliderWindow extends JPanel implements IWindow{
 	}
 	
 	/**
-	 * Método para asignarle a la ventana del deslizador de tiempo la ventana sobre la cual 
-	 * está actuando. Esto se realiza para controlar si el componente puede estar
+	 * <p>
+	 * Asignar a la ventana del deslizador de tiempo la ventana sobre la cual 
+	 * est&aacute; actuando. 
+	 * </p>
+	 * 
+	 * Esto se realiza para controlar si el componente puede estar
 	 * activo o no para la correspondiente vista.
-	 * @param view Vista sobre la cual actúa la ventana del deslizador de tiempo.
-	 * @author afmoya
-	 * @version 1.0.0
+	 * 
+	 * @param view Vista sobre la cual act&uacute;a la ventana del deslizador de tiempo.
 	 */
 	public void setRelatedWindow(IWindow iWindow) {
 			relatedWindow = iWindow;		
 	}
 
 	/**
-	 * Método que devuelve la ventana asociada a la ventana del deslizador de tiempo. 
-	 * Esto se realiza para controlar si el componente estará activo o no 
+	 * <p>
+	 * Devuelve la ventana asociada a la ventana del deslizador de tiempo.
+	 * </p>
+	 *  
+	 * Esto se realiza para controlar si la extensi&oacute;n estar&aacute; activo o no 
 	 * para la correspondiente vista.
-	 * @author afmoya
-	 * @version 1.0.0
+	 * 
+	 * @return IWindow Ventana asociada a la instancia del deslizador de tiempo.
 	 */
 	public IWindow getRelatedWindow() {
 		return relatedWindow;		

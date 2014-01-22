@@ -62,7 +62,7 @@
   	depends="init">
 
     <!-- Genera el JAR de la extensión en el archivo ${plugin}.jar -->
-    <jar jarfile="${dist}/lib/${plugin}.jar" basedir="${build}" />
+    <jar jarfile="${dist}/lib/${plugin}.jar" basedir="${build}" excludes="**/Test**.class"/>
 
     <!-- Copia otros archivos necesarios por la extensión -->
     <copy file="config/config.xml" todir="${dist}" />
