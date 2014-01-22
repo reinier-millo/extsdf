@@ -33,12 +33,15 @@ import java.util.List;
 import org.apache.log4j.Logger;
 import org.gvsig.raster.RasterLibrary;
 import org.gvsig.raster.dataset.IBuffer;
+import org.gvsig.raster.dataset.io.RasterDriverException;
 
 import ucar.ma2.Array;
 import ucar.ma2.DataType;
 import ucar.ma2.Index;
+import ucar.ma2.InvalidRangeException;
 import ucar.ma2.Range;
 import ucar.nc2.Attribute;
+import ucar.nc2.Dimension;
 import ucar.nc2.NetcdfFile;
 import ucar.nc2.Variable;
 import ucar.nc2.dataset.CoordinateAxis1D;
@@ -49,8 +52,10 @@ import ucar.nc2.dataset.NetcdfDataset;
 import com.iver.cit.gvsig.fmap.drivers.db.utils.SingleDBConnectionManager;
 
 /**
- * <p>Clase para manejar el flujo de datos entre la aplicación y el archivo NetCDF
- * de la capa Raster</p>
+ * <p>
+ * Clase para manejar el flujo de datos entre la aplicaci&oacute;n y el archivo
+ * NetCDF de la capa Raster
+ * </p>
  * 
  * @author millo
  * @version 1.0.2
@@ -72,14 +77,12 @@ public class NetCDFController {
      * Dataset del archivo NetCDF abierto
      */
     private NetcdfDataset fileDataSet = null;
-
     /**
      * Sistemas de coordenadas disponibles en el archivo NetCDF
      */
     ArrayList<CoordinateSystem> datas = null;
-
     /**
-     * Índice del sistema de coordenadas que se est&aacute; empleando
+     * &Iacute;ndice del sistema de coordenadas que se est&aacute; empleando
      */
     private int dataIdx = -1;
     /**
@@ -87,22 +90,26 @@ public class NetCDFController {
      * renderizaci&oacute;n
      */
     private CoordinateSystem data = null;
-
     /**
-     * Variables cuyos valores representan representan valores de longitud en un
-     * sistema de coordenadas geogr&aacute;ficas
+     * Variables cuyos valores representan valores de longitud en un sistema de
+     * coordenadas geogr&aacute;ficas
      */
     private CoordinateAxis1D lon = null;
     /**
-     * Variables cuyos valores representan representan valores de latitud en un
-     * sistema de coordenadas geogr&aacute;ficas
+     * Variables cuyos valores representan valores de latitud en un sistema de
+     * coordenadas geogr&aacute;ficas
      */
     private CoordinateAxis1D lat = null;
     /**
-     * Variables cuyos valores representan representan valores de tiempo u otra
-     * unidad de medida variable, como puede ser la altura
+     * Variables cuyos valores representan valores de tiempo u otra unidad de
+     * medida variable, como puede ser la altura
      */
     private CoordinateAxis1DTime time = null;
+    /**
+     * Indica el &iacute;ndice de tiempo que se est&aacute; empleando en la
+     * renderizaci&oacute;n
+     */
+    private int timeIdx = 0;
     /**
      * Variables cuyos valores son renderizados en el Raster
      */
@@ -129,8 +136,10 @@ public class NetCDFController {
      * 
      * @throws IOException
      *             formato incorrecto del archivo NetCDF o formato no soportado
+     * @throws InvalidRangeException
      */
-    public NetCDFController(String filename) throws IOException {
+    public NetCDFController(String filename) throws IOException,
+            InvalidRangeException, RasterDriverException {
         this.filename = filename;
         loadDefaults();
     }
@@ -147,8 +156,10 @@ public class NetCDFController {
      * 
      * @throws IOException
      *             Error de lectura del archivo NetCDF
+     * @throws InvalidRangeException
      */
-    private void loadDefaults() throws IOException {
+    private void loadDefaults() throws IOException, InvalidRangeException,
+            RasterDriverException {
         logger.info("Inicializando informaci\u00F3n del archivo NetCDF: ("
                 + filename + ")");
 
@@ -158,45 +169,75 @@ public class NetCDFController {
 
         // Inicializa las estructuras para almacenar los ejes coordenados
         datas = new ArrayList<CoordinateSystem>();
-        dataVar = file.getVariables().get(3);
 
         List<CoordinateSystem> coordSystems = fileDataSet
                 .getCoordinateSystems();
         for (CoordinateSystem system : coordSystems) {
             if (system.isGeoReferencing()) {
                 if (data == null) {
-                    if (system.isLatLon()) {
-                        lat = new CoordinateAxis1D(fileDataSet,
-                                system.getLatAxis());
-                        lon = new CoordinateAxis1D(fileDataSet,
-                                system.getLonAxis());
-                    } else if (system.isGeoXY()) {
-                        lat = new CoordinateAxis1D(fileDataSet,
-                                system.getYaxis());
-                        lon = new CoordinateAxis1D(fileDataSet,
-                                system.getXaxis());
-                    } else {
-                        // TODO Ver que sucede a partir de este punto con nuevos
-                        // NetCDF
-                        throw new IOException(
-                                "Formato incorrecto o no soportado");
-                    }
-
-                    // Verifica si el sistema coordenado tiene un eje de tiempo
-                    if (system.hasTimeAxis()) {
-                        // TODO Ver en que influye el formater
-                        time = CoordinateAxis1DTime.factory(fileDataSet,
-                                system.getLatAxis(), new Formatter());
-                    }
                     dataIdx = datas.size();
                     data = system;
+
+                    // Busca la primera variable que se puede representar con el
+                    // sistema de coordenadas
+                    List<Variable> vars = file.getVariables();
+                    for (Variable var : vars) {
+                        if (system.isCoordinateSystemFor(var)) {
+                            dataVar = var;
+                            break;
+                        }
+                    }
                 }
                 datas.add(system);
             }
-
         }
+        // Determina los ejes de coordenadas a partir del sistema de coordenadas
+        loadDefaultCoordinates();
+
+        // Determina el valor numérico empleado para relleno
         findMissind();
+
+        // Lee la primera capa correspondiente al archivo NetCDF
         readData();
+    }
+
+    /**
+     * Determina los ejes de coordenadas a partir del sistema de coordenada
+     * selecionado
+     * 
+     * @throws RasterDriverException
+     *             formato de archivo NetCDF no soportado
+     * @throws IOException
+     *             formato de archivo NetCDF no soportado
+     */
+    private void loadDefaultCoordinates() throws RasterDriverException,
+            IOException {
+        if (data == null) {
+            throw new RasterDriverException("Formato incorrecto o no soportado");
+        }
+
+        // Verifica si el sistema está georeferenciado por latitud/longitud
+        if (data.isLatLon()) {
+            lat = new CoordinateAxis1D(fileDataSet, data.getLatAxis());
+            lon = new CoordinateAxis1D(fileDataSet, data.getLonAxis());
+
+            // Verifica si el sistema está georeferenciado por X/Y
+        } else if (data.isGeoXY()) {
+            lat = new CoordinateAxis1D(fileDataSet, data.getYaxis());
+            lon = new CoordinateAxis1D(fileDataSet, data.getXaxis());
+        } else {
+            throw new RasterDriverException("Formato incorrecto o no soportado");
+        }
+
+        // Verifica si el sistema coordenado tiene un eje de tiempo
+        if (data.hasTimeAxis()) {
+            time = CoordinateAxis1DTime.factory(fileDataSet, data.getTaxis(),
+                    new Formatter());
+            timeIdx = 0;
+        } else {
+            time = null;
+            timeIdx = -1;
+        }
     }
 
     /**
@@ -258,7 +299,6 @@ public class NetCDFController {
 
         // Tipo de dato BYTE
         return IBuffer.TYPE_BYTE;
-
     }
 
     /**
@@ -356,11 +396,12 @@ public class NetCDFController {
 
     /**
      * <p>
-     * Devuelve la información obtenida de los atributos del archivo NetCDF
+     * Devuelve la informaci&oacute;n obtenida de los atributos del archivo
+     * NetCDF
      * </p>
      * .
      * 
-     * @return información de metadatos
+     * @return informaci&oacute;n de metadatos
      */
     public String[] getFileMetadata() {
         if (fileDataSet == null)
@@ -402,43 +443,98 @@ public class NetCDFController {
         return metadata.toArray(new String[0]);
     }
 
-    public void readData() {
+    /**
+     * Inicializa el b&uacute;ffer para almacenar los datos en dependencia del
+     * tipo de dato de la variable
+     */
+    private void initDataType() {
+        int type = getDataType();
+        switch (type) {
+            case IBuffer.TYPE_DOUBLE:
+                dData = new Double[getHeight()][getWidth()];
+                break;
+            case IBuffer.TYPE_FLOAT:
+                dData = new Float[getHeight()][getWidth()];
+                break;
+            case IBuffer.TYPE_INT:
+                dData = new Integer[getHeight()][getWidth()];
+                break;
+            case IBuffer.TYPE_SHORT:
+                dData = new Short[getHeight()][getWidth()];
+                break;
+            default:
+                dData = new Byte[getHeight()][getWidth()];
+        }
+    }
+
+    /**
+     * Lee el b&uacute;ffer de datos de la primera capa de la variable
+     * renderizada del archivo NetCDF
+     * 
+     * @throws IOException
+     *             error de entrada/salida del archivo NetCDF
+     * @throws InvalidRangeException
+     *             formato de archivo NetCDF no soportado
+     * @throws RasterDriverException
+     *             formato de archivo NetCDF no soportado
+     */
+    public void readData() throws IOException, InvalidRangeException,
+            RasterDriverException {
         // Inicializa la matriz de datos
-        dData = new Object[getHeight()][getWidth()];
+        initDataType();
 
-        try {
-            // Toma los rangos de las variables, de solo lectura
-            List<Range> ranges = dataVar.getRanges();
+        // Toma los rangos de las variables, de solo lectura
+        List<Range> ranges = dataVar.getRanges();
 
-            // Crea una estructura con los rangos leidos
-            ArrayList<Range> newRanges = new ArrayList<Range>();
-            newRanges.add(ranges.get(0));
-            newRanges.add(ranges.get(1));
-            newRanges.add(ranges.get(2));
-
-            // Selecciona los rango que se van a tomar
-            // TODO Tomar el rango de tiempo según el orden de las dimensiones
-            newRanges.set(0, new Range(0, 0));
-
-            // Lee los datos para cada instante de tiempo
-            Array arr = dataVar.read(newRanges);
-            // Toma el índice del arreglo de datos
-            Index idx = arr.getIndex();
-
-            // Recorre todas las latitudes
-            // TODO Tomar las dimensiones según las variables de lon y lat
-            for (int lat = 0; lat < 360; ++lat) {
-                for (int lon = 0; lon < 720; ++lon) {
-                    // TODO Tomar los índices según el orden de las dimensiones
-                    idx.set(0, lat, lon); // tiempo, latitud, longitud
-
-                    // Lee el valor correspondiente teniendo en cuenta el tipo
-                    // de dato
-                    dData[lat][lon] = readData(arr, idx);
-                }
+        // Busca el índice de dimensión que le corresponde a la latitud, la
+        // longitud y a la variable de tiempo
+        int timeDimIdx = -1;
+        int latDimIdx = -1;
+        int lonDimIdx = -1;
+        int itr = 0;
+        for (Dimension dim : dataVar.getDimensions()) {
+            if (time != null && dim.compareTo(time.getDimension(0)) == 0) {
+                timeDimIdx = itr;
+            } else if (dim.compareTo(lat.getDimension(0)) == 0) {
+                latDimIdx = itr;
+            } else if (dim.compareTo(lon.getDimension(0)) == 0) {
+                lonDimIdx = itr;
             }
-        } catch (Exception e) {
-            e.printStackTrace();
+            itr++;
+        }
+
+        // Verifica que el formato del archivo sea correcto
+        // La variable debe tener una dimensión de longitud y una de latitud
+        if (latDimIdx == -1 || lonDimIdx == -1)
+            throw new RasterDriverException("Formato incorrecto o no soportado");
+
+        // Crea una estructura con los rangos leidos
+        ArrayList<Range> newRanges = new ArrayList<Range>();
+        newRanges.addAll(ranges);
+
+        // Selecciona los rango que se van a tomar
+        if (timeDimIdx != -1)
+            newRanges.set(timeDimIdx, new Range(timeIdx, timeIdx));
+
+        // Lee los datos para cada instante de tiempo
+        Array arr = dataVar.read(newRanges);
+        // Toma el índice del arreglo de datos
+        Index idx = arr.getIndex();
+
+        int maxHeight = getHeight();
+        int maxWidth = getWidth();
+        // Recorre todas las latitudes
+        for (int lat = 0; lat < maxHeight; ++lat) {
+            // Establece el valor para la latitud
+            idx.setDim(latDimIdx, lat);
+            for (int lon = 0; lon < maxWidth; ++lon) {
+                // Establece el valor para la longitud
+                idx.setDim(lonDimIdx, lon);
+
+                // Lee el valor correspondiente teniendo en cuenta el tipo
+                // de dato
+                dData[lat][lon] = readData(arr, idx);
+            }
         }
     }
 
@@ -457,17 +553,26 @@ public class NetCDFController {
     private Object readData(Array arr, Index idx) {
         int type = getDataType();
         switch (type) {
-        case IBuffer.TYPE_DOUBLE:
-            return arr.getDouble(idx);
-        case IBuffer.TYPE_FLOAT:
-            return arr.getFloat(idx);
-        case IBuffer.TYPE_INT:
-            return arr.getInt(idx);
-        case IBuffer.TYPE_SHORT:
-            return arr.getShort(idx);
-        default:
-            return arr.getByte(idx);
+            case IBuffer.TYPE_DOUBLE:
+                return arr.getDouble(idx);
+            case IBuffer.TYPE_FLOAT:
+                return arr.getFloat(idx);
+            case IBuffer.TYPE_INT:
+                return arr.getInt(idx);
+            case IBuffer.TYPE_SHORT:
+                return arr.getShort(idx);
+            default:
+                return arr.getByte(idx);
         }
+    }
+
+    /**
+     * Devuelve el b&uacute;ffer de datos como una matriz de objetos
+     * 
+     * @return b&uacute;ffer de datos
+     */
+    public Object[][] getFullData() {
+        return dData;
     }
 
     /**
@@ -488,6 +593,132 @@ public class NetCDFController {
 
     /**
      * <p>
+     * Devuelve el valor correspondiente a un punto dentro del conjunto de datos
+     * como un tipo de datos byte
+     * </p>
+     * 
+     * @param line
+     *            l&iacute;nea o fila dentro de la variable de datos
+     * @param col
+     *            columna dentro de la variable de datos
+     * 
+     * @return valor correspondiente a la posici&oacute;n fila x columna
+     * 
+     * @throws RasterDriverException
+     *             formato de archivo NetCDF no soportado
+     */
+    public byte getValueByte(int line, int col) throws RasterDriverException {
+        try {
+            return (Byte) dData[line][col];
+        } catch (Exception e) {
+            throw new RasterDriverException(
+                    "Formato incorrecto o no soportado", e);
+        }
+    }
+
+    /**
+     * <p>
+     * Devuelve el valor correspondiente a un punto dentro del conjunto de datos
+     * como un tipo de datos short
+     * </p>
+     * 
+     * @param line
+     *            l&iacute;nea o fila dentro de la variable de datos
+     * @param col
+     *            columna dentro de la variable de datos
+     * 
+     * @return valor correspondiente a la posici&oacute;n fila x columna
+     * 
+     * @throws RasterDriverException
+     *             formato de archivo NetCDF no soportado
+     */
+    public short getValueShort(int line, int col) throws RasterDriverException {
+        try {
+            return (Short) dData[line][col];
+        } catch (Exception e) {
+            throw new RasterDriverException(
+                    "Formato incorrecto o no soportado", e);
+        }
+    }
+
+    /**
+     * <p>
+     * Devuelve el valor correspondiente a un punto dentro del conjunto de datos
+     * como un tipo de datos int
+     * </p>
+     * 
+     * @param line
+     *            l&iacute;nea o fila dentro de la variable de datos
+     * @param col
+     *            columna dentro de la variable de datos
+     * 
+     * @return valor correspondiente a la posici&oacute;n fila x columna
+     * 
+     * @throws RasterDriverException
+     *             formato de archivo NetCDF no soportado
+     */
+    public int getValueInteger(int line, int col) throws RasterDriverException {
+        try {
+            return (Integer) dData[line][col];
+        } catch (Exception e) {
+            throw new RasterDriverException(
+                    "Formato incorrecto o no soportado", e);
+        }
+    }
+
+    /**
+     * <p>
+     * Devuelve el valor correspondiente a un punto dentro del conjunto de datos
+     * como un tipo de datos float
+     * </p>
+     * 
+     * @param line
+     *            l&iacute;nea o fila dentro de la variable de datos
+     * @param col
+     *            columna dentro de la variable de datos
+     * 
+     * @return valor correspondiente a la posici&oacute;n fila x columna
+     * 
+     * @throws RasterDriverException
+     *             formato de archivo NetCDF no soportado
+     */
+    public float getValueFloat(int line, int col) throws RasterDriverException {
+        try {
+            return (Float) dData[line][col];
+        } catch (Exception e) {
+            throw new RasterDriverException(
+                    "Formato incorrecto o no soportado", e);
+        }
+    }
+
+    /**
+     * <p>
+     * Devuelve el valor correspondiente a un punto dentro del conjunto de datos
+     * como un tipo de datos double
+     * </p>
+     * 
+     * @param line
+     *            l&iacute;nea o fila dentro de la variable de datos
+     * @param col
+     *            columna dentro de la variable de datos
+     * 
+     * @return valor correspondiente a la posici&oacute;n fila x columna
+     * 
+     * @throws RasterDriverException
+     *             formato de archivo NetCDF no soportado
+     */
+    public double getValueDouble(int line, int col)
+            throws RasterDriverException {
+        try {
+            return (Double) dData[line][col];
+        } catch (Exception e) {
+            throw new RasterDriverException(
+                    "Formato incorrecto o no soportado", e);
+        }
+    }
+
+    /**
+     * <p>
      * Lee una l&iacute;nea de datos de tipo <i>double</i> dentro del conjunto
      * de datos del archivo NetCDF
      * </p>
@@ -496,18 +727,20 @@ public class NetCDFController {
      *            l&iacute;nea a leer
      * @param buf
      *            b&uacute;fer para guardar la l&iacute;nea leida
+     * 
+     * @throws RasterDriverException
+     *             formato de archivo NetCDF no soportado
      */
-    public void readLine(int line, double[] buf) {
-        // TODO Chequear el tipo de datos de la variable
+    public void readLine(int line, double[] buf) throws RasterDriverException {
         try {
             Object[] tline = dData[line];
-            // TODO Tomar las dimensiones según la variable de lat y lon
-            for (int lon = 0; lon < 720; ++lon) {
+            for (int lon = 0; lon < getWidth(); ++lon) {
                 double val = (Double) tline[lon];
                 buf[lon] = val;
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            throw new RasterDriverException(
+                    "Formato incorrecto o no soportado", e);
         }
     }
 
@@ -521,18 +754,20 @@ public class NetCDFController {
      *            l&iacute;nea a leer
      * @param buf
      *            b&uacute;fer para guardar la l&iacute;nea leida
+     * 
+     * @throws RasterDriverException
+     *             formato de archivo NetCDF no soportado
      */
-    public void readLine(int line, float[] buf) {
-        // TODO Chequear el tipo de datos de la variable
+    public void readLine(int line, float[] buf) throws RasterDriverException {
         try {
             Object[] tline = dData[line];
-            // TODO Tomar las dimensiones según la variable de lat y lon
-            for (int lon = 0; lon < 720; ++lon) {
+            for (int lon = 0; lon < getWidth(); ++lon) {
                 float val = (Float) tline[lon];
                 buf[lon] = val;
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            throw new RasterDriverException(
+                    "Formato incorrecto o no soportado", e);
         }
     }
 
@@ -546,18 +781,20 @@ public class NetCDFController {
      *            l&iacute;nea a leer
      * @param buf
      *            b&uacute;fer para guardar la l&iacute;nea leida
+     * 
+     * @throws RasterDriverException
+     *             formato de archivo NetCDF no soportado
      */
-    public void readLine(int line, int[] buf) {
-        // TODO Chequear el tipo de datos de la variable
+    public void readLine(int line, int[] buf) throws RasterDriverException {
         try {
             Object[] tline = dData[line];
-            // TODO Tomar las dimensiones según la variable de lat y lon
-            for (int lon = 0; lon < 720; ++lon) {
+            for (int lon = 0; lon < getWidth(); ++lon) {
                 int val = (Integer) tline[lon];
                 buf[lon] = val;
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            throw new RasterDriverException(
+                    "Formato incorrecto o no soportado", e);
         }
     }
 
@@ -571,18 +808,20 @@ public class NetCDFController {
      *            l&iacute;nea a leer
      * @param buf
      *            b&uacute;fer para guardar la l&iacute;nea leida
+     * 
+     * @throws RasterDriverException
+     *             formato de archivo NetCDF no soportado
      */
-    public void readLine(int line, short[] buf) {
-        // TODO Chequear el tipo de datos de la variable
+    public void readLine(int line, short[] buf) throws RasterDriverException {
         try {
             Object[] tline = dData[line];
-            // TODO Tomar las dimensiones según la variable de lat y lon
-            for (int lon = 0; lon < 720; ++lon) {
+            for (int lon = 0; lon < getWidth(); ++lon) {
                 short val = (Short) tline[lon];
                 buf[lon] = val;
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            throw new RasterDriverException(
+                    "Formato incorrecto o no soportado", e);
         }
     }
 
@@ -596,19 +835,58 @@ public class NetCDFController {
      *            l&iacute;nea a leer
      * @param buf
      *            b&uacute;fer para guardar la l&iacute;nea leida
+     * 
+     * @throws RasterDriverException
+     *             formato de archivo NetCDF no soportado
      */
-    public void readLine(int line, byte[] buf) {
-        // TODO Chequear el tipo de datos de la variable
+    public void readLine(int line, byte[] buf) throws RasterDriverException {
         try {
             Object[] tline = dData[line];
-            // TODO Tomar las dimensiones según la variable de lat y lon
-            for (int lon = 0; lon < 720; ++lon) {
+            for (int lon = 0; lon < getWidth(); ++lon) {
                 byte val = (Byte) tline[lon];
                 buf[lon] = val;
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            throw new RasterDriverException(
+                    "Formato incorrecto o no soportado", e);
         }
+    }
+
+    /**
+     * Devuelve todos los sistemas de coordenadas contenidos en el archiv NetCDF
+     * 
+     * @return sistemas de coordenadas
+     */
+    public CoordinateSystem[] getCoordinateSystems() {
+        return datas.toArray(new CoordinateSystem[0]);
+    }
+
+    /**
+     * Devuelve el &iacute;ndice del sistema de coordenada que se est&aacute;
+     * empleando
+     * 
+     * @return &iacute;ndice del sistema de coordenada
+     */
+    public int getCoordinateSystemIndex() {
+        return dataIdx;
+    }
+
+    /**
+     * Establece como activo un sistema de coordenada
+     * 
+     * @param dataIdx
+     *            &iacute;ndice del sistema de coordenada seleccionado
+     * 
+     * @throws IOException
+     */
+    public void setCoordinateSystem(int dataIdx) throws IOException,
+            RasterDriverException {
+        // Establece el sistema de coordenadas seleccionado
+        this.dataIdx = dataIdx;
+        data = datas.get(dataIdx);
+
+        // Determina los ejes de coordenadas a partir del sistema de coordenadas
+        loadDefaultCoordinates();
     }
 
 }
