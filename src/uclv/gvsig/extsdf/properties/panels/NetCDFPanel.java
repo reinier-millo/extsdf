@@ -42,8 +42,8 @@ import org.gvsig.gui.beans.panelGroup.panels.AbstractPanel;
 import org.gvsig.raster.dataset.io.RasterDriverException;
 
 import ucar.nc2.dataset.CoordinateSystem;
-import uclv.gvsig.extsdf.MMMC;
 import uclv.gvsig.extsdf.NetCDFController;
+import uclv.gvsig.extsdf.raster.NetCDFRasterDataset;
 
 import com.iver.andami.PluginServices;
 import com.iver.cit.gvsig.fmap.layers.FLayer;
@@ -343,6 +343,10 @@ public class NetCDFPanel extends AbstractPanel {
 		// TODO Auto-generated method stub		
 	}
 
+	/* (non-Javadoc)
+	 * @see org.gvsig.gui.beans.panelGroup.panels.AbstractPanel#setReference(java.lang.Object)
+	 */
+	@Override
 	public void setReference(Object ref) {
 		super.setReference(ref);
 
@@ -356,7 +360,7 @@ public class NetCDFPanel extends AbstractPanel {
 
 			// Obtiene el NetCDFControler asociado al layer
 			FLyrRasterSE fr = (FLyrRasterSE) flayer;
-			MMMC x = (MMMC) fr.getDataSource().getDataset(0)[0];
+			NetCDFRasterDataset x = (NetCDFRasterDataset) fr.getDataSource().getDataset(0)[0];
 			controler = x.getNetCDFController();
 		}
 	}

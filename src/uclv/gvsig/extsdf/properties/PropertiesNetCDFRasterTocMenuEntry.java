@@ -36,6 +36,8 @@ import org.gvsig.raster.gui.IGenericToolBarMenuItem;
 import org.gvsig.raster.util.RasterToolsUtil;
 import org.gvsig.rastertools.RasterModule;
 
+import uclv.gvsig.extsdf.raster.NetCDFRasterDataset;
+
 import com.iver.andami.PluginServices;
 import com.iver.andami.ui.mdiManager.WindowInfo;
 import com.iver.cit.gvsig.fmap.layers.FLayer;
@@ -89,15 +91,14 @@ public class PropertiesNetCDFRasterTocMenuEntry extends 	AbstractTocContextMenuA
 	}
 
 	/**
-	 * Gestiona la apertura del dialogo de propiedades de raster cuando se pulsa
-	 * la opcion asignando a este las propiedades iniciales.
+	 * Gestiona la apertura del dialogo de propiedades del NetCDF 
+	 * 
 	 */
 	@Override
 	public void execute(ITocItem item, FLayer[] selectedItems) {
 		if ((selectedItems == null) || (selectedItems.length != 1))
-			return;
-
-		lyr = selectedItems[0];
+            return ;
+        FLayer lyr = getNodeLayer(item);
 
 		try {
 			enableEvents = false;
@@ -165,8 +166,8 @@ public class PropertiesNetCDFRasterTocMenuEntry extends 	AbstractTocContextMenuA
         FLayer lyr = getNodeLayer(item);
         if (lyr instanceof FLyrRasterSE) {
             FLyrRasterSE fr = (FLyrRasterSE) lyr;
-       //     return fr.getDataSource().getDataset(0)[0] instanceof MMMC;
-            return true;
+            return fr.getDataSource().getDataset(0)[0] instanceof NetCDFRasterDataset;
+            
         }
         return false;
     }
