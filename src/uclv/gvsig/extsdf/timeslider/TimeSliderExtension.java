@@ -27,8 +27,6 @@ package uclv.gvsig.extsdf.timeslider;
 
 import org.gvsig.fmap.raster.layers.FLyrRasterSE;
 
-import uclv.gvsig.extsdf.raster.FlyrNetCDFRaster;
-
 import com.iver.andami.PluginServices;
 import com.iver.andami.ui.mdiManager.IWindow;
 import com.iver.cit.gvsig.fmap.layers.FLayers;
@@ -36,22 +34,35 @@ import com.iver.cit.gvsig.project.documents.view.gui.View;
 import com.iver.andami.plugins.Extension;
 
 /**
- * Extensión para añadir los controles del deslizador de tiempo del raster NetCDF.
+ * <p>
+ * Extensi&oacute;n para el deslizador de tiempo de la capa raster NetCDF.
+ * </p>
+ * 
+ * Esta extensi&oacute;n adiciona un bot&oacute;n a la barra de herramientas de 
+ * <i>gvSIG</i> que ejecuta el deslizador en el tiempo de la capa raster asociada
+ * a un archivo NetCDF de la Vista (<i>View</i>) activa.
+ * 
  * @author afmoya
  * @version 1.0.0
  */
 public class TimeSliderExtension extends Extension{
 
+	/**
+	 * (non javadoc)
+	 * 
+	 * @see com.iver.andami.plugins.Extension#initialize()
+	 */
 	@Override
 	public void initialize() {
 		registerIcons();
 	}
 
-	@Override
 	/**
-	 * @author afmoya
-	 * @version 1.0.0
+	 * (non javadoc)
+	 * 
+	 * @see com.iver.andami.plugins.Extension#execute(String)
 	 */
+	@Override
 	public void execute(String actionCommand) {
 		// TODO Auto-generated method stub
 		IWindow activeWindow = PluginServices.getMDIManager().getActiveWindow();
@@ -60,13 +71,10 @@ public class TimeSliderExtension extends Extension{
 			FLayers fLayers = activeView.getMapControl().getMapContext().getLayers();
 			int layersCount = fLayers.getLayersCount();
 			
-			FlyrNetCDFRaster cdfRaster = null;
-			
 			for(int i=0; i<layersCount; ++i) {
 //				if(fLayer instanceof FlyrNetCDFRaster) {
 //					cdfRaster = (FlyrNetCDFRaster)fLayer;
 					TimeSliderWindow timeSliderWindow = new TimeSliderWindow();
-					timeSliderWindow.setNetCDFRasterLayer(cdfRaster);
 					timeSliderWindow.setRelatedWindow(activeWindow);
 					PluginServices.getMDIManager().addWindow(timeSliderWindow);
 					break;
@@ -75,17 +83,16 @@ public class TimeSliderExtension extends Extension{
 		}
 	}
 
-	@Override
 	/**
-	 * Chequear si la vista activa ya tiene asociada un deslizador de tiempo.
-	 * @author afmoya
-	 * @version 1.0.0
+	 * (non javadoc)
+	 * 
+	 * @see com.iver.andami.plugins.Extension#isEnabled()
 	 */
+	@Override
 	public boolean isEnabled() {
 		// TODO Auto-generated method stub
 		IWindow activeWindow = PluginServices.getMDIManager().getActiveWindow();
 		if(activeWindow instanceof View) {
-//			View view = (View)activeWindow;
 			IWindow[] allWindows = PluginServices.getMDIManager().getAllWindows();
 			for(IWindow analized : allWindows) {
 				if(analized instanceof TimeSliderWindow) {
@@ -98,11 +105,12 @@ public class TimeSliderExtension extends Extension{
 		return true;
 	}
 
-	@Override
 	/**
-	 * @author afmoya
-	 * @version 1.0.0
+	 * (non javadoc)
+	 * 
+	 * @see com.iver.andami.plugins.Extension#isVisible()
 	 */
+	@Override
 	public boolean isVisible() {
 		// TODO Auto-generated method stub
 		IWindow iWindow = PluginServices.getMDIManager().getActiveWindow();		
@@ -119,6 +127,11 @@ public class TimeSliderExtension extends Extension{
 		return false;
 	}
 	
+	/**
+	 * <p>
+	 * Registra los iconos de la extensi&oacute;n
+	 * </p> 
+	 */
 	private void registerIcons() {
 		String[] icons = new String[] {
 				"decrease-icon",
