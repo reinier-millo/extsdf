@@ -25,7 +25,6 @@
  */
 package uclv.gvsig.extsdf.properties;
 
-import java.awt.Dimension;
 import java.awt.Toolkit;
 
 import javax.swing.JFrame;
@@ -49,7 +48,7 @@ public class TestNetCDFPanel extends JFrame{
 	 * @param args
 	 */
 	public TestNetCDFPanel(){
-		setPreferredSize(new Dimension(500,390));
+		setSize(500,390);
 		NetCDFPanel panel = new NetCDFPanel();
 		add(panel);
 		setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
