@@ -122,7 +122,23 @@ public class NetCDFController {
      * Valor de relleno definido en el NetCDF
      */
     private double missing;
-
+    /**
+     * &Iacute; correspondiente a la variable latitud en los rangos
+     * correspondientes a la variable a renderizar
+     */
+    private int idxLat;
+    /**
+     * &Iacute; correspondiente a la variable longitud en los rangos
+     * correspondientes a la variable a renderizar
+     */
+    private int idxLon;
+    /**
+     * &Iacute; correspondiente a la variable tomada como par&aacute;metro
+     * (tiempo, altura...) en los rangos correspondientes a la variable a
+     * renderizar
+     */
+    private int idxTime;
+    
     /**
      * <p>
      * Constructor de la clase
@@ -196,6 +212,9 @@ public class NetCDFController {
 
         // Determina el valor numérico empleado para relleno
         findMissind();
+
+        // Calcula los índices de cada uno de los ejes de coordenadas
+        findVariableIndex();
 
         // Lee la primera capa correspondiente al archivo NetCDF
         readData();
@@ -466,6 +485,35 @@ public class NetCDFController {
                 dData = new Byte[getHeight()][getWidth()];
         }
     }
+    
+    /**
+     * <p>
+     * Calcula los &iacute;ndices correspondientes a cada uno de los ejes de
+     * coordenadas empleados para la renderización de la variable
+     * </p>
+     * 
+     * Este &iacute;ndice es calculado teniendo en cuenta el orden en que
+     * aparece cada una de las dimensiones correspondientes a cada eje en las
+     * dimensiones asociadas a la variable que se renderiza
+     */
+    private void findVariableIndex() {
+        // Busca el índice de dimensión que le corresponde a la latitud, la
+        // longitud y a la variable de tiempo
+        idxLat = -1;
+        idxLon = -1;
+        idxTime = -1;
+        int itr = 0;
+        for (Dimension dim : dataVar.getDimensions()) {
+            if (time != null && dim.compareTo(time.getDimension(0)) == 0) {
+                idxTime = itr;
+            } else if (dim.compareTo(lat.getDimension(0)) == 0) {
+                idxLat = itr;
+            } else if (dim.compareTo(lon.getDimension(0)) == 0) {
+                idxLon = itr;
+            }
+            itr++;
+        }
+    }
 
     /**
      * Lee el b&uacute;ffer de datos de la primera capa de la variable
@@ -486,26 +534,11 @@ public class NetCDFController {
         // Toma los rangos de las variables, de solo lectura
         List<Range> ranges = dataVar.getRanges();
 
-        // Busca el índice de dimensión que le corresponde a la latitud, la
-        // longitud y a la variable de tiempo
-        int timeDimIdx = -1;
-        int latDimIdx = -1;
-        int lonDimIdx = -1;
-        int itr = 0;
-        for (Dimension dim : dataVar.getDimensions()) {
-            if (time != null && dim.compareTo(time.getDimension(0)) == 0) {
-                timeDimIdx = itr;
-            } else if (dim.compareTo(lat.getDimension(0)) == 0) {
-                latDimIdx = itr;
-            } else if (dim.compareTo(lon.getDimension(0)) == 0) {
-                lonDimIdx = itr;
-            }
-            itr++;
-        }
+        
 
         // Verifica que el formato del archivo sea correcto
         // La variable debe tener una dimensión de longitud y una de latitud
-        if (latDimIdx == -1 || lonDimIdx == -1)
+        if (idxLat == -1 || idxLon == -1)
             throw new RasterDriverException("Formato incorrecto o no soportado");
 
         // Crea una estructura con los rangos leidos
@@ -513,8 +546,8 @@ public class NetCDFController {
         newRanges.addAll(ranges);
 
         // Selecciona los rango que se van a tomar
-        if (timeDimIdx != -1)
-            newRanges.set(timeDimIdx, new Range(timeIdx, timeIdx));
+        if (idxTime != -1)
+            newRanges.set(idxTime, new Range(timeIdx, timeIdx));
 
         // Lee los datos para cada instante de tiempo
         Array arr = dataVar.read(newRanges);
@@ -526,10 +559,10 @@ public class NetCDFController {
         // Recorre todas las latitudes
         for (int lat = 0; lat < maxHeight; ++lat) {
             // Establece el valor para la latitud
-            idx.setDim(latDimIdx, lat);
+            idx.setDim(idxLat, lat);
             for (int lon = 0; lon < maxWidth; ++lon) {
                 // Establece el valor para la longitud
-                idx.setDim(lonDimIdx, lon);
+                idx.setDim(idxLon, lon);
 
                 // Lee el valor correspondiente teniendo en cuenta el tipo
                 // de dato
@@ -1014,6 +1047,8 @@ public class NetCDFController {
         this.dataVar = dataVar;
         // Determina el valor numérico empleado para relleno
         findMissind();
+        // Calcula los índices de cada uno de los ejes de coordenadas
+        findVariableIndex();
         // Lee la primera capa correspondiente al archivo NetCDF
         readData();
     }
