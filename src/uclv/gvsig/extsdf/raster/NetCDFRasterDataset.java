@@ -37,6 +37,8 @@ import org.gvsig.raster.dataset.io.RasterDriverException;
 import org.gvsig.raster.datastruct.Extent;
 import org.gvsig.raster.util.extensionPoints.ExtensionPoint;
 
+import uclv.gvsig.extsdf.NetCDFController;
+
 
 /**
  * <p>
@@ -46,6 +48,10 @@ import org.gvsig.raster.util.extensionPoints.ExtensionPoint;
  * @version 1.0.0
  */
 public class NetCDFRasterDataset extends RasterDataset{
+	/**
+	 * Controlador del archivo NetCDF
+	 */
+	private NetCDFController controller;
 	
 	/**
 	 * (non javadoc)
@@ -294,5 +300,18 @@ public class NetCDFRasterDataset extends RasterDataset{
 	public static void registerDriver() {
 	    ExtensionPoint point = ExtensionPoint.getExtensionPoint("RasterReader");
 	    point.register("nc", NetCDFRasterDataset.class);
+	}
+	
+	/**
+	 * <p>
+	 * Devuelve el controlador del archivo Netcdf.
+	 * </p>
+	 * 
+	 * @return NetCDFController
+	 * 
+	 * @see uclv.gvsig.extsdf.NetCDFController
+	 */
+	public NetCDFController getNetCDFController(){
+	      return controller;
 	  }
 }
