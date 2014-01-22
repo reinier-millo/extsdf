@@ -72,9 +72,6 @@ public class NetCDFDriverExtension extends Extension {
 		ExtensionPoints extensionPoints = ExtensionPointsSingleton
 				.getInstance();
 
-		// Añadimos el Driver para la apertura de ficheros NetCDF
-		extensionPoints.add("FileExtendingOpenDialog", "FileOpenRasterNetCDF",
-				NetCDFDriver.class);
 		// Creación del punto de extensión para registrar paneles en el cuadro
 		// de propiedades.
 		if (!extensionPoints.containsKey("NetCDFPropertiesDialog")) {
