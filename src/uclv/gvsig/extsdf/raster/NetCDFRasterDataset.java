@@ -581,7 +581,7 @@ public class NetCDFRasterDataset extends RasterDataset {
 	}
 
 	/**
-	 * Devuelve un subconjunto de filas del archiv de datos
+	 * Devuelve un subconjunto de filas del archivo de datos
 	 * 
 	 * @param pos
 	 *            fila inicial
