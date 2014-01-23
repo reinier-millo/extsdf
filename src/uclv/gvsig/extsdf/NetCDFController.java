@@ -1339,4 +1339,241 @@ public class NetCDFController {
     public Object getMaxValue() {
         return max;
     }
+
+    /**
+     * Carga un fragmento de la capa del NetCDF en el b&uuacute;ffer de la capa
+     * Raster, teniendo en cuenta el tipo de dato de la capa NetCDF
+     * 
+     * @param rasterBuf
+     *            b&uacute;ffer de la capa raster
+     * @param initRow
+     *            fila inicial de la capa NetCDF
+     * @param initCol
+     *            columna inicial de la capa NetCDF
+     * @param incRow
+     *            factor de incremento de las filas en la capa NetCDF
+     * @param incCol
+     *            factor de incremento de las columnas en la capa NetCDF
+     * 
+     * @throws IOException
+     *             error de entrada/salida de los datos
+     * @throws InterruptedException
+     *             error en el procesamiento concurrente
+     * @throws RasterDriverException
+     *             formato de archivo NetCDF no soportado
+     */
+    public void readDataToBuffer(IBuffer rasterBuf, int initRow, int initCol,
+            double incRow, double incCol) throws IOException,
+            InterruptedException, RasterDriverException {
+        switch (getDataType()) {
+            case IBuffer.TYPE_DOUBLE:
+                readDouble2Buffer(rasterBuf, initRow, initCol, incRow, incCol);
+                break;
+
+            case IBuffer.TYPE_FLOAT:
+                readFloat2Buffer(rasterBuf, initRow, initCol, incRow, incCol);
+                break;
+            case IBuffer.TYPE_INT:
+                readInteger2Buffer(rasterBuf, initRow, initCol, incRow, incCol);
+                break;
+            case IBuffer.TYPE_SHORT:
+                readShort2Buffer(rasterBuf, initRow, initCol, incRow, incCol);
+                break;
+
+            default:
+                readByte2Buffer(rasterBuf, initRow, initCol, incRow, incCol);
+        }
+    }
+
+    /**
+     * Carga un fragmento de la capa del NetCDF en el b&uuacute;ffer de la capa
+     * Raster.<br/>
+     * Los datos se leen de tipo double
+     * 
+     * @param rasterBuf
+     *            b&uacute;ffer de la capa raster
+     * @param initRow
+     *            fila inicial de la capa NetCDF
+     * @param initCol
+     *            columna inicial de la capa NetCDF
+     * @param incRow
+     *            factor de incremento de las filas en la capa NetCDF
+     * @param incCol
+     *            factor de incremento de las columnas en la capa NetCDF
+     * 
+     * @throws IOException
+     *             error de entrada/salida de los datos
+     * @throws InterruptedException
+     *             error en el procesamiento concurrente
+     * @throws RasterDriverException
+     *             formato de archivo NetCDF no soportado
+     */
+    private void readDouble2Buffer(IBuffer rasterBuf, int initRow, int initCol,
+            double incRow, double incCol) throws IOException,
+            InterruptedException, RasterDriverException {
+        for (int line = 0; line < rasterBuf.getHeight(); line++) {
+            for (int col = 0; col < rasterBuf.getWidth(); col++) {
+                rasterBuf.setElem(
+                        line,
+                        col,
+                        0,
+                        getValueDouble(initRow + (int) (line * incRow), initCol
+                                + (int) (col * incCol)));
+            }
+        }
+    }
+
+    /**
+     * Carga un fragmento de la capa del NetCDF en el b&uuacute;ffer de la capa
+     * Raster.<br/>
+     * Los datos se leen de tipo float
+     * 
+     * @param rasterBuf
+     *            b&uacute;ffer de la capa raster
+     * @param initRow
+     *            fila inicial de la capa NetCDF
+     * @param initCol
+     *            columna inicial de la capa NetCDF
+     * @param incRow
+     *            factor de incremento de las filas en la capa NetCDF
+     * @param incCol
+     *            factor de incremento de las columnas en la capa NetCDF
+     * 
+     * @throws IOException
+     *             error de entrada/salida de los datos
+     * @throws InterruptedException
+     *             error en el procesamiento concurrente
+     * @throws RasterDriverException
+     *             formato de archivo NetCDF no soportado
+     */
+
+    private void readFloat2Buffer(IBuffer rasterBuf, int initRow, int initCol,
+            double incRow, double incCol) throws IOException,
+            InterruptedException, RasterDriverException {
+        for (int line = 0; line < rasterBuf.getHeight(); line++) {
+            for (int col = 0; col < rasterBuf.getWidth(); col++) {
+                rasterBuf.setElem(
+                        line,
+                        col,
+                        0,
+                        getValueFloat(initRow + (int) (line * incRow), initCol
+                                + (int) (col * incCol)));
+            }
+        }
+    }
+
+    /**
+     * Carga un fragmento de la capa del NetCDF en el b&uuacute;ffer de la capa
+     * Raster.<br/>
+     * Los datos se leen de tipo int
+     * 
+     * @param rasterBuf
+     *            b&uacute;ffer de la capa raster
+     * @param initRow
+     *            fila inicial de la capa NetCDF
+     * @param initCol
+     *            columna inicial de la capa NetCDF
+     * @param incRow
+     *            factor de incremento de las filas en la capa NetCDF
+     * @param incCol
+     *            factor de incremento de las columnas en la capa NetCDF
+     * 
+     * @throws IOException
+     *             error de entrada/salida de los datos
+     * @throws InterruptedException
+     *             error en el procesamiento concurrente
+     * @throws RasterDriverException
+     *             formato de archivo NetCDF no soportado
+     */
+
+    private void readInteger2Buffer(IBuffer rasterBuf, int initRow,
+            int initCol, double incRow, double incCol) throws IOException,
+            InterruptedException, RasterDriverException {
+        for (int line = 0; line < rasterBuf.getHeight(); line++) {
+            for (int col = 0; col < rasterBuf.getWidth(); col++) {
+                rasterBuf.setElem(
+                        line,
+                        col,
+                        0,
+                        getValueInteger(initRow + (int) (line * incRow),
+                                initCol + (int) (col * incCol)));
+            }
+        }
+    }
+
+    /**
+     * Carga un fragmento de la capa del NetCDF en el b&uuacute;ffer de la capa
+     * Raster.<br/>
+     * Los datos se leen de tipo short
+     * 
+     * @param rasterBuf
+     *            b&uacute;ffer de la capa raster
+     * @param initRow
+     *            fila inicial de la capa NetCDF
+     * @param initCol
+     *            columna inicial de la capa NetCDF
+     * @param incRow
+     *            factor de incremento de las filas en la capa NetCDF
+     * @param incCol
+     *            factor de incremento de las columnas en la capa NetCDF
+     * 
+     * @throws IOException
+     *             error de entrada/salida de los datos
+     * @throws InterruptedException
+     *             error en el procesamiento concurrente
+     * @throws RasterDriverException
+     *             formato de archivo NetCDF no soportado
+     */
+    private void readShort2Buffer(IBuffer rasterBuf, int initRow, int initCol,
+            double incRow, double incCol) throws IOException,
+            InterruptedException, RasterDriverException {
+        for (int line = 0; line < rasterBuf.getHeight(); line++) {
+            for (int col = 0; col < rasterBuf.getWidth(); col++) {
+                rasterBuf.setElem(
+                        line,
+                        col,
+                        0,
+                        getValueShort(initRow + (int) (line * incRow), initCol
+                                + (int) (col * incCol)));
+            }
+        }
+    }
+
+    /**
+     * Carga un fragmento de la capa del NetCDF en el b&uuacute;ffer de la capa
+     * Raster.<br/>
+     * Los datos se leen de tipo byte
+     * 
+     * @param rasterBuf
+     *            b&uacute;ffer de la capa raster
+     * @param initRow
+     *            fila inicial de la capa NetCDF
+     * @param initCol
+     *            columna inicial de la capa NetCDF
+     * @param incRow
+     *            factor de incremento de las filas en la capa NetCDF
+     * @param incCol
+     *            factor de incremento de las columnas en la capa NetCDF
+     * 
+     * @throws IOException
+     *             error de entrada/salida de los datos
+     * @throws InterruptedException
+     *             error en el procesamiento concurrente
+     * @throws RasterDriverException
+     *             formato de archivo NetCDF no soportado
+     */
+    private void readByte2Buffer(IBuffer rasterBuf, int initRow, int initCol,
+            double incRow, double incCol) throws IOException,
+            InterruptedException, RasterDriverException {
+        for (int line = 0; line < rasterBuf.getHeight(); line++) {
+            for (int col = 0; col < rasterBuf.getWidth(); col++) {
+                rasterBuf.setElem(
+                        line,
+                        col,
+                        0,
+                        getValueByte(initRow + (int) (line * incRow), initCol
+                                + (int) (col * incCol)));
+            }
+        }
+    }
 }
