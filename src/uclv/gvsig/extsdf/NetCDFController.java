@@ -1791,4 +1791,88 @@ public class NetCDFController {
         return data;
     }
 
+    /**
+     * Devuelve una l&iacute;nea de valores de la capa Raster como un arreglo de
+     * byte
+     * 
+     * @param line
+     *            l&iacute;nea a leer
+     * 
+     * @return l&iacute;nea de datos
+     * 
+     * @throws RasterDriverException
+     */
+    public byte[] readLineByte(int line) throws RasterDriverException {
+        byte[] buff = new byte[getWidth()];
+        readLine(line, buff);
+        return buff;
+    }
+
+    /**
+     * Devuelve una l&iacute;nea de valores de la capa Raster como un arreglo de
+     * short
+     * 
+     * @param line
+     *            l&iacute;nea a leer
+     * 
+     * @return l&iacute;nea de datos
+     * 
+     * @throws RasterDriverException
+     */
+    public short[] readLineShort(int line) throws RasterDriverException {
+        short[] buff = new short[getWidth()];
+        readLine(line, buff);
+        return buff;
+    }
+
+    /**
+     * Devuelve una l&iacute;nea de valores de la capa Raster como un arreglo de
+     * int
+     * 
+     * @param line
+     *            l&iacute;nea a leer
+     * 
+     * @return l&iacute;nea de datos
+     * 
+     * @throws RasterDriverException
+     */
+    public int[] readLineInteger(int line) throws RasterDriverException {
+        int[] buff = new int[getWidth()];
+        readLine(line, buff);
+        return buff;
+    }
+
+    /**
+     * Devuelve una l&iacute;nea de valores de la capa Raster como un arreglo de
+     * float
+     * 
+     * @param line
+     *            l&iacute;nea a leer
+     * 
+     * @return l&iacute;nea de datos
+     * 
+     * @throws RasterDriverException
+     */
+    public float[] readLineFloat(int line) throws RasterDriverException {
+        float[] buff = new float[getWidth()];
+        readLine(line, buff);
+        return buff;
+    }
+
+    /**
+     * Devuelve una l&iacute;nea de valores de la capa Raster como un arreglo de
+     * double
+     * 
+     * @param line
+     *            l&iacute;nea a leer
+     * 
+     * @return l&iacute;nea de datos
+     * 
+     * @throws RasterDriverException
+     */
+    public double[] readLineDouble(int line) throws RasterDriverException {
+        double[] buff = new double[getWidth()];
+        readLine(line, buff);
+        return buff;
+    }
 }
