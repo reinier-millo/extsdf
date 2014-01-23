@@ -1077,6 +1077,33 @@ public class NetCDFController {
     }
 
     /**
+     * Devuelve la variable correpondiente al eje de coordenadas del parámetro
+     * variable (tiempo, altura, ...)
+     * 
+     * @return variable tiempo
+     * 
+     * @throws RasterDriverException
+     *             formato de archivo NetCDF no soportado
+     */
+    public CoordinateAxis1DTime getSelectedParameter()
+            throws RasterDriverException {
+        if (time == null)
+            throw new RasterDriverException(
+                    "Formato de archivo NetCDF no soportado");
+        return time;
+    }
+
+    /**
+     * Indica si la variable renderizada tiene un parámetro variable o no
+     * 
+     * @return <b>true</b> si existe una parámetro variable <br/>
+     *         <b>false</b> en cualquier otro caso
+     */
+    public boolean hasVariableParameter() {
+        return time != null;
+    }
+
+    /**
      * Establece la variable que se renderizar&aacute; en la capa Raster
      * 
      * @param dataVar
