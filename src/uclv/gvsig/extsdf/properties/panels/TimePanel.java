@@ -24,6 +24,7 @@
  */
 package uclv.gvsig.extsdf.properties.panels;
 
+import java.awt.Component;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
@@ -36,16 +37,23 @@ import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.border.TitledBorder;
+import javax.swing.text.DateFormatter;
 
 import org.apache.log4j.Logger;
 import org.gvsig.fmap.raster.layers.FLyrRasterSE;
 import org.gvsig.gui.beans.panelGroup.panels.AbstractPanel;
+import org.gvsig.raster.dataset.io.RasterDriverException;
 
 import uclv.gvsig.extsdf.NetCDFController;
 import uclv.gvsig.extsdf.raster.NetCDFRasterDataset;
 
 import com.iver.andami.PluginServices;
 import com.iver.cit.gvsig.fmap.layers.FLayer;
+
+import javax.swing.JCheckBox;
+
+import java.awt.event.ItemListener;
+import java.awt.event.ItemEvent;
 
 /**
  * Panel para el tiempo del NetCDF
@@ -58,9 +66,21 @@ public class TimePanel extends AbstractPanel {
 	 * Atributos
 	 */
 	private static final long serialVersionUID = 1L;
+	/**
+	 * 
+	 */
 	FLayer flayer = null;
+	/**
+	 * Objeto que maneja el NetCDF
+	 */
 	NetCDFController controler = null;
+	/**
+	 * 
+	 */
 	private Logger logger = Logger.getLogger(NetCDFPanel.class);
+	/**
+	 * Componentes visuales
+	 */
 	private JPanel panel;
 	private JLabel label;
 	private JComboBox comboBox;
@@ -82,25 +102,33 @@ public class TimePanel extends AbstractPanel {
 	private JTextField textField_4;
 	private JButton button;
 	private JList list;
+	private JCheckBox chckbxNewCheckBox;
 
 	public TimePanel() {
 		GridBagLayout gridBagLayout = new GridBagLayout();
 		gridBagLayout.columnWidths = new int[] { 396, 0 };
-		gridBagLayout.rowHeights = new int[] { 185, 78, 0 };
+		gridBagLayout.rowHeights = new int[] { 0, 185, 78, 0 };
 		gridBagLayout.columnWeights = new double[] { 0.0, Double.MIN_VALUE };
-		gridBagLayout.rowWeights = new double[] { 0.0, 0.0, Double.MIN_VALUE };
+		gridBagLayout.rowWeights = new double[] { 0.0, 0.0, 0.0,
+				Double.MIN_VALUE };
 		setLayout(gridBagLayout);
+		GridBagConstraints gbc_chckbxNewCheckBox = new GridBagConstraints();
+		gbc_chckbxNewCheckBox.anchor = GridBagConstraints.WEST;
+		gbc_chckbxNewCheckBox.insets = new Insets(0, 0, 5, 0);
+		gbc_chckbxNewCheckBox.gridx = 0;
+		gbc_chckbxNewCheckBox.gridy = 0;
+		add(getChckbxNewCheckBox(), gbc_chckbxNewCheckBox);
 		GridBagConstraints gbc_panel_1 = new GridBagConstraints();
 		gbc_panel_1.fill = GridBagConstraints.HORIZONTAL;
 		gbc_panel_1.insets = new Insets(0, 0, 5, 0);
 		gbc_panel_1.anchor = GridBagConstraints.NORTH;
 		gbc_panel_1.gridx = 0;
-		gbc_panel_1.gridy = 0;
+		gbc_panel_1.gridy = 1;
 		add(getPanel_1(), gbc_panel_1);
 		GridBagConstraints gbc_panel = new GridBagConstraints();
 		gbc_panel.fill = GridBagConstraints.BOTH;
 		gbc_panel.gridx = 0;
-		gbc_panel.gridy = 1;
+		gbc_panel.gridy = 2;
 		add(getPanel(), gbc_panel);
 	}
 
@@ -159,6 +187,13 @@ public class TimePanel extends AbstractPanel {
 
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.gvsig.gui.beans.panelGroup.panels.AbstractPanel#setReference(java
+	 * .lang.Object)
+	 */
 	public void setReference(Object ref) {
 		super.setReference(ref);
 
@@ -178,6 +213,10 @@ public class TimePanel extends AbstractPanel {
 		}
 	}
 
+	/**
+	 * 
+	 * @return
+	 */
 	private JPanel getPanel() {
 		if (panel == null) {
 			panel = new JPanel();
@@ -221,10 +260,18 @@ public class TimePanel extends AbstractPanel {
 			gbc_comboBox_1.gridx = 2;
 			gbc_comboBox_1.gridy = 1;
 			panel.add(getComboBox_1(), gbc_comboBox_1);
+			Component[] componets = panel.getComponents();
+			for (Component component : componets) {
+				component.setEnabled(false);
+			}
 		}
 		return panel;
 	}
 
+	/**
+	 * 
+	 * @return
+	 */
 	private JLabel getLabel_1() {
 		if (label == null) {
 			label = new JLabel("New label");
@@ -233,6 +280,10 @@ public class TimePanel extends AbstractPanel {
 		return label;
 	}
 
+	/**
+	 * 
+	 * @return
+	 */
 	private JComboBox getComboBox() {
 		if (comboBox == null) {
 			comboBox = new JComboBox();
@@ -240,6 +291,10 @@ public class TimePanel extends AbstractPanel {
 		return comboBox;
 	}
 
+	/**
+	 * 
+	 * @return
+	 */
 	private JLabel getLabel_1_1() {
 		if (label_1 == null) {
 			label_1 = new JLabel("New label");
@@ -248,6 +303,10 @@ public class TimePanel extends AbstractPanel {
 		return label_1;
 	}
 
+	/**
+	 * 
+	 * @return
+	 */
 	private JTextField getTextField() {
 		if (textField == null) {
 			textField = new JTextField();
@@ -256,6 +315,10 @@ public class TimePanel extends AbstractPanel {
 		return textField;
 	}
 
+	/**
+	 * 
+	 * @return
+	 */
 	private JComboBox getComboBox_1() {
 		if (comboBox_1 == null) {
 			comboBox_1 = new JComboBox();
@@ -263,6 +326,10 @@ public class TimePanel extends AbstractPanel {
 		return comboBox_1;
 	}
 
+	/**
+	 * 
+	 * @return
+	 */
 	private JPanel getPanel_1() {
 		if (panel_1 == null) {
 			panel_1 = new JPanel();
@@ -361,10 +428,19 @@ public class TimePanel extends AbstractPanel {
 			gbc_button.gridx = 3;
 			gbc_button.gridy = 5;
 			panel_1.add(getButton(), gbc_button);
+			Component[] componets = panel_1.getComponents();
+			for (Component component : componets) {
+				component.setEnabled(false);
+			}
 		}
+
 		return panel_1;
 	}
 
+	/**
+	 * 
+	 * @return
+	 */
 	private JLabel getLabel_2() {
 		if (label_2 == null) {
 			label_2 = new JLabel("New label");
@@ -373,6 +449,10 @@ public class TimePanel extends AbstractPanel {
 		return label_2;
 	}
 
+	/**
+	 * 
+	 * @return
+	 */
 	private JComboBox getComboBox_2() {
 		if (comboBox_2 == null) {
 			comboBox_2 = new JComboBox();
@@ -380,6 +460,10 @@ public class TimePanel extends AbstractPanel {
 		return comboBox_2;
 	}
 
+	/**
+	 * 
+	 * @return
+	 */
 	private JLabel getLabel_3() {
 		if (label_3 == null) {
 			label_3 = new JLabel("New label");
@@ -389,6 +473,10 @@ public class TimePanel extends AbstractPanel {
 		return label_3;
 	}
 
+	/**
+	 * 
+	 * @return
+	 */
 	private JLabel getLabel_4() {
 		if (label_4 == null) {
 			label_4 = new JLabel("New label");
@@ -397,6 +485,10 @@ public class TimePanel extends AbstractPanel {
 		return label_4;
 	}
 
+	/**
+	 * 
+	 * @return
+	 */
 	private JComboBox getComboBox_3() {
 		if (comboBox_3 == null) {
 			comboBox_3 = new JComboBox();
@@ -404,6 +496,10 @@ public class TimePanel extends AbstractPanel {
 		return comboBox_3;
 	}
 
+	/**
+	 * 
+	 * @return
+	 */
 	private JLabel getLabel_5() {
 		if (label_5 == null) {
 			label_5 = new JLabel("New label");
@@ -413,6 +509,10 @@ public class TimePanel extends AbstractPanel {
 		return label_5;
 	}
 
+	/**
+	 * 
+	 * @return
+	 */
 	private JTextField getTextField_2() {
 		if (textField_2 == null) {
 			textField_2 = new JTextField();
@@ -421,6 +521,10 @@ public class TimePanel extends AbstractPanel {
 		return textField_2;
 	}
 
+	/**
+	 * 
+	 * @return
+	 */
 	private JComboBox getComboBox_4() {
 		if (comboBox_4 == null) {
 			comboBox_4 = new JComboBox();
@@ -428,6 +532,10 @@ public class TimePanel extends AbstractPanel {
 		return comboBox_4;
 	}
 
+	/**
+	 * 
+	 * @return
+	 */
 	private JLabel getLabel_6() {
 		if (label_6 == null) {
 			label_6 = new JLabel("New label");
@@ -437,6 +545,10 @@ public class TimePanel extends AbstractPanel {
 		return label_6;
 	}
 
+	/**
+	 * 
+	 * @return
+	 */
 	private JTextField getTextField_3() {
 		if (textField_3 == null) {
 			textField_3 = new JTextField();
@@ -445,6 +557,10 @@ public class TimePanel extends AbstractPanel {
 		return textField_3;
 	}
 
+	/**
+	 * 
+	 * @return
+	 */
 	private JLabel getLabel_7() {
 		if (label_7 == null) {
 			label_7 = new JLabel("New label");
@@ -453,6 +569,10 @@ public class TimePanel extends AbstractPanel {
 		return label_7;
 	}
 
+	/**
+	 * 
+	 * @return
+	 */
 	private JTextField getTextField_4() {
 		if (textField_4 == null) {
 			textField_4 = new JTextField();
@@ -461,6 +581,10 @@ public class TimePanel extends AbstractPanel {
 		return textField_4;
 	}
 
+	/**
+	 * 
+	 * @return
+	 */
 	private JButton getButton() {
 		if (button == null) {
 			button = new JButton("New button");
@@ -469,6 +593,10 @@ public class TimePanel extends AbstractPanel {
 		return button;
 	}
 
+	/**
+	 * 
+	 * @return
+	 */
 	private JList getList() {
 		if (list == null) {
 			list = new JList();
@@ -476,4 +604,60 @@ public class TimePanel extends AbstractPanel {
 		return list;
 	}
 
+	/**
+	 * 
+	 * @return
+	 */
+	private JCheckBox getChckbxNewCheckBox() {
+		if (chckbxNewCheckBox == null) {
+			chckbxNewCheckBox = new JCheckBox("New check box");
+			chckbxNewCheckBox
+					.addItemListener(new ChckbxNewCheckBoxItemListener());
+			chckbxNewCheckBox.setText(PluginServices.getText(this,
+					"enable_time_on_this_layer"));
+		}
+		return chckbxNewCheckBox;
+	}
+
+	/**
+	 * 
+	 * @author dcardoso
+	 * 
+	 */
+	private class ChckbxNewCheckBoxItemListener implements ItemListener {
+		public void itemStateChanged(ItemEvent e) {
+			if (chckbxNewCheckBox.isSelected()) {
+				comboBox_2.setEnabled(true);
+				// si el layer tiene una dimension tiempo se activan las
+				// componentes
+				if (controler.hasVariableParameter()) {
+					comboBox_2.setModel(new DefaultComboBoxModel(
+							new String[] { PluginServices.getText(this,
+									"layer_has_time_as_a_dimension") }));
+					list.setEnabled(true);
+					try {
+						list.setListData(new String[] { controler
+								.getSelectedParameter().getFullName() });
+					} catch (RasterDriverException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+					comboBox_3.setEnabled(true);
+				} else
+					comboBox_2.setModel(new DefaultComboBoxModel(
+							new String[] { PluginServices.getText(this,
+									"layer_has_not_time_as_a_dimension") }));
+
+			} else {
+				Component[] componets = panel_1.getComponents();
+				for (Component component : componets) {
+					component.setEnabled(false);
+				}
+				componets = panel.getComponents();
+				for (Component component : componets) {
+					component.setEnabled(false);
+				}
+			}
+		}
+	}
 }
