@@ -30,7 +30,6 @@ import uclv.gvsig.extsdf.properties.PropertiesNetCDFRasterTocMenuEntry;
 import uclv.gvsig.extsdf.properties.panels.NetCDFPanel;
 import uclv.gvsig.extsdf.properties.panels.TimePanel;
 import uclv.gvsig.extsdf.raster.NetCDFRasterDataset;
-import uclv.gvsig.extsdf.testRaster.MMMC;
 
 import com.iver.andami.plugins.Extension;
 import com.iver.utiles.extensionPoints.ExtensionPoint;
