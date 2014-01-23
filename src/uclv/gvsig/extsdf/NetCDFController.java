@@ -32,7 +32,9 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.gvsig.raster.RasterLibrary;
+import org.gvsig.raster.dataset.FileNotOpenException;
 import org.gvsig.raster.dataset.IBuffer;
+import org.gvsig.raster.dataset.InvalidSetViewException;
 import org.gvsig.raster.dataset.io.RasterDriverException;
 
 import ucar.ma2.Array;
@@ -1603,4 +1605,190 @@ public class NetCDFController {
             }
         }
     }
+
+    /**
+     * Devuelve los datos de tipo byte leidos de una capa del NetCDF
+     * 
+     * @param pos
+     *            posición inicial de donde se comenzarán a leer los datos
+     * @param blockHeight
+     *            cantidad de filas de datos a leer
+     * 
+     * @return datos de tipo byte
+     * 
+     * @throws InvalidSetViewException
+     * @throws FileNotOpenException
+     * @throws RasterDriverException
+     * @throws InterruptedException
+     */
+    public byte[][][] readBlockByte(int pos, int blockHeight)
+            throws InvalidSetViewException, FileNotOpenException,
+            RasterDriverException, InterruptedException {
+        // Dimensiones de la data del NetCDF
+        int rows = getHeight();
+        int cols = getWidth();
+
+        // Inicializa el buffer de byte para una banda
+        byte[][][] data = new byte[1][blockHeight][cols];
+
+        // Lee línea a línea desde el archivo del NetCDF
+        for (int i = pos, h = 0; i < rows && h < blockHeight; ++i, ++h) {
+            Object[] tline = dData[i];
+            for (int lon = 0; lon < getWidth(); ++lon) {
+                data[0][h][lon] = (Byte) tline[lon];
+            }
+        }
+        data[0][0][0] = (Byte) getMinValue();
+        data[0][0][1] = (Byte) getMaxValue();
+        return data;
+    }
+
+    /**
+     * Devuelve los datos de tipo short leidos de una capa del NetCDF
+     * 
+     * @param pos
+     *            posición inicial de donde se comenzarán a leer los datos
+     * @param blockHeight
+     *            cantidad de filas de datos a leer
+     * 
+     * @return datos de tipo short
+     * 
+     * @throws InvalidSetViewException
+     * @throws FileNotOpenException
+     * @throws RasterDriverException
+     * @throws InterruptedException
+     */
+    public short[][][] readBlockShort(int pos, int blockHeight)
+            throws InvalidSetViewException, FileNotOpenException,
+            RasterDriverException, InterruptedException {
+        // Dimensiones de la data del NetCDF
+        int rows = getHeight();
+        int cols = getWidth();
+
+        // Inicializa el buffer de byte para una banda
+        short[][][] data = new short[1][blockHeight][cols];
+
+        // Lee línea a línea desde el archivo del NetCDF
+        for (int i = pos, h = 0; i < rows && h < blockHeight; ++i, ++h) {
+            Object[] tline = dData[i];
+            for (int lon = 0; lon < getWidth(); ++lon) {
+                data[0][h][lon] = (Short) tline[lon];
+            }
+        }
+        data[0][0][0] = (Short) getMinValue();
+        data[0][0][1] = (Short) getMaxValue();
+        return data;
+    }
+
+    /**
+     * Devuelve los datos de tipo int leidos de una capa del NetCDF
+     * 
+     * @param pos
+     *            posición inicial de donde se comenzarán a leer los datos
+     * @param blockHeight
+     *            cantidad de filas de datos a leer
+     * 
+     * @return datos de tipo byte
+     * 
+     * @throws InvalidSetViewException
+     * @throws FileNotOpenException
+     * @throws RasterDriverException
+     * @throws InterruptedException
+     */
+    public int[][][] readBlockInteger(int pos, int blockHeight)
+            throws InvalidSetViewException, FileNotOpenException,
+            RasterDriverException, InterruptedException {
+        // Dimensiones de la data del NetCDF
+        int rows = getHeight();
+        int cols = getWidth();
+
+        // Inicializa el buffer de byte para una banda
+        int[][][] data = new int[1][blockHeight][cols];
+
+        // Lee línea a línea desde el archivo del NetCDF
+        for (int i = pos, h = 0; i < rows && h < blockHeight; ++i, ++h) {
+            Object[] tline = dData[i];
+            for (int lon = 0; lon < getWidth(); ++lon) {
+                data[0][h][lon] = (Integer) tline[lon];
+            }
+        }
+        data[0][0][0] = (Integer) getMinValue();
+        data[0][0][1] = (Integer) getMaxValue();
+        return data;
+    }
+
+    /**
+     * Devuelve los datos de tipo float leidos de una capa del NetCDF
+     * 
+     * @param pos
+     *            posición inicial de donde se comenzarán a leer los datos
+     * @param blockHeight
+     *            cantidad de filas de datos a leer
+     * 
+     * @return datos de tipo float
+     * 
+     * @throws InvalidSetViewException
+     * @throws FileNotOpenException
+     * @throws RasterDriverException
+     * @throws InterruptedException
+     */
+    public float[][][] readBlockFloat(int pos, int blockHeight)
+            throws InvalidSetViewException, FileNotOpenException,
+            RasterDriverException, InterruptedException {
+        // Dimensiones de la data del NetCDF
+        int rows = getHeight();
+        int cols = getWidth();
+
+        // Inicializa el buffer de byte para una banda
+        float[][][] data = new float[1][blockHeight][cols];
+
+        // Lee línea a línea desde el archivo del NetCDF
+        for (int i = pos, h = 0; i < rows && h < blockHeight; ++i, ++h) {
+            Object[] tline = dData[i];
+            for (int lon = 0; lon < getWidth(); ++lon) {
+                data[0][h][lon] = (Float) tline[lon];
+            }
+        }
+        data[0][0][0] = (Float) getMinValue();
+        data[0][0][1] = (Float) getMaxValue();
+        return data;
+    }
+
+    /**
+     * Devuelve los datos de tipo double leidos de una capa del NetCDF
+     * 
+     * @param pos
+     *            posición inicial de donde se comenzarán a leer los datos
+     * @param blockHeight
+     *            cantidad de filas de datos a leer
+     * 
+     * @return datos de tipo double
+     * 
+     * @throws InvalidSetViewException
+     * @throws FileNotOpenException
+     * @throws RasterDriverException
+     * @throws InterruptedException
+     */
+    public double[][][] readBlockDouble(int pos, int blockHeight)
+            throws InvalidSetViewException, FileNotOpenException,
+            RasterDriverException, InterruptedException {
+        // Dimensiones de la data del NetCDF
+        int rows = getHeight();
+        int cols = getWidth();
+
+        // Inicializa el buffer de byte para una banda
+        double[][][] data = new double[1][blockHeight][cols];
+
+        // Lee línea a línea desde el archivo del NetCDF
+        for (int i = pos, h = 0; i < rows && h < blockHeight; ++i, ++h) {
+            Object[] tline = dData[i];
+            for (int lon = 0; lon < getWidth(); ++lon) {
+                data[0][h][lon] = (Double) tline[lon];
+            }
+        }
+        data[0][0][0] = (Double) getMinValue();
+        data[0][0][1] = (Double) getMaxValue();
+        return data;
+    }
+
 }
