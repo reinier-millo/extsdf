@@ -36,7 +36,6 @@ import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
-import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 import org.gvsig.gui.beans.panelGroup.panels.AbstractPanel;
@@ -75,7 +74,7 @@ public class TimeDisplayOptionsPanel extends AbstractPanel {
 	 * Create the panel.
 	 */
 	public TimeDisplayOptionsPanel() {
-		setLabel("Time Display");
+		setLabel(PluginServices.getText(this, "time_display")); //$NON-NLS-1$
 		GridBagLayout gridBagLayout = new GridBagLayout();
 		gridBagLayout.columnWidths = new int[] { 0, 0, 0, 0, 0 };
 		gridBagLayout.rowHeights = new int[] { 0, 0, 0, 0, 0, 0, 0 };
@@ -129,7 +128,7 @@ public class TimeDisplayOptionsPanel extends AbstractPanel {
 		add(getMeasureUnitIntervalCB(), gbc_measureUnitIntervalCB);
 
 		GridBagConstraints gbc_restoreDefaultBtn = new GridBagConstraints();
-		gbc_restoreDefaultBtn.insets = new Insets(0, 0, 5, 0);
+		gbc_restoreDefaultBtn.insets = new Insets(5, 5, 5, 5);
 		gbc_restoreDefaultBtn.gridx = 3;
 		gbc_restoreDefaultBtn.gridy = 2;
 		add(getRestoreDefaultBtn(), gbc_restoreDefaultBtn);
@@ -148,8 +147,9 @@ public class TimeDisplayOptionsPanel extends AbstractPanel {
 		add(getTimeWindowTF(), gbc_timeWindowTF);
 		getTimeWindowTF().setColumns(10);
 
-		measureUnitLabel = new JLabel(PluginServices.getText(this, "years")); //$NON-NLS-1$
+		measureUnitLabel = new JLabel(getMeasureUnitIntervalCB().getSelectedItem().toString());
 		GridBagConstraints gbc_measureUnitLabel = new GridBagConstraints();
+		gbc_measureUnitLabel.anchor = GridBagConstraints.WEST;
 		gbc_measureUnitLabel.insets = new Insets(5, 5, 5, 5);
 		gbc_measureUnitLabel.gridx = 2;
 		gbc_measureUnitLabel.gridy = 3;
@@ -216,12 +216,26 @@ public class TimeDisplayOptionsPanel extends AbstractPanel {
 		return timeStepIntervalTF;
 	}
 
+	// TODO Move this from here
+	private String[] measureUnits = new String[] {
+			PluginServices.getText(this, "milliseconds"),  //$NON-NLS-1$
+			PluginServices.getText(this, "seconds"),  //$NON-NLS-1$
+			PluginServices.getText(this, "minutes"),  //$NON-NLS-1$
+			PluginServices.getText(this, "hours"),  //$NON-NLS-1$
+			PluginServices.getText(this, "days"),  //$NON-NLS-1$
+			PluginServices.getText(this, "weeks"),  //$NON-NLS-1$
+			PluginServices.getText(this, "months"),  //$NON-NLS-1$
+			PluginServices.getText(this, "years"),  //$NON-NLS-1$
+			PluginServices.getText(this, "decades"),  //$NON-NLS-1$
+			PluginServices.getText(this, "centuries") //$NON-NLS-1$
+	};
+	
 	/**
 	 * @return the measureUnitIntervalCB
 	 */
 	private JComboBox getMeasureUnitIntervalCB() {
 		if (measureUnitIntervalCB == null) {
-			measureUnitIntervalCB = new JComboBox();
+			measureUnitIntervalCB = new JComboBox(measureUnits);
 			measureUnitIntervalCB
 					.addItemListener(new MeasureUnitIntervalCBItemListener());
 		}
@@ -250,26 +264,24 @@ public class TimeDisplayOptionsPanel extends AbstractPanel {
 	}
 	
 	
-//	DateTimeFormats dateFormats = new DateTimeFormats(new String[] {"dd/MM/yyyy"});
+	DateTimeFormats formats = new DateTimeFormats();
 	/**
 	 * @return the dateFormatCB
 	 */
 	private JComboBox getDateFormatCB() {
 		if (dateFormatCB == null) {
-			dateFormatCB = new JComboBox();
+			dateFormatCB = new JComboBox(formats.getTodayDatesFormat());
 //			dateFormatCB.setSelectedIndex(dateFormats.getDefaultFormatIndex());
 		}
 		return dateFormatCB;
 	}
-	
-//	DateTimeFormats timeFormats = new DateTimeFormats(new String[] {"HH:mm:ss"});
 
 	/**
 	 * @return the timeFormatCB
 	 */
 	private JComboBox getTimeFormatCB() {
 		if (timeFormatCB == null) {
-			timeFormatCB = new JComboBox();
+			timeFormatCB = new JComboBox(formats.getTodayHoursFormat());
 //			timeFormatCB.setSelectedIndex(timeFormats.getDefaultFormatIndex());
 		}
 		return timeFormatCB;
@@ -280,7 +292,7 @@ public class TimeDisplayOptionsPanel extends AbstractPanel {
 	 */
 	private JLabel getTimeZoneLabel() {
 		if (timeZoneLabel == null) {
-			timeZoneLabel = new JLabel("time_zone");
+			timeZoneLabel = new JLabel(PluginServices.getText(this, "time_zone")); //$NON-NLS-1$
 		}
 		return timeZoneLabel;
 	}
@@ -290,7 +302,7 @@ public class TimeDisplayOptionsPanel extends AbstractPanel {
 	 */
 	private JLabel getTimeStepIntervalLabel() {
 		if (timeStepIntervalLabel == null) {
-			timeStepIntervalLabel = new JLabel("time_step_interval");
+			timeStepIntervalLabel = new JLabel(PluginServices.getText(this, "time_step_interval")); //$NON-NLS-1$
 		}
 		return timeStepIntervalLabel;
 	}
@@ -300,7 +312,7 @@ public class TimeDisplayOptionsPanel extends AbstractPanel {
 	 */
 	private JLabel getTimeWindowLabel() {
 		if (timeWindowLabel == null) {
-			timeWindowLabel = new JLabel("time_window");
+			timeWindowLabel = new JLabel(PluginServices.getText(this, "time_window")); //$NON-NLS-1$
 		}
 		return timeWindowLabel;
 	}
@@ -310,7 +322,7 @@ public class TimeDisplayOptionsPanel extends AbstractPanel {
 	 */
 	private JLabel getDisplayDateFormatLabel() {
 		if (displayDateFormatLabel == null) {
-			displayDateFormatLabel = new JLabel("display_date_format");
+			displayDateFormatLabel = new JLabel(PluginServices.getText(this, "display_date_format")); //$NON-NLS-1$
 		}
 		return displayDateFormatLabel;
 	}
@@ -320,7 +332,7 @@ public class TimeDisplayOptionsPanel extends AbstractPanel {
 	 */
 	private JLabel getDisplayTimeFormatLabel() {
 		if (displayTimeFormatLabel == null) {
-			displayTimeFormatLabel = new JLabel("display_time_format");
+			displayTimeFormatLabel = new JLabel(PluginServices.getText(this, "display_time_format")); //$NON-NLS-1$
 		}
 		return displayTimeFormatLabel;
 	}
