@@ -147,7 +147,6 @@ public class TimeSliderPanel extends JPanel {
 		gbc_seekForwardButton.gridx = 2;
 		gbc_seekForwardButton.gridy = 1;
 		panel.add(getSeekForwardButton(), gbc_seekForwardButton);
-
 	}
 
 	/**

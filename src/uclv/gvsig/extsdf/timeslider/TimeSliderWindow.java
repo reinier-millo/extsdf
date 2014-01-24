@@ -25,6 +25,8 @@
 
 package uclv.gvsig.extsdf.timeslider;
 
+import java.awt.BorderLayout;
+
 import javax.swing.JPanel;
 
 import org.gvsig.gui.beans.swing.JButton;
@@ -99,8 +101,10 @@ public class TimeSliderWindow extends JPanel implements IWindow{
 	 * </p>
 	 */
 	private void initialize() {
-		setBounds(0, 0, 500, 500);
-		add(new JButton("Hello gvSIG extension!!"));		
+		TimeSliderPanel panel = new TimeSliderPanel();
+		setLayout(new BorderLayout());
+		setBounds(0, 0, 600, panel.getPreferredSize().height);
+		add(panel);
 	}
 	
 	/**

@@ -143,6 +143,7 @@ public class TimeSliderExtension extends Extension{
 				"skip-forward-icon",
 				"start-icon",
 				"time-on-map-icon",
+				"full-icon",
 				"video-icon"
 		};
 		String[] resources = new String[] {
@@ -155,6 +156,7 @@ public class TimeSliderExtension extends Extension{
 				"Skip-Forward-32.png",
 				"Start-32.png",
 				"Time-On-Map-32.png",
+				"Full-32.png",
 				"Video-32.png"
 		};
 		
