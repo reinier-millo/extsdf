@@ -25,28 +25,31 @@
 
 package uclv.gvsig.extsdf.timeslider;
 
-import javax.swing.JPanel;
-
-import java.awt.GridBagLayout;
+import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 
-import javax.swing.border.TitledBorder;
+import javax.swing.BoxLayout;
+import javax.swing.ButtonGroup;
+import javax.swing.JCheckBox;
+import javax.swing.JComboBox;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JSlider;
-
-import java.awt.FlowLayout;
-
-import javax.swing.JLabel;
 import javax.swing.JSpinner;
-import javax.swing.JComboBox;
-import javax.swing.JCheckBox;
+import javax.swing.border.TitledBorder;
 
 import org.gvsig.gui.beans.panelGroup.panels.AbstractPanel;
 
 import com.iver.andami.PluginServices;
 
 /**
+ * Panel designed to adjust the Playback options of the animation.
  * @author rmartinez
  *
  */
@@ -72,7 +75,7 @@ public class PlaybackOptionsPanel extends AbstractPanel {
 	 * Create the panel.
 	 */
 	public PlaybackOptionsPanel() {
-		setLabel("Playback");
+		setLabel(PluginServices.getText(this, "playback")); //$NON-NLS-1$
 		GridBagLayout gridBagLayout = new GridBagLayout();
 		gridBagLayout.columnWidths = new int[]{0, 0, 0};
 		gridBagLayout.rowHeights = new int[]{0, 0, 0, 0};
@@ -111,26 +114,26 @@ public class PlaybackOptionsPanel extends AbstractPanel {
 		gbc_panel_1.gridx = 0;
 		gbc_panel_1.gridy = 1;
 		panel.add(panel_1, gbc_panel_1);
-		panel_1.setLayout(new FlowLayout(FlowLayout.TRAILING, 5, 5));
+		panel_1.setLayout(new BoxLayout(panel_1, BoxLayout.X_AXIS));
 		
 		lblSpeed = new JLabel(PluginServices.getText(this, "speed")); //$NON-NLS-1$
 		panel_1.add(lblSpeed);
 		
-		speedSlider = new JSlider();
-		panel_1.add(speedSlider);
+		panel_1.add(getSpeedSlider());
 		
 		panel_2 = new JPanel();
 		GridBagConstraints gbc_panel_2 = new GridBagConstraints();
+		gbc_panel_2.insets = new Insets(5, 5, 5, 5);
 		gbc_panel_2.fill = GridBagConstraints.BOTH;
 		gbc_panel_2.gridx = 0;
 		gbc_panel_2.gridy = 2;
 		panel.add(panel_2, gbc_panel_2);
-		panel_2.setLayout(new FlowLayout(FlowLayout.LEADING, 5, 5));
+		panel_2.setLayout(new BoxLayout(panel_2, BoxLayout.X_AXIS));
 		
 		panel_2.add(getPlaySpecifiedRB());
 		panel_2.add(getDurationSpinner());
 		
-		afterPlayingOnceLabel = new JLabel("after_playing_once");
+		afterPlayingOnceLabel = new JLabel(PluginServices.getText(this, "after_playing_once")); //$NON-NLS-1$
 		GridBagConstraints gbc_afterPlayingOnceLabel = new GridBagConstraints();
 		gbc_afterPlayingOnceLabel.insets = new Insets(5, 5, 5, 5);
 		gbc_afterPlayingOnceLabel.anchor = GridBagConstraints.WEST;
@@ -152,7 +155,21 @@ public class PlaybackOptionsPanel extends AbstractPanel {
 		gbc_refreshCheckBox.gridx = 0;
 		gbc_refreshCheckBox.gridy = 2;
 		add(getRefreshCheckBox(), gbc_refreshCheckBox);
+		
+		getPlayButtonGroup();
+		
 		setPreferredSize(getPreferredSize());
+	}
+
+	/**
+	 * @return the speed slider
+	 */
+	private Component getSpeedSlider() {
+		if(speedSlider == null) {
+			speedSlider = new JSlider();
+			speedSlider.setEnabled(displayForEachRB.isSelected());
+		}
+		return speedSlider;
 	}
 
 	/**
@@ -161,6 +178,7 @@ public class PlaybackOptionsPanel extends AbstractPanel {
 	private JRadioButton getDisplayForEachRB() {
 		if(displayForEachRB == null) {
 			displayForEachRB = new JRadioButton(PluginServices.getText(this, "display_for_each_timestamp")); //$NON-NLS-1$
+			displayForEachRB.addItemListener(new DisplayForEachRBItemListener());
 			displayForEachRB.setSelected(true);
 		}
 		return displayForEachRB;
@@ -172,6 +190,7 @@ public class PlaybackOptionsPanel extends AbstractPanel {
 	private JRadioButton getPlaySpecifiedRB() {
 		if(playSpecifiedRB == null) {
 			playSpecifiedRB = new JRadioButton(PluginServices.getText(this, "play_in_specified_duration")); //$NON-NLS-1$
+			playSpecifiedRB.addItemListener(new PlaySpecifiedRBItemListener());
 		}
 		return playSpecifiedRB;
 	}
@@ -182,16 +201,26 @@ public class PlaybackOptionsPanel extends AbstractPanel {
 	private JSpinner getDurationSpinner() {
 		if(durationSpinner == null) {
 			durationSpinner = new JSpinner();
+			durationSpinner.setMaximumSize(new Dimension(50, Integer.MAX_VALUE));
+			durationSpinner.setEnabled(playSpecifiedRB.isSelected());
 		}
 		return durationSpinner;
 	}
+	
+	// TODO move from here
+	String[] playingOptions = new String[] {
+			PluginServices.getText(this, "repeat"), //$NON-NLS-1$
+			PluginServices.getText(this, "reverse"), //$NON-NLS-1$
+			PluginServices.getText(this, "stop") //$NON-NLS-1$
+	};
+	private ButtonGroup playButtonGroup;
 
 	/**
 	 * @return the actionAfterPlayingCB
 	 */
 	private JComboBox getActionAfterPlayingCB() {
 		if(actionAfterPlayingCB == null) {
-			actionAfterPlayingCB = new JComboBox();
+			actionAfterPlayingCB = new JComboBox(playingOptions);
 		}
 		return actionAfterPlayingCB;
 	}
@@ -205,6 +234,7 @@ public class PlaybackOptionsPanel extends AbstractPanel {
 		}
 		return refreshCheckBox;
 	}
+	
 
 	/* (non-Javadoc)
 	 * @see org.gvsig.gui.beans.panelGroup.panels.IPanel#accept()
@@ -250,4 +280,23 @@ public class PlaybackOptionsPanel extends AbstractPanel {
 		
 	}
 
+	private class PlaySpecifiedRBItemListener implements ItemListener {
+		public void itemStateChanged(ItemEvent e) {
+			getDurationSpinner().setEnabled(getPlaySpecifiedRB().isSelected());
+		}
+	}
+	private class DisplayForEachRBItemListener implements ItemListener {
+		public void itemStateChanged(ItemEvent e) {
+			getSpeedSlider().setEnabled(getDisplayForEachRB().isSelected());
+		}
+	}
+
+	private ButtonGroup getPlayButtonGroup() {
+		if (playButtonGroup == null) {
+			playButtonGroup = new ButtonGroup();
+			playButtonGroup.add(getPlaySpecifiedRB());
+			playButtonGroup.add(getDisplayForEachRB());
+		}
+		return playButtonGroup;
+	}
 }
