@@ -24,6 +24,8 @@
  */
 package uclv.gvsig.extsdf.properties.panels;
 
+import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -33,15 +35,20 @@ import java.awt.event.ItemListener;
 import java.io.IOException;
 
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
+import javax.swing.JList;
+import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.border.TitledBorder;
 
 import org.apache.log4j.Logger;
 import org.gvsig.fmap.raster.layers.FLyrRasterSE;
 import org.gvsig.gui.beans.panelGroup.panels.AbstractPanel;
 import org.gvsig.raster.dataset.io.RasterDriverException;
 
+import ucar.nc2.Variable;
 import ucar.nc2.dataset.CoordinateSystem;
 import uclv.gvsig.extsdf.NetCDFController;
 import uclv.gvsig.extsdf.raster.NetCDFRasterDataset;
@@ -49,14 +56,6 @@ import uclv.gvsig.extsdf.timeslider.DateTimeFormats;
 
 import com.iver.andami.PluginServices;
 import com.iver.cit.gvsig.fmap.layers.FLayer;
-
-import javax.swing.border.TitledBorder;
-import javax.swing.JPanel;
-import javax.swing.JList;
-import javax.swing.JButton;
-import javax.swing.JCheckBox;
-
-import java.awt.Color;
 
 /**
  * Panel de propiedades del <i>NetCDF</i>.
@@ -105,8 +104,8 @@ public class NetCDFPanel extends AbstractPanel {
 		super();
 		setLabel("NetCDF");
 		initialize();
-		setPreferredSize(new Dimension(500,450));
-		
+		setPreferredSize(new Dimension(500, 450));
+
 		GridBagLayout gridBagLayout = new GridBagLayout();
 		gridBagLayout.columnWidths = new int[] { 0, 0 };
 		gridBagLayout.rowHeights = new int[] { 0, 0, 0, 0 };
@@ -133,7 +132,6 @@ public class NetCDFPanel extends AbstractPanel {
 		add(getPanel_1(), gbc_panel_1);
 	}
 
-	
 	private JLabel getLabel_1() {
 		if (lblNewLabel == null) {
 			lblNewLabel = new JLabel("New label");
@@ -150,10 +148,8 @@ public class NetCDFPanel extends AbstractPanel {
 	private JComboBox getSistema_coordenado() {
 		if (sistema_coordenado == null) {
 			sistema_coordenado = new JComboBox();
-//			sistema_coordenado
-//					.addItemListener(new Sistema_coordenadoItemListener());
-//			sistema_coordenado.setModel(new DefaultComboBoxModel(controler
-//					.getCoordinateSystems()));
+			sistema_coordenado
+					.addItemListener(new Sistema_coordenadoItemListener());
 		}
 		return sistema_coordenado;
 	}
@@ -269,56 +265,111 @@ public class NetCDFPanel extends AbstractPanel {
 		}
 	}
 
-	/* (non-Javadoc)
+	private class CheckBoxItemListener implements ItemListener {
+		public void itemStateChanged(ItemEvent e) {
+			if (checkBox.isSelected()) {
+				comboBox.setEnabled(true);
+				if (controler.hasVariableParameter()) {
+					Component[] componet = panel_1.getComponents();
+					for (Component component : componet) {
+						if (component instanceof JLabel)
+							component.setEnabled(true);
+					}
+					comboBox.setModel(new DefaultComboBoxModel(
+							new String[] { PluginServices.getText(this,
+									"layer_has_time_as_a_dimension") }));
+					list.setEnabled(true);
+					try {
+						list.setListData(new String[] { controler
+								.getSelectedParameter().getFullName() });
+					} catch (RasterDriverException e1) {
+						logger.error(e1.getLocalizedMessage());
+					}
+					comboBox_1.setEnabled(true);
+					comboBox_1.setModel(new DefaultComboBoxModel(
+							new DateTimeFormats().getTodayDatesFormat()));
+					comboBox_2.setEnabled(true);
+					comboBox_2.setModel(new DefaultComboBoxModel(
+							new DateTimeFormats().getTodayHoursFormat()));
+				} else {
+					label.setEnabled(true);
+					comboBox.setModel(new DefaultComboBoxModel(
+							new String[] { PluginServices.getText(this,
+									"layer_has_not_time_as_a_dimension") }));
+
+				}
+			} else {
+				list.setListData(new String[] {});
+				comboBox.setModel(new DefaultComboBoxModel());
+				comboBox_1.setModel(new DefaultComboBoxModel());
+				comboBox_2.setModel(new DefaultComboBoxModel());
+				Component[] componet = panel_1.getComponents();
+				for (Component component : componet) {
+					component.setEnabled(false);
+				}
+			}
+		}
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.gvsig.gui.beans.panelGroup.panels.IPanel#accept()
 	 */
 	@Override
 	public void accept() {
 		// TODO Auto-generated method stub
-		
+
 	}
 
-
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.gvsig.gui.beans.panelGroup.panels.IPanel#apply()
 	 */
 	@Override
 	public void apply() {
-		System.out.println("NetCDF");
-		
+
 	}
 
-
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.gvsig.gui.beans.panelGroup.panels.IPanel#cancel()
 	 */
 	@Override
 	public void cancel() {
 		// TODO Auto-generated method stub
-		
+
 	}
 
-
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.gvsig.gui.beans.panelGroup.panels.IPanel#selected()
 	 */
 	@Override
 	public void selected() {
 		// TODO Auto-generated method stub
-		
+
 	}
 
-
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.gvsig.gui.beans.panelGroup.panels.AbstractPanel#initialize()
 	 */
 	@Override
 	protected void initialize() {
-		// TODO Auto-generated method stub		
+
 	}
 
-	/* (non-Javadoc)
-	 * @see org.gvsig.gui.beans.panelGroup.panels.AbstractPanel#setReference(java.lang.Object)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.gvsig.gui.beans.panelGroup.panels.AbstractPanel#setReference(java
+	 * .lang.Object)
 	 */
 	@Override
 	public void setReference(Object ref) {
@@ -334,19 +385,60 @@ public class NetCDFPanel extends AbstractPanel {
 
 			// Obtiene el NetCDFControler asociado al layer
 			FLyrRasterSE fr = (FLyrRasterSE) flayer;
-			NetCDFRasterDataset x = (NetCDFRasterDataset) fr.getDataSource().getDataset(0)[0];
+			NetCDFRasterDataset x = (NetCDFRasterDataset) fr.getDataSource()
+					.getDataset(0)[0];
 			controler = x.getNetCDFController();
+			init();
 		}
+	}
+
+	/**
+	 * 
+	 */
+	private void init() {
+		getSistema_coordenado().setModel(
+				new DefaultComboBoxModel(controler.getCoordinateSystems()));
+		variable.setModel(new DefaultComboBoxModel(variableToString()));
+
+		try {
+			x_dimension.setText(controler.getLatitudeForCoordinateSystem(
+					controler.getCoordinateSystems()[0]).getFullName());
+		} catch (RasterDriverException e1) {
+			logger.error(e1.getLocalizedMessage());
+		}
+		try {
+			y_dimension.setText(controler.getLongitudeForCoordinateSystem(
+					controler.getCoordinateSystems()[0]).getFullName());
+		} catch (RasterDriverException e1) {
+			logger.error(e1.getLocalizedMessage());
+		}
+		try {
+			variacion.setText(controler.getParameterForCoordinateSystem(
+					controler.getCoordinateSystems()[0]).getFullName());
+		} catch (IOException e1) {
+			logger.error(e1.getLocalizedMessage());
+		}
+	}
+
+	private String[] variableToString() {
+		Variable[] variable = controler
+				.getVariablesForCoordinateSystem(controler
+						.getCoordinateSystems()[0]);
+		String[] var = new String[variable.length];
+		for (int i = 0; i < variable.length; i++) {
+			var[i] = variable[i].getFullName();
+		}
+		return var;
 	}
 
 	private JPanel getPanel() {
 		if (panel == null) {
 			panel = new JPanel();
 			GridBagLayout gbl_panel = new GridBagLayout();
-			gbl_panel.columnWidths = new int[]{0, 0};
-			gbl_panel.rowHeights = new int[]{0, 0};
-			gbl_panel.columnWeights = new double[]{1.0, Double.MIN_VALUE};
-			gbl_panel.rowWeights = new double[]{0.0, Double.MIN_VALUE};
+			gbl_panel.columnWidths = new int[] { 0, 0 };
+			gbl_panel.rowHeights = new int[] { 0, 0 };
+			gbl_panel.columnWeights = new double[] { 1.0, Double.MIN_VALUE };
+			gbl_panel.rowWeights = new double[] { 0.0, Double.MIN_VALUE };
 			panel.setLayout(gbl_panel);
 			GridBagConstraints gbc_panel_2 = new GridBagConstraints();
 			gbc_panel_2.fill = GridBagConstraints.BOTH;
@@ -356,17 +448,20 @@ public class NetCDFPanel extends AbstractPanel {
 		}
 		return panel;
 	}
+
 	private JPanel getPanel_1() {
 		if (panel_1 == null) {
 			panel_1 = new JPanel();
 			panel_1.setBorder(new TitledBorder(null, PluginServices.getText(
-								this, "time_properties"), TitledBorder.LEADING,
-								TitledBorder.TOP, null, null));
+					this, "time_properties"), TitledBorder.LEADING,
+					TitledBorder.TOP, null, null));
 			GridBagLayout gbl_panel_1 = new GridBagLayout();
-			gbl_panel_1.columnWidths = new int[]{0, 0, 0, 0, 0};
-			gbl_panel_1.rowHeights = new int[]{0, 0, 0, 0, 0};
-			gbl_panel_1.columnWeights = new double[]{0.0, 1.0, 1.0, 1.0, Double.MIN_VALUE};
-			gbl_panel_1.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
+			gbl_panel_1.columnWidths = new int[] { 0, 0, 0, 0, 0 };
+			gbl_panel_1.rowHeights = new int[] { 0, 0, 0, 0, 0 };
+			gbl_panel_1.columnWeights = new double[] { 0.0, 1.0, 1.0, 1.0,
+					Double.MIN_VALUE };
+			gbl_panel_1.rowWeights = new double[] { 0.0, 0.0, 0.0, 0.0,
+					Double.MIN_VALUE };
 			panel_1.setLayout(gbl_panel_1);
 			GridBagConstraints gbc_label = new GridBagConstraints();
 			gbc_label.anchor = GridBagConstraints.WEST;
@@ -420,73 +515,91 @@ public class NetCDFPanel extends AbstractPanel {
 			gbc_comboBox_2.gridx = 1;
 			gbc_comboBox_2.gridy = 3;
 			panel_1.add(getComboBox_2(), gbc_comboBox_2);
+			Component[] componet = panel_1.getComponents();
+			for (Component component : componet) {
+				component.setEnabled(false);
+			}
 		}
 		return panel_1;
 	}
+
 	private JLabel getLabel_6() {
 		if (label == null) {
 			label = new JLabel("layer_time:");
 		}
 		return label;
 	}
+
 	private JComboBox getComboBox() {
 		if (comboBox == null) {
 			comboBox = new JComboBox();
 		}
 		return comboBox;
 	}
+
 	private JLabel getLabel_1_1() {
 		if (label_1 == null) {
 			label_1 = new JLabel("time_dimension:");
 		}
 		return label_1;
 	}
+
 	private JList getList() {
 		if (list == null) {
 			list = new JList();
 		}
 		return list;
 	}
+
 	private JLabel getLabel_2_1() {
 		if (label_2 == null) {
 			label_2 = new JLabel("field_format:");
 		}
 		return label_2;
 	}
+
 	private JComboBox getComboBox_1() {
 		if (comboBox_1 == null) {
 			comboBox_1 = new JComboBox();
-			comboBox_1.setModel(new DefaultComboBoxModel(new DateTimeFormats().getTodayDatesFormat()));
 		}
 		return comboBox_1;
 	}
+
 	private JCheckBox getCheckBox() {
 		if (checkBox == null) {
 			checkBox = new JCheckBox("enable_time_on_this_layer");
+			checkBox.addItemListener(new CheckBoxItemListener());
 		}
 		return checkBox;
 	}
+
 	private JLabel getLabel_3_1() {
 		if (lblVisualizemoment == null) {
 			lblVisualizemoment = new JLabel("visualize_moment");
 		}
 		return lblVisualizemoment;
 	}
+
 	private JList getList_1() {
 		if (list_1 == null) {
 			list_1 = new JList();
 		}
 		return list_1;
 	}
+
 	private JPanel getPanel_2() {
 		if (panel_2 == null) {
 			panel_2 = new JPanel();
-			panel_2.setBorder(new TitledBorder(null, "general", TitledBorder.LEFT, TitledBorder.TOP, null, new Color(59, 59, 59)));
+			panel_2.setBorder(new TitledBorder(null, "general",
+					TitledBorder.LEFT, TitledBorder.TOP, null, new Color(59,
+							59, 59)));
 			GridBagLayout gbl_panel_2 = new GridBagLayout();
-			gbl_panel_2.columnWidths = new int[]{0, 0, 0};
-			gbl_panel_2.rowHeights = new int[]{0, 0, 0, 0, 0, 0, 0};
-			gbl_panel_2.columnWeights = new double[]{0.0, 1.0, Double.MIN_VALUE};
-			gbl_panel_2.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 1.0, Double.MIN_VALUE};
+			gbl_panel_2.columnWidths = new int[] { 0, 0, 0 };
+			gbl_panel_2.rowHeights = new int[] { 0, 0, 0, 0, 0, 0, 0 };
+			gbl_panel_2.columnWeights = new double[] { 0.0, 1.0,
+					Double.MIN_VALUE };
+			gbl_panel_2.rowWeights = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0,
+					1.0, Double.MIN_VALUE };
 			panel_2.setLayout(gbl_panel_2);
 			GridBagConstraints gbc_lblNewLabel = new GridBagConstraints();
 			gbc_lblNewLabel.anchor = GridBagConstraints.ABOVE_BASELINE_LEADING;
@@ -562,16 +675,17 @@ public class NetCDFPanel extends AbstractPanel {
 		}
 		return panel_2;
 	}
+
 	private JLabel getLabel_3_2() {
 		if (lblHourFormat == null) {
 			lblHourFormat = new JLabel("hour format");
 		}
 		return lblHourFormat;
 	}
+
 	private JComboBox getComboBox_2() {
 		if (comboBox_2 == null) {
 			comboBox_2 = new JComboBox();
-			comboBox_2.setModel(new DefaultComboBoxModel(new DateTimeFormats().getTodayHoursFormat()));
 		}
 		return comboBox_2;
 	}
