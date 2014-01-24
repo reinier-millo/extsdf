@@ -26,15 +26,12 @@
 package uclv.gvsig.extsdf.properties;
 
 import javax.swing.Icon;
-import javax.swing.JDialog;
 
 import org.gvsig.fmap.raster.layers.FLyrRasterSE;
-import org.gvsig.fmap.raster.layers.ILayerState;
 import org.gvsig.gui.beans.panelGroup.PanelGroupManager;
 import org.gvsig.gui.beans.panelGroup.tabbedPanel.TabbedPanel;
 import org.gvsig.raster.gui.IGenericToolBarMenuItem;
 import org.gvsig.raster.util.RasterToolsUtil;
-import org.gvsig.rastertools.RasterModule;
 
 import uclv.gvsig.extsdf.raster.NetCDFRasterDataset;
 
@@ -94,6 +91,10 @@ public class PropertiesNetCDFRasterTocMenuEntry extends 	AbstractTocContextMenuA
 	 * Gestiona la apertura del dialogo de propiedades del NetCDF 
 	 * 
 	 */
+	
+	/* (non-Javadoc)
+	 * @see com.iver.cit.gvsig.project.documents.view.toc.AbstractTocContextMenuAction#execute(com.iver.cit.gvsig.project.documents.view.toc.ITocItem, com.iver.cit.gvsig.fmap.layers.FLayer[])
+	 */
 	@Override
 	public void execute(ITocItem item, FLayer[] selectedItems) {
 		if ((selectedItems == null) || (selectedItems.length != 1))
@@ -114,8 +115,7 @@ public class PropertiesNetCDFRasterTocMenuEntry extends 	AbstractTocContextMenuA
 			properties = new PanelGroupDialog(lyr.getName() ,PluginServices.getText(this,"NetCDF_properties"), 550, 450, (byte) (WindowInfo.MODELESSDIALOG | WindowInfo.RESIZABLE | WindowInfo.MAXIMIZABLE), panelGroup);
 			properties.loadPanels(loader);
 			enableEvents = true;
-			//RasterToolsUtil.addWindow(properties);
-			PluginServices.getMDIManager().addWindow(properties);
+			RasterToolsUtil.addWindow(properties);
 		} catch (Exception e) {
 			RasterToolsUtil.messageBoxInfo("error_props_tabs", this, e);
 		} finally  {
@@ -128,8 +128,7 @@ public class PropertiesNetCDFRasterTocMenuEntry extends 	AbstractTocContextMenuA
 	 */
 	@Override
 	public Icon getIcon() {
-		// TODO Auto-generated method stub
-		return null;
+		return PluginServices.getIconTheme().get("video-icon");
 	}
 	
 	

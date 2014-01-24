@@ -24,6 +24,7 @@
  */
 package uclv.gvsig.extsdf.properties.panels;
 
+import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
@@ -47,6 +48,7 @@ import uclv.gvsig.extsdf.raster.NetCDFRasterDataset;
 
 import com.iver.andami.PluginServices;
 import com.iver.cit.gvsig.fmap.layers.FLayer;
+import javax.swing.border.TitledBorder;
 
 /**
  * Panel de propiedades del <i>NetCDF</i>.
@@ -79,7 +81,10 @@ public class NetCDFPanel extends AbstractPanel {
 	 */
 	public NetCDFPanel() {
 		super();
+		
 		initialize();
+		setPreferredSize(new Dimension(500,450));
+		
 		
 		GridBagLayout gridBagLayout = new GridBagLayout();
 		gridBagLayout.columnWidths = new int[] { 0, 0, 0 };
@@ -176,10 +181,10 @@ public class NetCDFPanel extends AbstractPanel {
 	private JComboBox getSistema_coordenado() {
 		if (sistema_coordenado == null) {
 			sistema_coordenado = new JComboBox();
-			sistema_coordenado
-					.addItemListener(new Sistema_coordenadoItemListener());
-			sistema_coordenado.setModel(new DefaultComboBoxModel(controler
-					.getCoordinateSystems()));
+//			sistema_coordenado
+//					.addItemListener(new Sistema_coordenadoItemListener());
+//			sistema_coordenado.setModel(new DefaultComboBoxModel(controler
+//					.getCoordinateSystems()));
 		}
 		return sistema_coordenado;
 	}

@@ -25,6 +25,7 @@
 package uclv.gvsig.extsdf.properties.panels;
 
 import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
@@ -105,15 +106,19 @@ public class TimePanel extends AbstractPanel {
 	private JCheckBox chckbxNewCheckBox;
 
 	public TimePanel() {
+		super();
+		setPreferredSize(new Dimension(500,450));
+		setName("Time");
+		
 		GridBagLayout gridBagLayout = new GridBagLayout();
 		gridBagLayout.columnWidths = new int[] { 396, 0 };
 		gridBagLayout.rowHeights = new int[] { 0, 185, 78, 0 };
-		gridBagLayout.columnWeights = new double[] { 0.0, Double.MIN_VALUE };
+		gridBagLayout.columnWeights = new double[] { 1.0, Double.MIN_VALUE };
 		gridBagLayout.rowWeights = new double[] { 0.0, 0.0, 0.0,
 				Double.MIN_VALUE };
 		setLayout(gridBagLayout);
 		GridBagConstraints gbc_chckbxNewCheckBox = new GridBagConstraints();
-		gbc_chckbxNewCheckBox.anchor = GridBagConstraints.WEST;
+		gbc_chckbxNewCheckBox.fill = GridBagConstraints.HORIZONTAL;
 		gbc_chckbxNewCheckBox.insets = new Insets(0, 0, 5, 0);
 		gbc_chckbxNewCheckBox.gridx = 0;
 		gbc_chckbxNewCheckBox.gridy = 0;
@@ -444,7 +449,7 @@ public class TimePanel extends AbstractPanel {
 	private JLabel getLabel_2() {
 		if (label_2 == null) {
 			label_2 = new JLabel("New label");
-			label_2.setText(PluginServices.getText(this, "layer_time" + ":"));
+			label_2.setText(PluginServices.getText(this, "layer_time")+":");
 		}
 		return label_2;
 	}
