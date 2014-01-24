@@ -25,21 +25,19 @@
 
 package uclv.gvsig.extsdf.timeslider;
 
-import javax.swing.JPanel;
-
-import java.awt.GridBagLayout;
-
-import javax.swing.JLabel;
-
 import java.awt.GridBagConstraints;
-
-import javax.swing.JComboBox;
-
+import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
-import javax.swing.JTextField;
-import javax.swing.JSpinner;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JLabel;
+import javax.swing.JSpinner;
+import javax.swing.JTextField;
+
+import org.gvsig.gui.beans.panelGroup.panels.AbstractPanel;
 
 import com.iver.andami.PluginServices;
 
@@ -47,40 +45,39 @@ import com.iver.andami.PluginServices;
  * @author rmartinez
  *
  */
-public class TimeExtentOptionsPanel extends JPanel {
+public class TimeExtentOptionsPanel extends AbstractPanel {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	private JLabel lblRestrictFullTime;
 	private JComboBox restrictFullTimeExtentCB;
-	private JLabel lblStartTime;
 	private JTextField startDateField;
 	private JSpinner startTimeField;
 	private JButton minTimeBtn;
 	private JTextField endDateField;
 	private JSpinner endTimeField;
 	private JButton maxTimeBtn;
+	private JLabel restrictFullTimeExtentLabel;
+	private JLabel startTimeLabel;
 
 	/**
 	 * Create the panel.
 	 */
 	public TimeExtentOptionsPanel() {
+		setLabel("TimeExtent");
 		GridBagLayout gridBagLayout = new GridBagLayout();
-		gridBagLayout.columnWidths = new int[]{0, 0, 0, 0, 0};
+		gridBagLayout.columnWidths = new int[]{0, 0, 60, 0, 0};
 		gridBagLayout.rowHeights = new int[]{0, 0, 0, 0};
 		gridBagLayout.columnWeights = new double[]{0.0, 1.0, 0.0, 0.0, Double.MIN_VALUE};
 		gridBagLayout.rowWeights = new double[]{0.0, 0.0, 0.0, Double.MIN_VALUE};
 		setLayout(gridBagLayout);
-		
-		lblRestrictFullTime = new JLabel(PluginServices.getText(this, "restrict_full_time_extent")); //$NON-NLS-1$
-		GridBagConstraints gbc_lblRestrictFullTime = new GridBagConstraints();
-		gbc_lblRestrictFullTime.insets = new Insets(5, 5, 5, 5);
-		gbc_lblRestrictFullTime.anchor = GridBagConstraints.WEST;
-		gbc_lblRestrictFullTime.gridx = 0;
-		gbc_lblRestrictFullTime.gridy = 0;
-		add(lblRestrictFullTime, gbc_lblRestrictFullTime);
+		GridBagConstraints gbc_restrictFullTimeExtentLabel = new GridBagConstraints();
+		gbc_restrictFullTimeExtentLabel.insets = new Insets(5, 5, 5, 5);
+		gbc_restrictFullTimeExtentLabel.anchor = GridBagConstraints.WEST;
+		gbc_restrictFullTimeExtentLabel.gridx = 0;
+		gbc_restrictFullTimeExtentLabel.gridy = 0;
+		add(getRestrictFullTimeExtentLabel(), gbc_restrictFullTimeExtentLabel);
 		
 		GridBagConstraints gbc_restrictFullTimeExtentCB = new GridBagConstraints();
 		gbc_restrictFullTimeExtentCB.gridwidth = 3;
@@ -89,14 +86,12 @@ public class TimeExtentOptionsPanel extends JPanel {
 		gbc_restrictFullTimeExtentCB.gridx = 1;
 		gbc_restrictFullTimeExtentCB.gridy = 0;
 		add(getRestrictFullTimeExtentCB(), gbc_restrictFullTimeExtentCB);
-		
-		lblStartTime = new JLabel(PluginServices.getText(this, "start_time")); //$NON-NLS-1$
-		GridBagConstraints gbc_lblStartTime = new GridBagConstraints();
-		gbc_lblStartTime.anchor = GridBagConstraints.WEST;
-		gbc_lblStartTime.insets = new Insets(5, 5, 5, 5);
-		gbc_lblStartTime.gridx = 0;
-		gbc_lblStartTime.gridy = 1;
-		add(lblStartTime, gbc_lblStartTime);
+		GridBagConstraints gbc_startTimeLabel = new GridBagConstraints();
+		gbc_startTimeLabel.insets = new Insets(5, 5, 5, 5);
+		gbc_startTimeLabel.anchor = GridBagConstraints.WEST;
+		gbc_startTimeLabel.gridx = 0;
+		gbc_startTimeLabel.gridy = 1;
+		add(getStartTimeLabel(), gbc_startTimeLabel);
 		
 		GridBagConstraints gbc_startDateField = new GridBagConstraints();
 		gbc_startDateField.insets = new Insets(5, 5, 5, 5);
@@ -107,12 +102,14 @@ public class TimeExtentOptionsPanel extends JPanel {
 		getStartDateField().setColumns(10);
 		
 		GridBagConstraints gbc_startTimeField = new GridBagConstraints();
+		gbc_startTimeField.fill = GridBagConstraints.HORIZONTAL;
 		gbc_startTimeField.insets = new Insets(5, 5, 5, 5);
 		gbc_startTimeField.gridx = 2;
 		gbc_startTimeField.gridy = 1;
 		add(getStartTimeField(), gbc_startTimeField);
 		
 		GridBagConstraints gbc_minTimeBtn = new GridBagConstraints();
+		gbc_minTimeBtn.fill = GridBagConstraints.HORIZONTAL;
 		gbc_minTimeBtn.insets = new Insets(5, 5, 5, 5);
 		gbc_minTimeBtn.gridx = 3;
 		gbc_minTimeBtn.gridy = 1;
@@ -127,16 +124,19 @@ public class TimeExtentOptionsPanel extends JPanel {
 		getEndDateField().setColumns(10);
 		
 		GridBagConstraints gbc_endTimeField = new GridBagConstraints();
+		gbc_endTimeField.fill = GridBagConstraints.HORIZONTAL;
 		gbc_endTimeField.insets = new Insets(5, 5, 5, 5);
 		gbc_endTimeField.gridx = 2;
 		gbc_endTimeField.gridy = 2;
 		add(getEndTimeField(), gbc_endTimeField);
 		
 		GridBagConstraints gbc_maxTimeBtn = new GridBagConstraints();
+		gbc_maxTimeBtn.insets = new Insets(5, 5, 5, 5);
+		gbc_maxTimeBtn.fill = GridBagConstraints.HORIZONTAL;
 		gbc_maxTimeBtn.gridx = 3;
 		gbc_maxTimeBtn.gridy = 2;
 		add(getMaxTimeBtn(), gbc_maxTimeBtn);
-
+		setPreferredSize(getPreferredSize());
 	}
 	
 	/**
@@ -175,6 +175,7 @@ public class TimeExtentOptionsPanel extends JPanel {
 	private JButton getMinTimeBtn() {
 		if(minTimeBtn == null) {
 			minTimeBtn = new JButton(PluginServices.getText(this, "min_time")); //$NON-NLS-1$
+			minTimeBtn.addActionListener(new MinTimeBtnActionListener());
 		}
 		return minTimeBtn;
 	}
@@ -205,10 +206,75 @@ public class TimeExtentOptionsPanel extends JPanel {
 	private JButton getMaxTimeBtn() {
 		if(maxTimeBtn == null) {
 			maxTimeBtn = new JButton(PluginServices.getText(this, "max_time")); //$NON-NLS-1$
+			maxTimeBtn.addActionListener(new MaxTimeBtnActionListener());
 		}
 		return maxTimeBtn;
 	}
 
+	private JLabel getRestrictFullTimeExtentLabel() {
+		if (restrictFullTimeExtentLabel == null) {
+			restrictFullTimeExtentLabel = new JLabel(PluginServices.getText(this, "restrict_full_time_extent")); //$NON-NLS-1$
+		}
+		return restrictFullTimeExtentLabel;
+	}
+	private JLabel getStartTimeLabel() {
+		if (startTimeLabel == null) {
+			startTimeLabel = new JLabel(PluginServices.getText(this, "start_time")); //$NON-NLS-1$
+		}
+		return startTimeLabel;
+	}
+	
+	private class MinTimeBtnActionListener implements ActionListener {
+		public void actionPerformed(ActionEvent e) {
+		}
+	}
+	
+	private class MaxTimeBtnActionListener implements ActionListener {
+		public void actionPerformed(ActionEvent e) {
+		}
+	}
 
+	/* (non-Javadoc)
+	 * @see org.gvsig.gui.beans.panelGroup.panels.IPanel#accept()
+	 */
+	@Override
+	public void accept() {
+		// TODO Auto-generated method stub
+		
+	}
 
+	/* (non-Javadoc)
+	 * @see org.gvsig.gui.beans.panelGroup.panels.IPanel#apply()
+	 */
+	@Override
+	public void apply() {
+		System.out.println(getClass().getName());
+	}
+
+	/* (non-Javadoc)
+	 * @see org.gvsig.gui.beans.panelGroup.panels.IPanel#cancel()
+	 */
+	@Override
+	public void cancel() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	/* (non-Javadoc)
+	 * @see org.gvsig.gui.beans.panelGroup.panels.IPanel#selected()
+	 */
+	@Override
+	public void selected() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	/* (non-Javadoc)
+	 * @see org.gvsig.gui.beans.panelGroup.panels.AbstractPanel#initialize()
+	 */
+	@Override
+	protected void initialize() {
+		// TODO Auto-generated method stub
+		
+	}
 }
