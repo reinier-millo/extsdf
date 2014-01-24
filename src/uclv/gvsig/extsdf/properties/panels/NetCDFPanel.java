@@ -81,10 +81,9 @@ public class NetCDFPanel extends AbstractPanel {
 	 */
 	public NetCDFPanel() {
 		super();
-		
+		setLabel("NetCDF");
 		initialize();
 		setPreferredSize(new Dimension(500,450));
-		
 		
 		GridBagLayout gridBagLayout = new GridBagLayout();
 		gridBagLayout.columnWidths = new int[] { 0, 0, 0 };
@@ -315,7 +314,7 @@ public class NetCDFPanel extends AbstractPanel {
 	 */
 	@Override
 	public void apply() {
-		// TODO Auto-generated method stub
+		System.out.println("NetCDF");
 		
 	}
 

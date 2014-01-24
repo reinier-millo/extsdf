@@ -107,8 +107,8 @@ public class TimePanel extends AbstractPanel {
 
 	public TimePanel() {
 		super();
+		setLabel("Time");
 		setPreferredSize(new Dimension(500,450));
-		setName("Time");
 		
 		GridBagLayout gridBagLayout = new GridBagLayout();
 		gridBagLayout.columnWidths = new int[] { 396, 0 };
@@ -156,7 +156,7 @@ public class TimePanel extends AbstractPanel {
 	@Override
 	public void apply() {
 		// TODO Auto-generated method stub
-
+		System.out.println("Time");
 	}
 
 	/*

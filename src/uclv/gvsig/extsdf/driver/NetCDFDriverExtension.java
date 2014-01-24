@@ -67,6 +67,7 @@ public class NetCDFDriverExtension extends Extension {
 
         // Creación del punto de extensión para registrar paneles en el cuadro
         // de propiedades.
+        
         if (!extensionPoints.containsKey("NetCDFPropertiesDialog")) {
             extensionPoints
                     .put(new ExtensionPoint(
@@ -77,12 +78,17 @@ public class NetCDFDriverExtension extends Extension {
         // Añadimos paneles al cuadro de propiedades.
         extensionPoints.add("NetCDFPropertiesDialog", "NetCDF",
                 NetCDFPanel.class);
-        extensionPoints.add("NetCDFPropertiesDialog", "time", TimePanel.class);
+        extensionPoints.add("NetCDFPropertiesDialog", "Time", TimePanel.class);
 
         // Añadimos las entradas del menú del toc de raster
         extensionPoints.add("View_TocActions", "NetCDFProperties",
                 PropertiesNetCDFRasterTocMenuEntry.getSingleton());
-
+        
+        org.gvsig.raster.util.extensionPoints.ExtensionPoint point = org.gvsig.raster.util.extensionPoints.ExtensionPoint.getExtensionPoint("GenericToolBarMenu");
+        point.register("NetCDFProperties",
+                PropertiesNetCDFRasterTocMenuEntry.getSingleton());
+        
+        
         // Registra el driver para dar soporte a los archivos NetCDF
         NetCDFRasterDataset.registerDriver();
     }
