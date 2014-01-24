@@ -78,13 +78,36 @@ public class PropertiesNetCDFRasterTocMenuEntry extends 	AbstractTocContextMenuA
 		return singleton;
 	}	
 	
+	/*
+	 * (non-Javadoc)
+	 * @see com.iver.cit.gvsig.project.documents.contextMenu.AbstractContextMenuAction#getGroup()
+	 */
+	public String getGroup() {
+		return "RasterLayer";
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see com.iver.cit.gvsig.project.documents.contextMenu.AbstractContextMenuAction#getGroupOrder()
+	 */
+	public int getGroupOrder() {
+		return 60;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see com.iver.cit.gvsig.project.documents.contextMenu.AbstractContextMenuAction#getOrder()
+	 */
+	public int getOrder() {
+		return 0;
+	}
+
 	/* (non-Javadoc)
 	 * @see com.iver.cit.gvsig.project.documents.IContextMenuAction#getText()
 	 */
 	@Override
 	public String getText() {
-		// TODO Auto-generated method stub
-		return "Properties NetCDF";
+		return PluginServices.getText(this,"NetCDF_properties");
 	}
 
 	/**
@@ -128,7 +151,7 @@ public class PropertiesNetCDFRasterTocMenuEntry extends 	AbstractTocContextMenuA
 	 */
 	@Override
 	public Icon getIcon() {
-		return PluginServices.getIconTheme().get("video-icon");
+		return RasterToolsUtil.getIcon("properties-icon");
 	}
 	
 	

@@ -11,6 +11,12 @@
       priority="999">
     </extension>
     
+    <extension class-name="uclv.gvsig.extsdf.properties.NetCDFPropertiesExtension"
+				description="Extension para gestionar la entrada en el TOC y la barra de herramientas generica." 
+				active="true" 
+				priority="999">
+	</extension>
+    
     <extension	class-name="uclv.gvsig.extsdf.timeslider.TimeSliderExtension"
     			description="time_slider_description"
     			active="true"
