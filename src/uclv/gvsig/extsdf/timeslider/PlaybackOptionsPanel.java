@@ -211,7 +211,7 @@ public class PlaybackOptionsPanel extends AbstractPanel {
 	 */
 	@Override
 	public void accept() {
-		
+		apply();
 	}
 
 	/* (non-Javadoc)
@@ -219,6 +219,7 @@ public class PlaybackOptionsPanel extends AbstractPanel {
 	 */
 	@Override
 	public void apply() {
+		// TODO Auto-generated method stub
 		System.out.println(getClass().getName());
 	}
 

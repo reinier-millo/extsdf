@@ -298,11 +298,11 @@ public class TimeSliderPanel extends JPanel {
 		return seekForwardButton;
 	}
 	
-	private AnimationOptionsActionListener animationOptionsActionListener;
+	private AnimationOptionsAction animationOptionsActionListener;
 
-	private AnimationOptionsActionListener getAnimationOptionsActionListener() {
+	private AnimationOptionsAction getAnimationOptionsActionListener() {
 		if (animationOptionsActionListener == null) {
-			animationOptionsActionListener = new AnimationOptionsActionListener();
+			animationOptionsActionListener = new AnimationOptionsAction();
 		}
 		return animationOptionsActionListener;
 	}

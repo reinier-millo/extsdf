@@ -239,8 +239,7 @@ public class TimeExtentOptionsPanel extends AbstractPanel {
 	 */
 	@Override
 	public void accept() {
-		// TODO Auto-generated method stub
-		
+		apply();
 	}
 
 	/* (non-Javadoc)
@@ -248,6 +247,7 @@ public class TimeExtentOptionsPanel extends AbstractPanel {
 	 */
 	@Override
 	public void apply() {
+		// TODO Auto-generated method stub
 		System.out.println(getClass().getName());
 	}
 

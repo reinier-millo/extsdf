@@ -250,27 +250,27 @@ public class TimeDisplayOptionsPanel extends AbstractPanel {
 	}
 	
 	
-	DateTimeFormats dateFormats = new DateTimeFormats(new String[] {"dd/MM/yyyy"});
+//	DateTimeFormats dateFormats = new DateTimeFormats(new String[] {"dd/MM/yyyy"});
 	/**
 	 * @return the dateFormatCB
 	 */
 	private JComboBox getDateFormatCB() {
 		if (dateFormatCB == null) {
-			dateFormatCB = new JComboBox(dateFormats.getFormats());
-			dateFormatCB.setSelectedIndex(dateFormats.getDefaultFormatIndex());
+			dateFormatCB = new JComboBox();
+//			dateFormatCB.setSelectedIndex(dateFormats.getDefaultFormatIndex());
 		}
 		return dateFormatCB;
 	}
 	
-	DateTimeFormats timeFormats = new DateTimeFormats(new String[] {"HH:mm:ss"});
+//	DateTimeFormats timeFormats = new DateTimeFormats(new String[] {"HH:mm:ss"});
 
 	/**
 	 * @return the timeFormatCB
 	 */
 	private JComboBox getTimeFormatCB() {
 		if (timeFormatCB == null) {
-			timeFormatCB = new JComboBox(timeFormats.getFormats());
-			timeFormatCB.setSelectedIndex(timeFormats.getDefaultFormatIndex());
+			timeFormatCB = new JComboBox();
+//			timeFormatCB.setSelectedIndex(timeFormats.getDefaultFormatIndex());
 		}
 		return timeFormatCB;
 	}

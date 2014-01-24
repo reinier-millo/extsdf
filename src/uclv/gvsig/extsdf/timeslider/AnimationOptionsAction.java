@@ -42,7 +42,7 @@ import com.iver.cit.gvsig.panelGroup.loaders.PanelGroupLoaderFromExtensionPoint;
  * @author rmartinez
  *
  */
-public class AnimationOptionsActionListener extends AbstractAction  {
+public class AnimationOptionsAction extends AbstractAction  {
 	
 	/**
 	 * 
@@ -53,7 +53,7 @@ public class AnimationOptionsActionListener extends AbstractAction  {
 	/**
 	 * 
 	 */
-	public AnimationOptionsActionListener() {
+	public AnimationOptionsAction() {
 		putValue(LONG_DESCRIPTION, PluginServices.getText(this, "options")); //$NON-NLS-1$
 		putValue(SMALL_ICON, PluginServices.getIconTheme().get("settings-icon")); //$NON-NLS-1$
 	}
