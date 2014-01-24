@@ -17,6 +17,7 @@
  * MA 02110-1301, USA.
  * 
  * Copyright (C) 2014 Rainer Martinez Fraga <rmartinez@uclv.edu.cu>
+ * 					  Daynier Cardoso Roque <dcardoso@uclv.edu.cu>
  *                    Universidad Central "Marta Abreu" de Las Villas
  *
  * This file is part of the gvSIG extension extSDF, which is distributed
@@ -25,51 +26,66 @@
 
 package uclv.gvsig.extsdf.timeslider;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+
 /**
  * @author rmartinez
- *
+ * @author dcardoso
  */
 public class DateTimeFormats {
-	
-	Logger logger = LoggerFactory.getLogger(getClass());
-	
-	String [] formats;
-	int default_format;
-	
+
+	private String[] dates = { "MM/dd/yy",
+			"MM/dd/yyyy",
+			"M/d/yy",
+			"M/d/yyyy",
+			"yy/MM/dd",
+			"yyyy",
+			"yyyy-MM-dd",
+			"dd MMMM, yyyy",
+			"dd-MMM-yyy",
+			"EEEE",
+			"EEEE, dd MMMM, yyyy",
+			"EEEE, MMMM dd, yyyy",
+			"MMM yyy",
+			"MMMM yyyy",
+			"MMMM dd, yyyy" };
+	private String[]hours={"hh:mm a",
+			"H:mm:ss",
+			"HH:mm:ss",
+			"h:mm:ss a",
+			"hh:mm:ss a"};
 	/**
-	 * 
+	 * @return the dates
 	 */
-	public DateTimeFormats(String[] formats) {
-		this.formats = formats;
+	public String[] getDates() {
+		return dates;
+	}
+	/**
+	 * @return the hours
+	 */
+	public String[] getHours() {
+		return hours;
 	}
 	
-	public void setDefaultFormatIndex(int index) {
-		if(index >= 0 && index < formats.length) {
-			default_format = index;
-		} else {
-			logger.warn("No valid default format. Set default to -1");
+	public String[] getTodayDatesFormat(){
+		return getTodayFormat(dates);
+	}
+	
+	public String[] getTodayHoursFormat(){
+		return getTodayFormat(hours);
+	}
+	
+	private String[] getTodayFormat(String[] format){
+		String[]today = new String[format.length];
+		SimpleDateFormat formatter = new SimpleDateFormat();
+		Date date = new Date(System.currentTimeMillis());
+		for (int i = 0; i < format.length; i++) {
+			formatter.applyLocalizedPattern(format[i]);
+			today[i] = formatter.format(date) + " ("+format[i]+")";
 		}
-	}
-	
-	public int getDefaultFormatIndex() {
-		return default_format;
-	}
-	
-	public String getDefaultFormat() {
-		if(default_format != -1) {
-			return formats[default_format];
-		}
-		return null;
-	}
-	
-	public void setFormats(String[] formats) {
-		this.formats = formats;
-	}
-	
-	public String[] getFormats() {
-		return formats;
+		return today;
 	}
 
 }
