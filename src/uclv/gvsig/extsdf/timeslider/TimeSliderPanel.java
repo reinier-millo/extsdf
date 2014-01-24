@@ -33,25 +33,10 @@ import java.awt.Insets;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JSlider;
-import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
 import javax.swing.JToolBar;
-import javax.swing.event.ChangeEvent;
-
-import org.gvsig.gui.beans.panelGroup.AbstractPanelGroup;
-import org.gvsig.gui.beans.panelGroup.IPanelGroup;
-import org.gvsig.gui.beans.panelGroup.PanelGroupManager;
-import org.gvsig.gui.beans.panelGroup.loaders.PanelGroupLoaderFromList;
-import org.gvsig.gui.beans.panelGroup.panels.AbstractPanel;
-import org.gvsig.gui.beans.panelGroup.panels.IPanel;
-import org.gvsig.gui.beans.panelGroup.tabbedPanel.TabbedPanel;
 
 import com.iver.andami.PluginServices;
-import com.iver.cit.gvsig.panelGroup.PanelGroupDialog;
-import com.iver.cit.gvsig.panelGroup.loaders.PanelGroupLoaderFromExtensionPoint;
-
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
 
 public class TimeSliderPanel extends JPanel {
 	/**
@@ -194,9 +179,7 @@ public class TimeSliderPanel extends JPanel {
 	private JButton getOptionsButton() {
 		if(optionsButton == null){
 			optionsButton = new JButton("");
-			optionsButton.addActionListener(new OptionsButtonActionListener());
-			optionsButton.setIcon(PluginServices.getIconTheme().get("settings-icon"));
-			optionsButton.setToolTipText(PluginServices.getText(this, "options"));
+			optionsButton.setAction(getAnimationOptionsActionListener());
 		}
 		return optionsButton;
 	}
@@ -314,27 +297,13 @@ public class TimeSliderPanel extends JPanel {
 		}
 		return seekForwardButton;
 	}
+	
+	private AnimationOptionsActionListener animationOptionsActionListener;
 
-	private class OptionsButtonActionListener implements ActionListener {
-		public void actionPerformed(ActionEvent e) {
-			// TODO Move this from here
-			PanelGroupManager manager = PanelGroupManager.getManager();
-
-			manager.registerPanelGroup(TabbedPanel.class);
-			manager.setDefaultType(TabbedPanel.class);
-
-			TabbedPanel panelGroup = null;
-			try {
-				panelGroup = (TabbedPanel) manager.getPanelGroup(new String("Raster Layer"));
-				PanelGroupLoaderFromExtensionPoint loader = new PanelGroupLoaderFromExtensionPoint("NetCDFAnimationSettingsDialog");
-				panelGroup.loadPanels(loader);
-			} catch (Exception e1) {
-				e1.printStackTrace();
-			}
-			
-			
-			PanelGroupDialog dialog = new PanelGroupDialog("ok", panelGroup);
-			PluginServices.getMDIManager().addWindow(dialog);
+	private AnimationOptionsActionListener getAnimationOptionsActionListener() {
+		if (animationOptionsActionListener == null) {
+			animationOptionsActionListener = new AnimationOptionsActionListener();
 		}
+		return animationOptionsActionListener;
 	}
 }
