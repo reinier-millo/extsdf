@@ -42,13 +42,15 @@ import javax.swing.JSpinner;
 import javax.swing.JComboBox;
 import javax.swing.JCheckBox;
 
+import org.gvsig.gui.beans.panelGroup.panels.AbstractPanel;
+
 import com.iver.andami.PluginServices;
 
 /**
  * @author rmartinez
  *
  */
-public class PlaybackOptionsPanel extends JPanel {
+public class PlaybackOptionsPanel extends AbstractPanel {
 
 	/**
 	 * 
@@ -62,14 +64,15 @@ public class PlaybackOptionsPanel extends JPanel {
 	private JRadioButton playSpecifiedRB;
 	private JPanel panel_2;
 	private JSpinner durationSpinner;
-	private JLabel lblAfterPlayingOnce;
 	private JComboBox actionAfterPlayingCB;
 	private JCheckBox refreshCheckBox;
+	private JLabel afterPlayingOnceLabel;
 
 	/**
 	 * Create the panel.
 	 */
 	public PlaybackOptionsPanel() {
+		setLabel("Playback");
 		GridBagLayout gridBagLayout = new GridBagLayout();
 		gridBagLayout.columnWidths = new int[]{0, 0, 0};
 		gridBagLayout.rowHeights = new int[]{0, 0, 0, 0};
@@ -81,7 +84,7 @@ public class PlaybackOptionsPanel extends JPanel {
 		panel.setBorder(new TitledBorder(null, "", TitledBorder.LEADING, TitledBorder.TOP, null, null)); //$NON-NLS-1$
 		GridBagConstraints gbc_panel = new GridBagConstraints();
 		gbc_panel.gridwidth = 2;
-		gbc_panel.insets = new Insets(5, 5, 5, 5);
+		gbc_panel.insets = new Insets(5, 5, 5, 0);
 		gbc_panel.fill = GridBagConstraints.BOTH;
 		gbc_panel.gridx = 0;
 		gbc_panel.gridy = 0;
@@ -127,16 +130,16 @@ public class PlaybackOptionsPanel extends JPanel {
 		panel_2.add(getPlaySpecifiedRB());
 		panel_2.add(getDurationSpinner());
 		
-		lblAfterPlayingOnce = new JLabel(PluginServices.getText(this, "after_playing_once")); //$NON-NLS-1$
-		GridBagConstraints gbc_lblAfterPlayingOnce = new GridBagConstraints();
-		gbc_lblAfterPlayingOnce.insets = new Insets(5, 5, 5, 5);
-		gbc_lblAfterPlayingOnce.anchor = GridBagConstraints.WEST;
-		gbc_lblAfterPlayingOnce.gridx = 0;
-		gbc_lblAfterPlayingOnce.gridy = 1;
-		add(lblAfterPlayingOnce, gbc_lblAfterPlayingOnce);
+		afterPlayingOnceLabel = new JLabel("after_playing_once");
+		GridBagConstraints gbc_afterPlayingOnceLabel = new GridBagConstraints();
+		gbc_afterPlayingOnceLabel.insets = new Insets(5, 5, 5, 5);
+		gbc_afterPlayingOnceLabel.anchor = GridBagConstraints.WEST;
+		gbc_afterPlayingOnceLabel.gridx = 0;
+		gbc_afterPlayingOnceLabel.gridy = 1;
+		add(afterPlayingOnceLabel, gbc_afterPlayingOnceLabel);
 		
 		GridBagConstraints gbc_actionAfterPlayingCB = new GridBagConstraints();
-		gbc_actionAfterPlayingCB.insets = new Insets(5, 5, 5, 5);
+		gbc_actionAfterPlayingCB.insets = new Insets(5, 5, 5, 0);
 		gbc_actionAfterPlayingCB.anchor = GridBagConstraints.WEST;
 		gbc_actionAfterPlayingCB.gridx = 1;
 		gbc_actionAfterPlayingCB.gridy = 1;
@@ -145,11 +148,11 @@ public class PlaybackOptionsPanel extends JPanel {
 		GridBagConstraints gbc_refreshCheckBox = new GridBagConstraints();
 		gbc_refreshCheckBox.anchor = GridBagConstraints.WEST;
 		gbc_refreshCheckBox.gridwidth = 2;
-		gbc_refreshCheckBox.insets = new Insets(5, 5, 5, 5);
+		gbc_refreshCheckBox.insets = new Insets(5, 5, 0, 0);
 		gbc_refreshCheckBox.gridx = 0;
 		gbc_refreshCheckBox.gridy = 2;
 		add(getRefreshCheckBox(), gbc_refreshCheckBox);
-
+		setPreferredSize(getPreferredSize());
 	}
 
 	/**
@@ -201,6 +204,49 @@ public class PlaybackOptionsPanel extends JPanel {
 			refreshCheckBox = new JCheckBox(PluginServices.getText(this, "refresh_when_dragging")); //$NON-NLS-1$
 		}
 		return refreshCheckBox;
+	}
+
+	/* (non-Javadoc)
+	 * @see org.gvsig.gui.beans.panelGroup.panels.IPanel#accept()
+	 */
+	@Override
+	public void accept() {
+		
+	}
+
+	/* (non-Javadoc)
+	 * @see org.gvsig.gui.beans.panelGroup.panels.IPanel#apply()
+	 */
+	@Override
+	public void apply() {
+		System.out.println(getClass().getName());
+	}
+
+	/* (non-Javadoc)
+	 * @see org.gvsig.gui.beans.panelGroup.panels.IPanel#cancel()
+	 */
+	@Override
+	public void cancel() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	/* (non-Javadoc)
+	 * @see org.gvsig.gui.beans.panelGroup.panels.IPanel#selected()
+	 */
+	@Override
+	public void selected() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	/* (non-Javadoc)
+	 * @see org.gvsig.gui.beans.panelGroup.panels.AbstractPanel#initialize()
+	 */
+	@Override
+	protected void initialize() {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

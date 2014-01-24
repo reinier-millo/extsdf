@@ -27,10 +27,16 @@ package uclv.gvsig.extsdf.timeslider;
 
 import org.gvsig.fmap.raster.layers.FLyrRasterSE;
 
+import uclv.gvsig.extsdf.properties.panels.NetCDFPanel;
+import uclv.gvsig.extsdf.properties.panels.TimePanel;
+
 import com.iver.andami.PluginServices;
 import com.iver.andami.ui.mdiManager.IWindow;
 import com.iver.cit.gvsig.fmap.layers.FLayers;
 import com.iver.cit.gvsig.project.documents.view.gui.View;
+import com.iver.utiles.extensionPoints.ExtensionPoint;
+import com.iver.utiles.extensionPoints.ExtensionPoints;
+import com.iver.utiles.extensionPoints.ExtensionPointsSingleton;
 import com.iver.andami.plugins.Extension;
 
 /**
@@ -81,6 +87,24 @@ public class TimeSliderExtension extends Extension{
 //				}				
 			}
 		}
+		
+		// Obtiene todos los puntos de extensión del gvSIG
+        ExtensionPoints extensionPoints = ExtensionPointsSingleton
+                .getInstance();
+		
+		// Creación del punto de extensión para registrar paneles en el cuadro
+        // de propiedades.
+        if (!extensionPoints.containsKey("NetCDFAnimationSettingsDialog")) {
+            extensionPoints
+                    .put(new ExtensionPoint(
+                            "NetCDFAnimationSettingsDialog",
+                            "NetCDF Properties registrable panels (register instances of javax.swing.JPanel)"));
+        }
+
+        // Añadimos paneles al cuadro de propiedades.
+        extensionPoints.add("NetCDFAnimationSettingsDialog", "Time Display", TimeDisplayOptionsPanel.class);
+        extensionPoints.add("NetCDFAnimationSettingsDialog", "Time Extent", TimeExtentOptionsPanel.class);
+        extensionPoints.add("NetCDFAnimationSettingsDialog", "Playback", PlaybackOptionsPanel.class);
 	}
 
 	/**
