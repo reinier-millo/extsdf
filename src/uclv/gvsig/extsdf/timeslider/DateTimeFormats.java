@@ -27,15 +27,18 @@
 package uclv.gvsig.extsdf.timeslider;
 
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
 
 /**
+ * Esta clase es la encargada de manejar los formatos de fecha y hora
+ * 
  * @author rmartinez
  * @author dcardoso
  */
 public class DateTimeFormats {
-
+	/**
+	 * Formatos posibles de fechas a mostrar
+	 */
 	private String[] dates = { "MM/dd/yy",
 			"MM/dd/yyyy",
 			"M/d/yy",
@@ -51,39 +54,57 @@ public class DateTimeFormats {
 			"MMM yyy",
 			"MMMM yyyy",
 			"MMMM dd, yyyy" };
+	/**
+	 * Formatos posibles de hora a mostrar
+	 */
 	private String[]hours={"hh:mm a",
 			"H:mm:ss",
 			"HH:mm:ss",
 			"h:mm:ss a",
 			"hh:mm:ss a"};
+
 	/**
 	 * @return the dates
 	 */
 	public String[] getDates() {
 		return dates;
 	}
+
 	/**
 	 * @return the hours
 	 */
 	public String[] getHours() {
 		return hours;
 	}
-	
-	public String[] getTodayDatesFormat(){
+
+	/**
+	 * 
+	 * @return la fecha actual como ejemplo en todos los formatos
+	 */
+	public String[] getTodayDatesFormat() {
 		return getTodayFormat(dates);
 	}
-	
-	public String[] getTodayHoursFormat(){
+
+	/**
+	 * 
+	 * @return la fecha actual como ejemplo en todos los formatos
+	 */
+	public String[] getTodayHoursFormat() {
 		return getTodayFormat(hours);
 	}
 	
-	private String[] getTodayFormat(String[] format){
-		String[]today = new String[format.length];
+	/** 
+	 * Da formato a la hora o fecha atual en los formatos posibles
+	 *@param format  formatos de fechas o hora
+	 *@return fecha actual formateada
+	 */
+	private String[] getTodayFormat(String[] format) {
+		String[] today = new String[format.length];
 		SimpleDateFormat formatter = new SimpleDateFormat();
 		Date date = new Date(System.currentTimeMillis());
 		for (int i = 0; i < format.length; i++) {
 			formatter.applyLocalizedPattern(format[i]);
-			today[i] = formatter.format(date) + " ("+format[i]+")";
+			today[i] = formatter.format(date) + " (" + format[i] + ")";
 		}
 		return today;
 	}
