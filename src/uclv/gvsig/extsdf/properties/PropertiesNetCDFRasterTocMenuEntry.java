@@ -44,10 +44,11 @@ import com.iver.cit.gvsig.project.documents.view.toc.AbstractTocContextMenuActio
 import com.iver.cit.gvsig.project.documents.view.toc.ITocItem;
 
 /**
- * Entrada en el menu contextual del TOC correspondiente al cuadro de
- * propiedades del raster
+ * Clase que posibilita la entrada en el menú contextual del TOC correspondiente al cuadro de
+ * propiedades del raster 
  * 
  * @author dcardoso
+ * @see {@link AbstractTocContextMenuAction}, {@link IGenericToolBarMenuItem}
  *
  */
 public class PropertiesNetCDFRasterTocMenuEntry extends 	AbstractTocContextMenuAction
@@ -69,8 +70,8 @@ public class PropertiesNetCDFRasterTocMenuEntry extends 	AbstractTocContextMenuA
 	private PropertiesNetCDFRasterTocMenuEntry() {}
 
 	/**
-	 * Devuelve un objeto unico a dicha clase
-	 * @return
+	 * Devuelve un objeto unico de esta clase
+	 * @return PropertiesNetCDFRasterTocMenuEntry
 	 */
 	static public PropertiesNetCDFRasterTocMenuEntry getSingleton() {
 		if (singleton == null)
@@ -114,7 +115,6 @@ public class PropertiesNetCDFRasterTocMenuEntry extends 	AbstractTocContextMenuA
 	 * Gestiona la apertura del dialogo de propiedades del NetCDF 
 	 * 
 	 */
-	
 	/* (non-Javadoc)
 	 * @see com.iver.cit.gvsig.project.documents.view.toc.AbstractTocContextMenuAction#execute(com.iver.cit.gvsig.project.documents.view.toc.ITocItem, com.iver.cit.gvsig.fmap.layers.FLayer[])
 	 */
