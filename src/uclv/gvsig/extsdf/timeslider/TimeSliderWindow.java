@@ -140,6 +140,13 @@ public class TimeSliderWindow extends JPanel implements IWindow{
 		this.dataset = dataset;
 		getAnimationOptionsActionListener().setDataset(dataset);
 	}
+	
+	/**
+	 * @return the dataset
+	 */
+	public NetCDFRasterDataset getDataset() {
+		return dataset;
+	}
 
 	/**
 	 * <p>

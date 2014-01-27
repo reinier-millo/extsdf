@@ -42,7 +42,7 @@ import com.iver.andami.PluginServices;
 
 /**
  * @author rmartinez
- *
+ * 
  */
 public class TimeDisplayOptionsPanel extends NetCDFOptionsPanel {
 	/**
@@ -141,7 +141,8 @@ public class TimeDisplayOptionsPanel extends NetCDFOptionsPanel {
 		add(getTimeWindowTF(), gbc_timeWindowTF);
 		getTimeWindowTF().setColumns(10);
 
-		measureUnitLabel = new JLabel(getMeasureUnitIntervalCB().getSelectedItem().toString());
+		measureUnitLabel = new JLabel(getMeasureUnitIntervalCB()
+				.getSelectedItem().toString());
 		GridBagConstraints gbc_measureUnitLabel = new GridBagConstraints();
 		gbc_measureUnitLabel.anchor = GridBagConstraints.WEST;
 		gbc_measureUnitLabel.insets = new Insets(5, 5, 5, 5);
@@ -212,18 +213,18 @@ public class TimeDisplayOptionsPanel extends NetCDFOptionsPanel {
 
 	// TODO Move this from here
 	private String[] measureUnits = new String[] {
-			PluginServices.getText(this, "milliseconds"),  //$NON-NLS-1$
-			PluginServices.getText(this, "seconds"),  //$NON-NLS-1$
-			PluginServices.getText(this, "minutes"),  //$NON-NLS-1$
-			PluginServices.getText(this, "hours"),  //$NON-NLS-1$
-			PluginServices.getText(this, "days"),  //$NON-NLS-1$
-			PluginServices.getText(this, "weeks"),  //$NON-NLS-1$
-			PluginServices.getText(this, "months"),  //$NON-NLS-1$
-			PluginServices.getText(this, "years"),  //$NON-NLS-1$
-			PluginServices.getText(this, "decades"),  //$NON-NLS-1$
+			PluginServices.getText(this, "milliseconds"), //$NON-NLS-1$
+			PluginServices.getText(this, "seconds"), //$NON-NLS-1$
+			PluginServices.getText(this, "minutes"), //$NON-NLS-1$
+			PluginServices.getText(this, "hours"), //$NON-NLS-1$
+			PluginServices.getText(this, "days"), //$NON-NLS-1$
+			PluginServices.getText(this, "weeks"), //$NON-NLS-1$
+			PluginServices.getText(this, "months"), //$NON-NLS-1$
+			PluginServices.getText(this, "years"), //$NON-NLS-1$
+			PluginServices.getText(this, "decades"), //$NON-NLS-1$
 			PluginServices.getText(this, "centuries") //$NON-NLS-1$
 	};
-	
+
 	/**
 	 * @return the measureUnitIntervalCB
 	 */
@@ -243,7 +244,8 @@ public class TimeDisplayOptionsPanel extends NetCDFOptionsPanel {
 		if (restoreDefaultBtn == null) {
 			restoreDefaultBtn = new JButton(PluginServices.getText(this,
 					"restore_default_short")); //$NON-NLS-1$
-			restoreDefaultBtn.setToolTipText(PluginServices.getText(this, "restore_default_full")); //$NON-NLS-1$
+			restoreDefaultBtn.setToolTipText(PluginServices.getText(this,
+					"restore_default_full")); //$NON-NLS-1$
 		}
 		return restoreDefaultBtn;
 	}
@@ -257,9 +259,9 @@ public class TimeDisplayOptionsPanel extends NetCDFOptionsPanel {
 		}
 		return timeWindowTF;
 	}
-	
-	
+
 	DateTimeFormats formats = new DateTimeFormats();
+
 	/**
 	 * @return the dateFormatCB
 	 */
@@ -285,7 +287,8 @@ public class TimeDisplayOptionsPanel extends NetCDFOptionsPanel {
 	 */
 	private JLabel getTimeZoneLabel() {
 		if (timeZoneLabel == null) {
-			timeZoneLabel = new JLabel(PluginServices.getText(this, "time_zone")); //$NON-NLS-1$
+			timeZoneLabel = new JLabel(
+					PluginServices.getText(this, "time_zone")); //$NON-NLS-1$
 		}
 		return timeZoneLabel;
 	}
@@ -295,7 +298,8 @@ public class TimeDisplayOptionsPanel extends NetCDFOptionsPanel {
 	 */
 	private JLabel getTimeStepIntervalLabel() {
 		if (timeStepIntervalLabel == null) {
-			timeStepIntervalLabel = new JLabel(PluginServices.getText(this, "time_step_interval")); //$NON-NLS-1$
+			timeStepIntervalLabel = new JLabel(PluginServices.getText(this,
+					"time_step_interval")); //$NON-NLS-1$
 		}
 		return timeStepIntervalLabel;
 	}
@@ -305,7 +309,8 @@ public class TimeDisplayOptionsPanel extends NetCDFOptionsPanel {
 	 */
 	private JLabel getTimeWindowLabel() {
 		if (timeWindowLabel == null) {
-			timeWindowLabel = new JLabel(PluginServices.getText(this, "time_window")); //$NON-NLS-1$
+			timeWindowLabel = new JLabel(PluginServices.getText(this,
+					"time_window")); //$NON-NLS-1$
 		}
 		return timeWindowLabel;
 	}
@@ -315,7 +320,8 @@ public class TimeDisplayOptionsPanel extends NetCDFOptionsPanel {
 	 */
 	private JLabel getDisplayDateFormatLabel() {
 		if (displayDateFormatLabel == null) {
-			displayDateFormatLabel = new JLabel(PluginServices.getText(this, "display_date_format")); //$NON-NLS-1$
+			displayDateFormatLabel = new JLabel(PluginServices.getText(this,
+					"display_date_format")); //$NON-NLS-1$
 		}
 		return displayDateFormatLabel;
 	}
@@ -325,7 +331,8 @@ public class TimeDisplayOptionsPanel extends NetCDFOptionsPanel {
 	 */
 	private JLabel getDisplayTimeFormatLabel() {
 		if (displayTimeFormatLabel == null) {
-			displayTimeFormatLabel = new JLabel(PluginServices.getText(this, "display_time_format")); //$NON-NLS-1$
+			displayTimeFormatLabel = new JLabel(PluginServices.getText(this,
+					"display_time_format")); //$NON-NLS-1$
 		}
 		return displayTimeFormatLabel;
 	}
@@ -344,7 +351,9 @@ public class TimeDisplayOptionsPanel extends NetCDFOptionsPanel {
 		}
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.gvsig.gui.beans.panelGroup.panels.IPanel#accept()
 	 */
 	@Override
@@ -352,7 +361,9 @@ public class TimeDisplayOptionsPanel extends NetCDFOptionsPanel {
 		apply();
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.gvsig.gui.beans.panelGroup.panels.IPanel#apply()
 	 */
 	@Override
@@ -361,40 +372,60 @@ public class TimeDisplayOptionsPanel extends NetCDFOptionsPanel {
 		configuration.setTimeformat(timeFormatCB.getSelectedIndex());
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.gvsig.gui.beans.panelGroup.panels.IPanel#cancel()
 	 */
 	@Override
 	public void cancel() {
 		// TODO Auto-generated method stub
-		
+
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.gvsig.gui.beans.panelGroup.panels.IPanel#selected()
 	 */
 	@Override
 	public void selected() {
 		// TODO Auto-generated method stub
-		
+
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.gvsig.gui.beans.panelGroup.panels.AbstractPanel#initialize()
 	 */
 	@Override
 	protected void initialize() {
 		// TODO Auto-generated method stub
-		
+
 	}
-	
-	/* (non-Javadoc)
-	 * @see uclv.gvsig.extsdf.timeslider.NetCDFOptionsPanel#setReference(java.lang.Object)
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * uclv.gvsig.extsdf.timeslider.NetCDFOptionsPanel#setReference(java.lang
+	 * .Object)
 	 */
 	@Override
 	public void setReference(Object ref) {
 		super.setReference(ref);
-		getTimeFormatCB().setSelectedIndex(dataset.getConfiguration().getTimeformat());
-		getDateFormatCB().setSelectedIndex(dataset.getConfiguration().getDateformat());
+		postInitialize();
+	}
+
+	/**
+	 * Código que necesita de la referencia (el dataset) pasada al panel.
+	 * Durante el método initialize la referencia es null.
+	 */
+	private void postInitialize() {
+		getTimeFormatCB().setSelectedIndex(
+				dataset.getConfiguration().getTimeformat());
+		getDateFormatCB().setSelectedIndex(
+				dataset.getConfiguration().getDateformat());
 	}
 }
