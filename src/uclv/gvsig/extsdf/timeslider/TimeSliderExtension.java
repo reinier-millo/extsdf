@@ -148,7 +148,7 @@ public class TimeSliderExtension extends Extension{
 			}
 		}
 		
-		return dataset != null && dataset.getConfiguration().getEnable();
+		return dataset != null && dataset.getConfiguration().getEnabled();
 	}
 
 	/**
