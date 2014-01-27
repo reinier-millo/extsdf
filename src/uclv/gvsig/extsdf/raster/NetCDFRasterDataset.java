@@ -50,6 +50,7 @@ import org.gvsig.raster.process.RasterTask;
 import org.gvsig.raster.process.RasterTaskQueue;
 import org.gvsig.raster.util.extensionPoints.ExtensionPoint;
 
+import uclv.gvsig.extsdf.NetCDFConfiguration;
 import uclv.gvsig.extsdf.NetCDFController;
 
 /**
@@ -67,6 +68,10 @@ public class NetCDFRasterDataset extends RasterDataset {
 	 * @see uclv.gvsig.extsdf.NetCDFController
 	 */
 	private NetCDFController controller;
+	/**
+	 * configuración de las propiedades
+	 */
+	private NetCDFConfiguration configuration;
 
 	/**
 	 * @see org.gvsig.raster.datastruct.Transparency
@@ -105,7 +110,10 @@ public class NetCDFRasterDataset extends RasterDataset {
 
 			// Inicializa el controlador de archivos NetCDF
 			controller = new NetCDFController((String) param);
-
+			
+			// Inicializa la configuración
+			configuration = new NetCDFConfiguration();
+			
 			// Inicializa la capa y la cantidad de bandas (siempre es 1)
 			load();
 			bandCount = 1;
@@ -715,6 +723,13 @@ public class NetCDFRasterDataset extends RasterDataset {
 	 */
 	public NetCDFController getNetCDFController() {
 		return controller;
+	}
+	
+	/**
+	 * @return the configuration
+	 */
+	public NetCDFConfiguration getConfiguration() {
+		return configuration;
 	}
 
 	/**
