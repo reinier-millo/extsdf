@@ -266,7 +266,6 @@ public class TimeDisplayOptionsPanel extends NetCDFOptionsPanel {
 	private JComboBox getDateFormatCB() {
 		if (dateFormatCB == null) {
 			dateFormatCB = new JComboBox(formats.getTodayDatesFormat());
-//			dateFormatCB.setSelectedIndex(dateFormats.getDefaultFormatIndex());
 		}
 		return dateFormatCB;
 	}
@@ -277,7 +276,6 @@ public class TimeDisplayOptionsPanel extends NetCDFOptionsPanel {
 	private JComboBox getTimeFormatCB() {
 		if (timeFormatCB == null) {
 			timeFormatCB = new JComboBox(formats.getTodayHoursFormat());
-//			timeFormatCB.setSelectedIndex(timeFormats.getDefaultFormatIndex());
 		}
 		return timeFormatCB;
 	}
@@ -351,8 +349,7 @@ public class TimeDisplayOptionsPanel extends NetCDFOptionsPanel {
 	 */
 	@Override
 	public void accept() {
-		// TODO Auto-generated method stub
-		
+		apply();
 	}
 
 	/* (non-Javadoc)
@@ -360,7 +357,8 @@ public class TimeDisplayOptionsPanel extends NetCDFOptionsPanel {
 	 */
 	@Override
 	public void apply() {
-		System.out.println(getClass().getName());
+		configuration.setDateformat(dateFormatCB.getSelectedIndex());
+		configuration.setTimeformat(timeFormatCB.getSelectedIndex());
 	}
 
 	/* (non-Javadoc)
@@ -388,5 +386,15 @@ public class TimeDisplayOptionsPanel extends NetCDFOptionsPanel {
 	protected void initialize() {
 		// TODO Auto-generated method stub
 		
+	}
+	
+	/* (non-Javadoc)
+	 * @see uclv.gvsig.extsdf.timeslider.NetCDFOptionsPanel#setReference(java.lang.Object)
+	 */
+	@Override
+	public void setReference(Object ref) {
+		super.setReference(ref);
+		getTimeFormatCB().setSelectedIndex(dataset.getConfiguration().getTimeformat());
+		getDateFormatCB().setSelectedIndex(dataset.getConfiguration().getDateformat());
 	}
 }
