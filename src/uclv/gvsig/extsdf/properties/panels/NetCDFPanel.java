@@ -676,6 +676,33 @@ public class NetCDFPanel extends AbstractPanel {
 		} catch (IOException e1) {
 			logger.error(e1.getLocalizedMessage());
 		}
+		// si se abren las propiedades después de la primera vez
+		chHabilitarTiempo.setSelected(configuration.getEnabled());
+		if (configuration.getEnabled() && controler.hasVariableParameter()) {
+			Component[] componet = paPropiedadesTiempo.getComponents();
+			for (Component component : componet) {
+				if (component instanceof JLabel)
+					component.setEnabled(true);
+			}
+			layer_time.setModel(new DefaultComboBoxModel(
+					new String[] { PluginServices.getText(this,
+							"layer_has_time_as_a_dimension") }));
+			time_dimension.setEnabled(true);
+			try {
+				time_dimension.setListData(new String[] { controler
+						.getSelectedParameter().getFullName() });
+			} catch (RasterDriverException e1) {
+				logger.error(e1.getLocalizedMessage());
+			}
+			field_format.setEnabled(true);
+			field_format.setModel(new DefaultComboBoxModel(
+					new DateTimeFormats().getTodayDatesFormat()));
+			field_format.setSelectedIndex(configuration.getDateformat());
+			hour_format.setEnabled(true);
+			hour_format.setModel(new DefaultComboBoxModel(
+					new DateTimeFormats().getTodayHoursFormat()));
+			hour_format.setSelectedIndex(configuration.getTimeformat());
+		}
 	}
 
 	/**
