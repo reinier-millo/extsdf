@@ -50,6 +50,7 @@ import org.gvsig.raster.dataset.io.RasterDriverException;
 
 import ucar.nc2.Variable;
 import ucar.nc2.dataset.CoordinateSystem;
+import uclv.gvsig.extsdf.NetCDFConfiguration;
 import uclv.gvsig.extsdf.NetCDFController;
 import uclv.gvsig.extsdf.raster.NetCDFRasterDataset;
 import uclv.gvsig.extsdf.timeslider.DateTimeFormats;
@@ -93,6 +94,7 @@ public class NetCDFPanel extends AbstractPanel {
 	private JPanel paGeneral;
 	private JLabel lbHourFormat;
 	private JComboBox hour_format;
+	private NetCDFConfiguration configuration;
 
 	/**
 	 * Constructor del panel NetCDF
@@ -580,7 +582,9 @@ public class NetCDFPanel extends AbstractPanel {
 	 */
 	@Override
 	public void apply() {
-
+		if(chHabilitarTiempo.isSelected()){
+			configuration.setEnable(true);
+		}
 	}
 
 	/*
@@ -637,6 +641,7 @@ public class NetCDFPanel extends AbstractPanel {
 			NetCDFRasterDataset x = (NetCDFRasterDataset) fr.getDataSource()
 					.getDataset(0)[0];
 			controler = x.getNetCDFController();
+			configuration = x.getConfiguration();
 			init();
 		}
 	}

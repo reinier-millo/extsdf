@@ -32,8 +32,9 @@ package uclv.gvsig.extsdf;
  * 
  */
 public class NetCDFConfiguration {
-	private String dateformat = null;
-	private String timeformat = null;
+	private int dateformat =0;
+	private int timeformat =0;
+	private Boolean enable = false;
 
 	/**
 	 * 
@@ -45,7 +46,7 @@ public class NetCDFConfiguration {
 	/**
 	 * @return the dateformat
 	 */
-	public String getDateformat() {
+	public int getDateformat() {
 		return dateformat;
 	}
 
@@ -53,14 +54,14 @@ public class NetCDFConfiguration {
 	 * @param dateformat
 	 *            the dateformat to set
 	 */
-	public void setDateformat(String dateformat) {
+	public void setDateformat(int dateformat) {
 		this.dateformat = dateformat;
 	}
 
 	/**
 	 * @return the timeformat
 	 */
-	public String getTimeformat() {
+	public int getTimeformat() {
 		return timeformat;
 	}
 
@@ -68,8 +69,23 @@ public class NetCDFConfiguration {
 	 * @param timeformat
 	 *            the timeformat to set
 	 */
-	public void setTimeformat(String timeformat) {
+	public void setTimeformat(int timeformat) {
 		this.timeformat = timeformat;
+	}
+
+	/**
+	 * @return the enable
+	 */
+	public Boolean getEnable() {
+		return enable;
+	}
+
+	/**
+	 * @param enable
+	 *            the enable to set
+	 */
+	public void setEnable(Boolean enable) {
+		this.enable = enable;
 	}
 
 }
