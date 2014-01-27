@@ -34,13 +34,13 @@ import javax.swing.UIManager;
  * @author rmartinez
  *
  */
-public class TestTimeSliderPanel extends JFrame {
+public class TestTimeSliderWindow extends JFrame {
 	
 	private static final long serialVersionUID = 1L;
 
-	public TestTimeSliderPanel() {
-		TimeSliderPanel panel = new TimeSliderPanel();
-		add(panel);
+	public TestTimeSliderWindow() {
+		TimeSliderWindow window = new TimeSliderWindow();
+		add(window);
 		setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 		pack();
 		setVisible(true);
@@ -53,6 +53,6 @@ public class TestTimeSliderPanel extends JFrame {
 		} catch( Exception e ) {
 			e.printStackTrace();
 		}
-		new TestTimeSliderPanel();
+		new TestTimeSliderWindow();
 	}
 }

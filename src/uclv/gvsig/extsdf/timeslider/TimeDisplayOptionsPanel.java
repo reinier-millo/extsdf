@@ -38,8 +38,6 @@ import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 
-import org.gvsig.gui.beans.panelGroup.panels.AbstractPanel;
-
 import com.iver.andami.PluginServices;
 
 /**
@@ -50,7 +48,7 @@ import com.iver.andami.PluginServices;
  * @author rmartinez
  * 
  */
-public class TimeDisplayOptionsPanel extends AbstractPanel {
+public class TimeDisplayOptionsPanel extends NetCDFOptionsPanel {
 	/**
 	 * 
 	 */

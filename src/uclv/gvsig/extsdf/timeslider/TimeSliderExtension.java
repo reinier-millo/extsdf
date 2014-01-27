@@ -27,6 +27,8 @@ package uclv.gvsig.extsdf.timeslider;
 
 import org.gvsig.fmap.raster.layers.FLyrRasterSE;
 
+import uclv.gvsig.extsdf.raster.NetCDFRasterDataset;
+
 import com.iver.andami.PluginServices;
 import com.iver.andami.plugins.Extension;
 import com.iver.andami.ui.mdiManager.IWindow;
@@ -76,12 +78,18 @@ public class TimeSliderExtension extends Extension{
 			
 			for(int i=0; i<layersCount; ++i) {
 //				if(fLayer instanceof FlyrNetCDFRaster) {
-//					cdfRaster = (FlyrNetCDFRaster)fLayer;
+//				cdfRaster = (FlyrNetCDFRaster)fLayer;
+				if(fLayers.getLayer(i) instanceof FLyrRasterSE) {
+					FLyrRasterSE fr = (FLyrRasterSE) fLayers.getLayer(i);
+					NetCDFRasterDataset dataset = (NetCDFRasterDataset) fr.getDataSource().getDataset(0)[0];
+
 					TimeSliderWindow timeSliderWindow = new TimeSliderWindow();
 					timeSliderWindow.setRelatedWindow(activeWindow);
+					timeSliderWindow.setDataset(dataset);
 					PluginServices.getMDIManager().addWindow(timeSliderWindow);
+					
 					break;
-//				}				
+				}				
 			}
 		}
 		
@@ -141,7 +149,8 @@ public class TimeSliderExtension extends Extension{
 			for(int index=0; index<numberOfLayers; ++index) {
 				// OJO: Suprimir FLyrRasterSE por la capa que se defina en el plugin
 				if(fLayers.getLayer(index) instanceof FLyrRasterSE) {
-					return true;
+					FLyrRasterSE fr = (FLyrRasterSE) fLayers.getLayer(index);
+					return fr.getDataSource().getDataset(0)[0] instanceof NetCDFRasterDataset;
 				}
 			}			
 		}		
