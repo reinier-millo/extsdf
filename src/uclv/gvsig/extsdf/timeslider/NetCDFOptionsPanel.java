@@ -1,5 +1,5 @@
 /*
- * TestTimeSliderPanel.java
+ * NetCDFOptionsPanel.java
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -25,34 +25,28 @@
 
 package uclv.gvsig.extsdf.timeslider;
 
-import java.awt.Toolkit;
+import org.gvsig.gui.beans.panelGroup.panels.AbstractPanel;
 
-import javax.swing.JFrame;
-import javax.swing.UIManager;
+import uclv.gvsig.extsdf.raster.NetCDFRasterDataset;
 
 /**
  * @author rmartinez
  *
  */
-public class TestTimeSliderWindow extends JFrame {
-	
-	private static final long serialVersionUID = 1L;
+public abstract class NetCDFOptionsPanel extends AbstractPanel {
 
-	public TestTimeSliderWindow() {
-		TimeSliderWindow window = new TimeSliderWindow();
-		add(window);
-		setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-		pack();
-		setVisible(true);
-	}
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	protected NetCDFRasterDataset dataset;
 	
-	public static void main(String[] args) {
-		Toolkit.getDefaultToolkit().setDynamicLayout(true);
-		try {
-			UIManager.setLookAndFeel("com.jgoodies.looks.plastic.PlasticXPLookAndFeel");
-		} catch( Exception e ) {
-			e.printStackTrace();
-		}
-		new TestTimeSliderWindow();
+	/* (non-Javadoc)
+	 * @see org.gvsig.gui.beans.panelGroup.panels.AbstractPanel#setReference(java.lang.Object)
+	 */
+	@Override
+	public void setReference(Object ref) {
+		super.setReference(ref);
+		dataset = (NetCDFRasterDataset) ref;
 	}
 }

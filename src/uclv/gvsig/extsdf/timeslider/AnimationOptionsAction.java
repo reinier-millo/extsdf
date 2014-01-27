@@ -32,6 +32,8 @@ import javax.swing.AbstractAction;
 import org.gvsig.gui.beans.panelGroup.PanelGroupManager;
 import org.gvsig.gui.beans.panelGroup.tabbedPanel.TabbedPanel;
 
+import uclv.gvsig.extsdf.raster.NetCDFRasterDataset;
+
 import com.iver.andami.PluginServices;
 import com.iver.andami.ui.mdiManager.WindowInfo;
 import com.iver.cit.gvsig.panelGroup.PanelGroupDialog;
@@ -49,6 +51,7 @@ public class AnimationOptionsAction extends AbstractAction  {
 	 */
 	private static final long serialVersionUID = 1L;
 	private PanelGroupDialog optionsDialog;
+	private NetCDFRasterDataset dataset;
 
 	/**
 	 * 
@@ -70,8 +73,8 @@ public class AnimationOptionsAction extends AbstractAction  {
 			manager.setDefaultType(TabbedPanel.class);
 
 			TabbedPanel panelGroup = null;
-			try {
-				panelGroup = (TabbedPanel) manager.getPanelGroup(new String("Raster Layer")); //$NON-NLS-1$
+			try {				
+				panelGroup = (TabbedPanel) manager.getPanelGroup(dataset); //$NON-NLS-1$
 				PanelGroupLoaderFromExtensionPoint loader = new PanelGroupLoaderFromExtensionPoint("NetCDFAnimationSettingsDialog"); //$NON-NLS-1$
 				panelGroup.loadPanels(loader);
 			} catch (Exception e1) {
@@ -80,6 +83,13 @@ public class AnimationOptionsAction extends AbstractAction  {
 			optionsDialog = new PanelGroupDialog(PluginServices.getText(this, "options"), PluginServices.getText(this, "animation_options"), 550, 450, (byte) (WindowInfo.MODALDIALOG | WindowInfo.RESIZABLE | WindowInfo.MAXIMIZABLE), panelGroup); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 		PluginServices.getMDIManager().addCentredWindow(optionsDialog);
+	}
+	
+	/**
+	 * @param dataset the dataset to set
+	 */
+	public void setDataset(NetCDFRasterDataset dataset) {
+		this.dataset = dataset;
 	}
 
 }

@@ -44,8 +44,6 @@ import javax.swing.JSlider;
 import javax.swing.JSpinner;
 import javax.swing.border.TitledBorder;
 
-import org.gvsig.gui.beans.panelGroup.panels.AbstractPanel;
-
 import com.iver.andami.PluginServices;
 
 /**
@@ -53,7 +51,7 @@ import com.iver.andami.PluginServices;
  * @author rmartinez
  *
  */
-public class PlaybackOptionsPanel extends AbstractPanel {
+public class PlaybackOptionsPanel extends NetCDFOptionsPanel {
 
 	/**
 	 * 

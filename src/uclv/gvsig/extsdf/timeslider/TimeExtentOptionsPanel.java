@@ -37,15 +37,13 @@ import javax.swing.JLabel;
 import javax.swing.JSpinner;
 import javax.swing.JTextField;
 
-import org.gvsig.gui.beans.panelGroup.panels.AbstractPanel;
-
 import com.iver.andami.PluginServices;
 
 /**
  * @author rmartinez
  *
  */
-public class TimeExtentOptionsPanel extends AbstractPanel {
+public class TimeExtentOptionsPanel extends NetCDFOptionsPanel {
 
 	/**
 	 * 
@@ -277,4 +275,5 @@ public class TimeExtentOptionsPanel extends AbstractPanel {
 		// TODO Auto-generated method stub
 		
 	}
+	
 }
