@@ -51,6 +51,10 @@ import com.iver.cit.gvsig.project.documents.view.toc.ITocItem;
  * @see {@link AbstractTocContextMenuAction}, {@link IGenericToolBarMenuItem}
  *
  */
+/**
+ * @author dcardoso
+ *
+ */
 public class PropertiesNetCDFRasterTocMenuEntry extends 	AbstractTocContextMenuAction
 												implements 	IGenericToolBarMenuItem{
 
@@ -122,7 +126,7 @@ public class PropertiesNetCDFRasterTocMenuEntry extends 	AbstractTocContextMenuA
 	public void execute(ITocItem item, FLayer[] selectedItems) {
 		if ((selectedItems == null) || (selectedItems.length != 1))
             return ;
-        FLayer lyr = getNodeLayer(item);
+        FLayer lyr = selectedItems[0];
 
 		try {
 			enableEvents = false;
@@ -154,16 +158,27 @@ public class PropertiesNetCDFRasterTocMenuEntry extends 	AbstractTocContextMenuA
 		return RasterToolsUtil.getIcon("properties-icon");
 	}
 	
-	
-	/* (non-Javadoc)
-	 * @see com.iver.cit.gvsig.project.documents.view.toc.AbstractTocContextMenuAction#isEnabled(com.iver.cit.gvsig.project.documents.view.toc.ITocItem, com.iver.cit.gvsig.fmap.layers.FLayer[])
-	 */
+	/**
+     * Verifica si el menú puede habilitarse o no
+     *
+     * @param item
+     *            elemento del menu
+     * @param selectedItems
+     *            conjunto de capas seleccionadas
+     *
+     * @return <b>true</b> si la capa seleccionada es un raster de un NetCDF<br />
+     *         <b>false</b> en cualquier otro caso
+     *
+     * @see com.iver.cit.gvsig.project.documents.view.toc.AbstractTocContextMenuAction#isVisible(com.iver.cit.gvsig.project.documents.view.toc.ITocItem,
+     *      com.iver.cit.gvsig.fmap.layers.FLayer[])
+     */
 	public boolean isEnabled(ITocItem item, FLayer[] selectedItems) {
 		if ((selectedItems == null) || (selectedItems.length != 1))
             return false;
-        FLayer lyr = getNodeLayer(item);
+        FLayer lyr = selectedItems[0];
         if (lyr instanceof FLyrRasterSE) {
-            return true;
+        	FLyrRasterSE fr = (FLyrRasterSE) lyr;
+            return fr.getDataSource().getDataset(0)[0] instanceof NetCDFRasterDataset;
         }
         return false;
     }
@@ -185,12 +200,11 @@ public class PropertiesNetCDFRasterTocMenuEntry extends 	AbstractTocContextMenuA
     public boolean isVisible(ITocItem item, FLayer[] selectedItems) {
         if ((selectedItems == null) || (selectedItems.length != 1))
             return false;
-        FLayer lyr = getNodeLayer(item);
+        FLayer lyr = selectedItems[0];
         if (lyr instanceof FLyrRasterSE) {
             FLyrRasterSE fr = (FLyrRasterSE) lyr;
             return fr.getDataSource().getDataset(0)[0] instanceof NetCDFRasterDataset;
-            
-        }
+          }
         return false;
     }
 
