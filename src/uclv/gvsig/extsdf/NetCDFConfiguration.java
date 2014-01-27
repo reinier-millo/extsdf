@@ -32,12 +32,21 @@ package uclv.gvsig.extsdf;
  * 
  */
 public class NetCDFConfiguration {
+	/**
+	 * indice del formato de fecha seleccionado
+	 */
 	private int dateformat =0;
+	/**
+	 * indice del formato de hora seleccionado
+	 */
 	private int timeformat =0;
-	private Boolean enable = false;
+	/**
+	 * Dice si debe activarse el TimeSlider
+	 */
+	private Boolean enabled = false;
 
 	/**
-	 * 
+	 * Constructor
 	 */
 	public NetCDFConfiguration() {
 		super();
@@ -76,16 +85,16 @@ public class NetCDFConfiguration {
 	/**
 	 * @return the enable
 	 */
-	public Boolean getEnable() {
-		return enable;
+	public Boolean getEnabled() {
+		return enabled;
 	}
 
 	/**
 	 * @param enable
 	 *            the enable to set
 	 */
-	public void setEnable(Boolean enable) {
-		this.enable = enable;
+	public void setEnable(Boolean enabled) {
+		this.enabled = enabled;
 	}
 
 }

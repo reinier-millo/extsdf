@@ -572,7 +572,7 @@ public class NetCDFPanel extends AbstractPanel {
 	 */
 	@Override
 	public void accept() {
-		// TODO Auto-generated method stub
+		apply();
 	}
 
 	/*
@@ -582,8 +582,12 @@ public class NetCDFPanel extends AbstractPanel {
 	 */
 	@Override
 	public void apply() {
-		if(chHabilitarTiempo.isSelected()){
+		if(chHabilitarTiempo.isSelected() && controler.hasVariableParameter()){
 			configuration.setEnable(true);
+			configuration.setDateformat(field_format.getSelectedIndex());
+			configuration.setTimeformat(hour_format.getSelectedIndex());
+		}else{
+			configuration.setEnable(false);
 		}
 	}
 
