@@ -69,29 +69,28 @@ public class TimeSliderExtension extends Extension{
 	 */
 	@Override
 	public void execute(String actionCommand) {
-		// TODO Auto-generated method stub
 		IWindow activeWindow = PluginServices.getMDIManager().getActiveWindow();
-		if(activeWindow instanceof View) {
-			View activeView = (View)activeWindow;
-			FLayers fLayers = activeView.getMapControl().getMapContext().getLayers();
-			int layersCount = fLayers.getLayersCount();
-			
-			for(int i=0; i<layersCount; ++i) {
+//		if(activeWindow instanceof View) {
+//			View activeView = (View)activeWindow;
+//			FLayers fLayers = activeView.getMapControl().getMapContext().getLayers();
+//			int layersCount = fLayers.getLayersCount();
+//			
+//			for(int i=0; i<layersCount; ++i) {
 //				if(fLayer instanceof FlyrNetCDFRaster) {
 //				cdfRaster = (FlyrNetCDFRaster)fLayer;
-				if(fLayers.getLayer(i) instanceof FLyrRasterSE) {
-					FLyrRasterSE fr = (FLyrRasterSE) fLayers.getLayer(i);
-					NetCDFRasterDataset dataset = (NetCDFRasterDataset) fr.getDataSource().getDataset(0)[0];
+//				if(fLayers.getLayer(i) instanceof FLyrRasterSE) {
+//					FLyrRasterSE fr = (FLyrRasterSE) fLayers.getLayer(i);
+//					NetCDFRasterDataset dataset = (NetCDFRasterDataset) fr.getDataSource().getDataset(0)[0];
 
 					TimeSliderWindow timeSliderWindow = new TimeSliderWindow();
 					timeSliderWindow.setRelatedWindow(activeWindow);
 					timeSliderWindow.setDataset(dataset);
 					PluginServices.getMDIManager().addWindow(timeSliderWindow);
-					
-					break;
-				}				
-			}
-		}
+//					
+//					break;
+//				}				
+//			}
+//		}
 		
 		// Obtiene todos los puntos de extensión del gvSIG
         ExtensionPoints extensionPoints = ExtensionPointsSingleton
@@ -111,6 +110,8 @@ public class TimeSliderExtension extends Extension{
         extensionPoints.add("NetCDFAnimationSettingsDialog", "Time Extent", TimeExtentOptionsPanel.class);
         extensionPoints.add("NetCDFAnimationSettingsDialog", "Playback", PlaybackOptionsPanel.class);
 	}
+	
+	private NetCDFRasterDataset dataset;
 
 	/**
 	 * (non javadoc)
@@ -119,9 +120,11 @@ public class TimeSliderExtension extends Extension{
 	 */
 	@Override
 	public boolean isEnabled() {
-		// TODO Auto-generated method stub
 		IWindow activeWindow = PluginServices.getMDIManager().getActiveWindow();
+		dataset = null;
+		
 		if(activeWindow instanceof View) {
+			// Desactivar si existe un slider abierto para esta ventana
 			IWindow[] allWindows = PluginServices.getMDIManager().getAllWindows();
 			for(IWindow analized : allWindows) {
 				if(analized instanceof TimeSliderWindow) {
@@ -130,8 +133,22 @@ public class TimeSliderExtension extends Extension{
 					}
 				}				
 			}
+			
+			// Obtener el dataset asociado a esta capa
+			View activeView = (View)activeWindow;
+			FLayers fLayers = activeView.getMapControl().getMapContext().getLayers();
+			int layersCount = fLayers.getLayersCount();
+			
+			for(int i=0; i<layersCount; ++i) {
+				if(fLayers.getLayer(i) instanceof FLyrRasterSE) {
+					FLyrRasterSE fr = (FLyrRasterSE) fLayers.getLayer(i);
+					dataset = (NetCDFRasterDataset) fr.getDataSource().getDataset(0)[0];
+					break;
+				}				
+			}
 		}
-		return true;
+		
+		return dataset != null && dataset.getConfiguration().getEnable();
 	}
 
 	/**
@@ -141,7 +158,6 @@ public class TimeSliderExtension extends Extension{
 	 */
 	@Override
 	public boolean isVisible() {
-		// TODO Auto-generated method stub
 		IWindow iWindow = PluginServices.getMDIManager().getActiveWindow();		
 		if(iWindow instanceof View) {
 			FLayers fLayers = ((View)iWindow).getMapControl().getMapContext().getLayers();

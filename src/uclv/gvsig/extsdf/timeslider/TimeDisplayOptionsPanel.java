@@ -44,10 +44,6 @@ import com.iver.andami.PluginServices;
  * @author rmartinez
  *
  */
-/**
- * @author rmartinez
- * 
- */
 public class TimeDisplayOptionsPanel extends NetCDFOptionsPanel {
 	/**
 	 * 
@@ -246,7 +242,8 @@ public class TimeDisplayOptionsPanel extends NetCDFOptionsPanel {
 	private JButton getRestoreDefaultBtn() {
 		if (restoreDefaultBtn == null) {
 			restoreDefaultBtn = new JButton(PluginServices.getText(this,
-					"restore_default")); //$NON-NLS-1$
+					"restore_default_short")); //$NON-NLS-1$
+			restoreDefaultBtn.setToolTipText(PluginServices.getText(this, "restore_default_full")); //$NON-NLS-1$
 		}
 		return restoreDefaultBtn;
 	}
