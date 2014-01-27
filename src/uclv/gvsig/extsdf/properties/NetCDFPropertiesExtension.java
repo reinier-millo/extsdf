@@ -32,8 +32,8 @@ import com.iver.utiles.extensionPoints.ExtensionPoints;
 import com.iver.utiles.extensionPoints.ExtensionPointsSingleton;
 
 /**
- * Extension para gestionar la entrada del Dialog de propiedades en el TOC y en
- * la barra de propiedades genéricas
+ * Extension para gestionar la entrada del Dialog de propiedades en el <i>TOC</i> y en
+ * la <i>Barra de Herramienta Genérica</i>
  * 
  * @author dcardoso
  * 
@@ -47,36 +47,28 @@ public class NetCDFPropertiesExtension extends Extension {
 	 */
 	@Override
 	public void initialize() {
-
 		// Obtiene todos los puntos de extensión del gvSIG
 		ExtensionPoints extensionPoints = ExtensionPointsSingleton
 				.getInstance();
-
 		// Creación del punto de extensión para registrar paneles en el cuadro
 		// de propiedades.
-
 		if (!extensionPoints.containsKey("NetCDFPropertiesDialog")) {
 			extensionPoints
 					.put(new ExtensionPoint(
 							"NetCDFPropertiesDialog",
 							"NetCDF Properties registrable panels (register instances of javax.swing.JPanel)"));
 		}
-
 		// Añadimos paneles al cuadro de propiedades.
 		extensionPoints.add("NetCDFPropertiesDialog", "NetCDF",
 				NetCDFPanel.class);
-		// extensionPoints.add("NetCDFPropertiesDialog", "Time",
-		// TimePanel.class);
-
-		// Añadimos las entradas del menú del toc de raster
+		// Añadimos la entrada del menú del toc de raster
 		extensionPoints.add("View_TocActions", "NetCDFProperties",
 				PropertiesNetCDFRasterTocMenuEntry.getSingleton());
-
+		// Añadimos la entrada en la Barra de Herramienta Genérica
 		org.gvsig.raster.util.extensionPoints.ExtensionPoint point = org.gvsig.raster.util.extensionPoints.ExtensionPoint
 				.getExtensionPoint("GenericToolBarMenu");
 		point.register("NetCDFProperties",
 				PropertiesNetCDFRasterTocMenuEntry.getSingleton());
-
 	}
 
 	/*
@@ -87,7 +79,6 @@ public class NetCDFPropertiesExtension extends Extension {
 	@Override
 	public void execute(String actionCommand) {
 		// TODO Auto-generated method stub
-
 	}
 
 	/*
@@ -98,7 +89,7 @@ public class NetCDFPropertiesExtension extends Extension {
 	@Override
 	public boolean isEnabled() {
 		// TODO Auto-generated method stub
-		return false;
+		return true;
 	}
 
 	/*
@@ -109,7 +100,6 @@ public class NetCDFPropertiesExtension extends Extension {
 	@Override
 	public boolean isVisible() {
 		// TODO Auto-generated method stub
-		return false;
+		return true;
 	}
-
 }

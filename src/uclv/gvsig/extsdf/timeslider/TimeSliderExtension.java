@@ -27,17 +27,14 @@ package uclv.gvsig.extsdf.timeslider;
 
 import org.gvsig.fmap.raster.layers.FLyrRasterSE;
 
-import uclv.gvsig.extsdf.properties.panels.NetCDFPanel;
-import uclv.gvsig.extsdf.properties.panels.TimePanel;
-
 import com.iver.andami.PluginServices;
+import com.iver.andami.plugins.Extension;
 import com.iver.andami.ui.mdiManager.IWindow;
 import com.iver.cit.gvsig.fmap.layers.FLayers;
 import com.iver.cit.gvsig.project.documents.view.gui.View;
 import com.iver.utiles.extensionPoints.ExtensionPoint;
 import com.iver.utiles.extensionPoints.ExtensionPoints;
 import com.iver.utiles.extensionPoints.ExtensionPointsSingleton;
-import com.iver.andami.plugins.Extension;
 
 /**
  * <p>

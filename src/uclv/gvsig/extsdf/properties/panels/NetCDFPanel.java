@@ -61,44 +61,41 @@ import com.iver.cit.gvsig.fmap.layers.FLayer;
  * Panel de propiedades del <i>NetCDF</i>.
  * 
  * @author dcardoso
- * 
  */
 
 public class NetCDFPanel extends AbstractPanel {
-	/**
-	 * Atributos
-	 */
-	FLayer flayer = null;
-	NetCDFController controler = null;
+
+	private FLayer flayer = null;
+	private NetCDFController controler = null;
 	private Logger logger = Logger.getLogger(NetCDFPanel.class);
 	private static final long serialVersionUID = 1L;
-	private JLabel lblNewLabel;
+	private JLabel lbSistemaDeCoordenada;
 	private JComboBox sistema_coordenado;
-	private JLabel lblNewLabel_1;
+	private JLabel lbVariable;
 	private JComboBox variable;
-	private JLabel lblNewLabel_2;
+	private JLabel lbXDimension;
 	private JTextField x_dimension;
-	private JLabel lblNewLabel_3;
+	private JLabel lbYDimension;
 	private JTextField y_dimension;
-	private JLabel lblNewLabel_4;
-	private JTextField variacion;
+	private JLabel lbParametroVariable;
+	private JTextField parametro_variable;
 	private JPanel panel;
-	private JPanel panel_1;
-	private JLabel label;
-	private JComboBox comboBox;
-	private JLabel label_1;
-	private JList list;
-	private JLabel label_2;
-	private JComboBox comboBox_1;
-	private JCheckBox checkBox;
-	private JLabel lblVisualizemoment;
-	private JList list_1;
-	private JPanel panel_2;
-	private JLabel lblHourFormat;
-	private JComboBox comboBox_2;
+	private JPanel paPropiedadesTiempo;
+	private JLabel lbLayerTime;
+	private JComboBox layer_time;
+	private JLabel lbTimeDimension;
+	private JList time_dimension;
+	private JLabel lbFieldFormat;
+	private JComboBox field_format;
+	private JCheckBox chHabilitarTiempo;
+	private JLabel lbVisualizarMomento;
+	private JList visualize_moment;
+	private JPanel paGeneral;
+	private JLabel lbHourFormat;
+	private JComboBox hour_format;
 
 	/**
-	 * Constructor
+	 * Constructor del panel NetCDF
 	 */
 	public NetCDFPanel() {
 		super();
@@ -119,31 +116,227 @@ public class NetCDFPanel extends AbstractPanel {
 		gbc_panel.gridx = 0;
 		gbc_panel.gridy = 0;
 		add(getPanel(), gbc_panel);
-		GridBagConstraints gbc_checkBox = new GridBagConstraints();
-		gbc_checkBox.anchor = GridBagConstraints.WEST;
-		gbc_checkBox.insets = new Insets(0, 0, 5, 0);
-		gbc_checkBox.gridx = 0;
-		gbc_checkBox.gridy = 1;
-		add(getCheckBox(), gbc_checkBox);
-		GridBagConstraints gbc_panel_1 = new GridBagConstraints();
-		gbc_panel_1.fill = GridBagConstraints.BOTH;
-		gbc_panel_1.gridx = 0;
-		gbc_panel_1.gridy = 2;
-		add(getPanel_1(), gbc_panel_1);
-	}
-
-	private JLabel getLabel_1() {
-		if (lblNewLabel == null) {
-			lblNewLabel = new JLabel("New label");
-			lblNewLabel.setText(PluginServices.getText(this,
-					"sistema_de_coordenada") + ":");
-		}
-		return lblNewLabel;
+		GridBagConstraints gbc_chHabilitarTiempo = new GridBagConstraints();
+		gbc_chHabilitarTiempo.anchor = GridBagConstraints.WEST;
+		gbc_chHabilitarTiempo.insets = new Insets(0, 0, 5, 0);
+		gbc_chHabilitarTiempo.gridx = 0;
+		gbc_chHabilitarTiempo.gridy = 1;
+		add(getChHabilitarTiempo(), gbc_chHabilitarTiempo);
+		GridBagConstraints gbc_paPropiedadesTiempo = new GridBagConstraints();
+		gbc_paPropiedadesTiempo.fill = GridBagConstraints.BOTH;
+		gbc_paPropiedadesTiempo.gridx = 0;
+		gbc_paPropiedadesTiempo.gridy = 2;
+		add(getPaPropiedadesTiempo(), gbc_paPropiedadesTiempo);
 	}
 
 	/**
 	 * 
-	 * @return sistemas de coordenada del NetCDF
+	 * @return JPanel
+	 */
+	private JPanel getPanel() {
+		if (panel == null) {
+			panel = new JPanel();
+			GridBagLayout gbl_panel = new GridBagLayout();
+			gbl_panel.columnWidths = new int[] { 0, 0 };
+			gbl_panel.rowHeights = new int[] { 0, 0 };
+			gbl_panel.columnWeights = new double[] { 1.0, Double.MIN_VALUE };
+			gbl_panel.rowWeights = new double[] { 0.0, Double.MIN_VALUE };
+			panel.setLayout(gbl_panel);
+			GridBagConstraints gbc_paGeneral = new GridBagConstraints();
+			gbc_paGeneral.fill = GridBagConstraints.BOTH;
+			gbc_paGeneral.gridx = 0;
+			gbc_paGeneral.gridy = 0;
+			panel.add(getPaGeneral(), gbc_paGeneral);
+		}
+		return panel;
+	}
+
+	/**
+	 * 
+	 * @return JPanel
+	 */
+	private JPanel getPaPropiedadesTiempo() {
+		if (paPropiedadesTiempo == null) {
+			paPropiedadesTiempo = new JPanel();
+			paPropiedadesTiempo.setBorder(new TitledBorder(null, PluginServices
+					.getText(this, "time_properties"), TitledBorder.LEADING,
+					TitledBorder.TOP, null, null));
+			GridBagLayout gbl_paPropiedadesTiempo = new GridBagLayout();
+			gbl_paPropiedadesTiempo.columnWidths = new int[] { 0, 0, 0, 0, 0 };
+			gbl_paPropiedadesTiempo.rowHeights = new int[] { 0, 0, 0, 0, 0 };
+			gbl_paPropiedadesTiempo.columnWeights = new double[] { 0.0, 1.0,
+					1.0, 1.0, Double.MIN_VALUE };
+			gbl_paPropiedadesTiempo.rowWeights = new double[] { 0.0, 0.0, 0.0,
+					0.0, Double.MIN_VALUE };
+			paPropiedadesTiempo.setLayout(gbl_paPropiedadesTiempo);
+			GridBagConstraints gbc_lbLayerTime = new GridBagConstraints();
+			gbc_lbLayerTime.anchor = GridBagConstraints.WEST;
+			gbc_lbLayerTime.insets = new Insets(0, 0, 5, 5);
+			gbc_lbLayerTime.gridx = 0;
+			gbc_lbLayerTime.gridy = 0;
+			paPropiedadesTiempo.add(getLabel_6(), gbc_lbLayerTime);
+			GridBagConstraints gbc_layer_time = new GridBagConstraints();
+			gbc_layer_time.fill = GridBagConstraints.HORIZONTAL;
+			gbc_layer_time.gridwidth = 3;
+			gbc_layer_time.insets = new Insets(0, 0, 5, 0);
+			gbc_layer_time.gridx = 1;
+			gbc_layer_time.gridy = 0;
+			paPropiedadesTiempo.add(getLayer_time(), gbc_layer_time);
+			GridBagConstraints gbc_lbTimeDimension = new GridBagConstraints();
+			gbc_lbTimeDimension.anchor = GridBagConstraints.WEST;
+			gbc_lbTimeDimension.insets = new Insets(0, 0, 5, 5);
+			gbc_lbTimeDimension.gridx = 0;
+			gbc_lbTimeDimension.gridy = 1;
+			paPropiedadesTiempo.add(getLabel_1_1(), gbc_lbTimeDimension);
+			GridBagConstraints gbc_time_dimension = new GridBagConstraints();
+			gbc_time_dimension.fill = GridBagConstraints.BOTH;
+			gbc_time_dimension.gridwidth = 2;
+			gbc_time_dimension.insets = new Insets(0, 0, 5, 5);
+			gbc_time_dimension.gridx = 1;
+			gbc_time_dimension.gridy = 1;
+			paPropiedadesTiempo.add(getTime_dimension(), gbc_time_dimension);
+			GridBagConstraints gbc_lbFieldFormat = new GridBagConstraints();
+			gbc_lbFieldFormat.anchor = GridBagConstraints.WEST;
+			gbc_lbFieldFormat.insets = new Insets(0, 0, 5, 5);
+			gbc_lbFieldFormat.gridx = 0;
+			gbc_lbFieldFormat.gridy = 2;
+			paPropiedadesTiempo.add(getLabel_2_1(), gbc_lbFieldFormat);
+			GridBagConstraints gbc_field_format = new GridBagConstraints();
+			gbc_field_format.fill = GridBagConstraints.HORIZONTAL;
+			gbc_field_format.gridwidth = 2;
+			gbc_field_format.insets = new Insets(0, 0, 5, 5);
+			gbc_field_format.gridx = 1;
+			gbc_field_format.gridy = 2;
+			paPropiedadesTiempo.add(getField_format(), gbc_field_format);
+			GridBagConstraints gbc_lbHourFormat = new GridBagConstraints();
+			gbc_lbHourFormat.anchor = GridBagConstraints.WEST;
+			gbc_lbHourFormat.insets = new Insets(0, 0, 0, 5);
+			gbc_lbHourFormat.gridx = 0;
+			gbc_lbHourFormat.gridy = 3;
+			paPropiedadesTiempo.add(getLabel_3_2(), gbc_lbHourFormat);
+			GridBagConstraints gbc_hour_format = new GridBagConstraints();
+			gbc_hour_format.gridwidth = 2;
+			gbc_hour_format.insets = new Insets(0, 0, 0, 5);
+			gbc_hour_format.fill = GridBagConstraints.HORIZONTAL;
+			gbc_hour_format.gridx = 1;
+			gbc_hour_format.gridy = 3;
+			paPropiedadesTiempo.add(getHour_format(), gbc_hour_format);
+			Component[] componet = paPropiedadesTiempo.getComponents();
+			for (Component component : componet) {
+				component.setEnabled(false);
+			}
+		}
+		return paPropiedadesTiempo;
+	}
+
+	/**
+	 * 
+	 * @return JPanel
+	 */
+	private JPanel getPaGeneral() {
+		if (paGeneral == null) {
+			paGeneral = new JPanel();
+			paGeneral.setBorder(new TitledBorder(null, PluginServices.getText(this, "general"),
+					TitledBorder.LEFT, TitledBorder.TOP, null, new Color(59,
+							59, 59)));
+			GridBagLayout gbl_paGeneral = new GridBagLayout();
+			gbl_paGeneral.columnWidths = new int[] { 0, 0, 0 };
+			gbl_paGeneral.rowHeights = new int[] { 0, 0, 0, 0, 0, 0, 0 };
+			gbl_paGeneral.columnWeights = new double[] { 0.0, 1.0,
+					Double.MIN_VALUE };
+			gbl_paGeneral.rowWeights = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0,
+					1.0, Double.MIN_VALUE };
+			paGeneral.setLayout(gbl_paGeneral);
+			GridBagConstraints gbc_lbSistemaDeCoordenada = new GridBagConstraints();
+			gbc_lbSistemaDeCoordenada.anchor = GridBagConstraints.ABOVE_BASELINE_LEADING;
+			gbc_lbSistemaDeCoordenada.insets = new Insets(0, 0, 5, 5);
+			gbc_lbSistemaDeCoordenada.gridx = 0;
+			gbc_lbSistemaDeCoordenada.gridy = 0;
+			paGeneral.add(getLabel_1(), gbc_lbSistemaDeCoordenada);
+			GridBagConstraints gbc_sistema_coordenado = new GridBagConstraints();
+			gbc_sistema_coordenado.fill = GridBagConstraints.HORIZONTAL;
+			gbc_sistema_coordenado.insets = new Insets(0, 0, 5, 0);
+			gbc_sistema_coordenado.gridx = 1;
+			gbc_sistema_coordenado.gridy = 0;
+			paGeneral.add(getSistema_coordenado(), gbc_sistema_coordenado);
+			GridBagConstraints gbc_lbVariable = new GridBagConstraints();
+			gbc_lbVariable.anchor = GridBagConstraints.ABOVE_BASELINE_LEADING;
+			gbc_lbVariable.insets = new Insets(0, 0, 5, 5);
+			gbc_lbVariable.gridx = 0;
+			gbc_lbVariable.gridy = 1;
+			paGeneral.add(getLabel_2(), gbc_lbVariable);
+			GridBagConstraints gbc_variable = new GridBagConstraints();
+			gbc_variable.fill = GridBagConstraints.HORIZONTAL;
+			gbc_variable.insets = new Insets(0, 0, 5, 0);
+			gbc_variable.gridx = 1;
+			gbc_variable.gridy = 1;
+			paGeneral.add(getVariable(), gbc_variable);
+			GridBagConstraints gbc_lbXDimension = new GridBagConstraints();
+			gbc_lbXDimension.anchor = GridBagConstraints.ABOVE_BASELINE_LEADING;
+			gbc_lbXDimension.insets = new Insets(0, 0, 5, 5);
+			gbc_lbXDimension.gridx = 0;
+			gbc_lbXDimension.gridy = 2;
+			paGeneral.add(getLabel_3(), gbc_lbXDimension);
+			GridBagConstraints gbc_x_dimension = new GridBagConstraints();
+			gbc_x_dimension.fill = GridBagConstraints.HORIZONTAL;
+			gbc_x_dimension.insets = new Insets(0, 0, 5, 0);
+			gbc_x_dimension.gridx = 1;
+			gbc_x_dimension.gridy = 2;
+			paGeneral.add(getX_dimension(), gbc_x_dimension);
+			GridBagConstraints gbc_lbYDimension = new GridBagConstraints();
+			gbc_lbYDimension.anchor = GridBagConstraints.ABOVE_BASELINE_LEADING;
+			gbc_lbYDimension.insets = new Insets(0, 0, 5, 5);
+			gbc_lbYDimension.gridx = 0;
+			gbc_lbYDimension.gridy = 3;
+			paGeneral.add(getLabel_4(), gbc_lbYDimension);
+			GridBagConstraints gbc_y_dimension = new GridBagConstraints();
+			gbc_y_dimension.fill = GridBagConstraints.HORIZONTAL;
+			gbc_y_dimension.insets = new Insets(0, 0, 5, 0);
+			gbc_y_dimension.gridx = 1;
+			gbc_y_dimension.gridy = 3;
+			paGeneral.add(getY_dimension(), gbc_y_dimension);
+			GridBagConstraints gbc_lbParametroVariable = new GridBagConstraints();
+			gbc_lbParametroVariable.anchor = GridBagConstraints.ABOVE_BASELINE_LEADING;
+			gbc_lbParametroVariable.insets = new Insets(0, 0, 5, 5);
+			gbc_lbParametroVariable.gridx = 0;
+			gbc_lbParametroVariable.gridy = 4;
+			paGeneral.add(getLabel_5(), gbc_lbParametroVariable);
+			GridBagConstraints gbc_parametro_variable = new GridBagConstraints();
+			gbc_parametro_variable.fill = GridBagConstraints.HORIZONTAL;
+			gbc_parametro_variable.insets = new Insets(0, 0, 5, 0);
+			gbc_parametro_variable.gridx = 1;
+			gbc_parametro_variable.gridy = 4;
+			paGeneral.add(getParametro_variable(), gbc_parametro_variable);
+			GridBagConstraints gbc_lbVisualizarMomento = new GridBagConstraints();
+			gbc_lbVisualizarMomento.anchor = GridBagConstraints.WEST;
+			gbc_lbVisualizarMomento.insets = new Insets(0, 0, 0, 5);
+			gbc_lbVisualizarMomento.gridx = 0;
+			gbc_lbVisualizarMomento.gridy = 5;
+			paGeneral.add(getLabel_3_1(), gbc_lbVisualizarMomento);
+			GridBagConstraints gbc_visualize_moment = new GridBagConstraints();
+			gbc_visualize_moment.fill = GridBagConstraints.BOTH;
+			gbc_visualize_moment.gridx = 1;
+			gbc_visualize_moment.gridy = 5;
+			paGeneral.add(getVisualize_moment(), gbc_visualize_moment);
+		}
+		return paGeneral;
+	}
+
+	/**
+	 * 
+	 * @return JLabel
+	 */
+	private JLabel getLabel_1() {
+		if (lbSistemaDeCoordenada == null) {
+			lbSistemaDeCoordenada = new JLabel(PluginServices.getText(this,
+					"sistema_de_coordenada") + ":");
+		}
+		return lbSistemaDeCoordenada;
+	}
+
+	/**
+	 * 
+	 * @return JComboBox
 	 */
 	private JComboBox getSistema_coordenado() {
 		if (sistema_coordenado == null) {
@@ -154,15 +347,21 @@ public class NetCDFPanel extends AbstractPanel {
 		return sistema_coordenado;
 	}
 
+	/**
+	 * 
+	 * @return JLabel
+	 */
 	private JLabel getLabel_2() {
-		if (lblNewLabel_1 == null) {
-			lblNewLabel_1 = new JLabel("New label");
-			lblNewLabel_1.setText(PluginServices.getText(this, "variable")
-					+ ":");
+		if (lbVariable == null) {
+			lbVariable = new JLabel(PluginServices.getText(this, "variable") + ":");
 		}
-		return lblNewLabel_1;
+		return lbVariable;
 	}
 
+	/**
+	 * 
+	 * @return JComboBox
+	 */
 	private JComboBox getVariable() {
 		if (variable == null) {
 			variable = new JComboBox();
@@ -170,15 +369,21 @@ public class NetCDFPanel extends AbstractPanel {
 		return variable;
 	}
 
+	/**
+	 * 
+	 * @return JLabel
+	 */
 	private JLabel getLabel_3() {
-		if (lblNewLabel_2 == null) {
-			lblNewLabel_2 = new JLabel("New label");
-			lblNewLabel_2.setText(PluginServices.getText(this, "x_dimension")
-					+ ":");
+		if (lbXDimension == null) {
+			lbXDimension = new JLabel(PluginServices.getText(this, "x_dimension") + ":");
 		}
-		return lblNewLabel_2;
+		return lbXDimension;
 	}
 
+	/**
+	 * 
+	 * @return JTextField
+	 */
 	private JTextField getX_dimension() {
 		if (x_dimension == null) {
 			x_dimension = new JTextField();
@@ -188,15 +393,21 @@ public class NetCDFPanel extends AbstractPanel {
 		return x_dimension;
 	}
 
+	/**
+	 * 
+	 * @return JLabel
+	 */
 	private JLabel getLabel_4() {
-		if (lblNewLabel_3 == null) {
-			lblNewLabel_3 = new JLabel("New label");
-			lblNewLabel_3.setText(PluginServices.getText(this, "y_dimension")
-					+ ":");
+		if (lbYDimension == null) {
+			lbYDimension = new JLabel(PluginServices.getText(this, "y_dimension") + ":");
 		}
-		return lblNewLabel_3;
+		return lbYDimension;
 	}
 
+	/**
+	 * 
+	 * @return JTextField
+	 */
 	private JTextField getY_dimension() {
 		if (y_dimension == null) {
 			y_dimension = new JTextField();
@@ -206,22 +417,272 @@ public class NetCDFPanel extends AbstractPanel {
 		return y_dimension;
 	}
 
+	/**
+	 * 
+	 * @return JLabel
+	 */
 	private JLabel getLabel_5() {
-		if (lblNewLabel_4 == null) {
-			lblNewLabel_4 = new JLabel("New label");
-			lblNewLabel_4.setText(PluginServices.getText(this, "variacion")
-					+ ":");
+		if (lbParametroVariable == null) {
+			lbParametroVariable = new JLabel(PluginServices.getText(this, "variacion") + ":");
 		}
-		return lblNewLabel_4;
+		return lbParametroVariable;
 	}
 
-	private JTextField getVariacion() {
-		if (variacion == null) {
-			variacion = new JTextField();
-			variacion.setEditable(false);
-			variacion.setColumns(10);
+	/**
+	 * 
+	 * @return JTextField
+	 */
+	private JTextField getParametro_variable() {
+		if (parametro_variable == null) {
+			parametro_variable = new JTextField();
+			parametro_variable.setEditable(false);
+			parametro_variable.setColumns(10);
 		}
-		return variacion;
+		return parametro_variable;
+	}
+
+	/**
+	 * 
+	 * @return JLabel
+	 */
+	private JLabel getLabel_6() {
+		if (lbLayerTime == null) {
+			lbLayerTime = new JLabel(PluginServices.getText(this, "layer_time") + ":");
+		}
+		return lbLayerTime;
+	}
+
+	/**
+	 * 
+	 * @return JComboBox
+	 */
+	private JComboBox getLayer_time() {
+		if (layer_time == null) {
+			layer_time = new JComboBox();
+		}
+		return layer_time;
+	}
+
+	/**
+	 * 
+	 * @return JLabel
+	 */
+	private JLabel getLabel_1_1() {
+		if (lbTimeDimension == null) {
+			lbTimeDimension = new JLabel(PluginServices.getText(this, "time_dimension") + ":");
+		}
+		return lbTimeDimension;
+	}
+
+	/**
+	 * 
+	 * @return JList
+	 */
+	private JList getTime_dimension() {
+		if (time_dimension == null) {
+			time_dimension = new JList();
+		}
+		return time_dimension;
+	}
+
+	/**
+	 * 
+	 * @return JLabel
+	 */
+	private JLabel getLabel_2_1() {
+		if (lbFieldFormat == null) {
+			lbFieldFormat = new JLabel(PluginServices.getText(this, "field_format") + ":");
+		}
+		return lbFieldFormat;
+	}
+
+	/**
+	 * 
+	 * @return JComboBox
+	 */
+	private JComboBox getField_format() {
+		if (field_format == null) {
+			field_format = new JComboBox();
+		}
+		return field_format;
+	}
+
+	/**
+	 * 
+	 * @return JCheckBox
+	 */
+	private JCheckBox getChHabilitarTiempo() {
+		if (chHabilitarTiempo == null) {
+			chHabilitarTiempo = new JCheckBox(PluginServices.getText(this, "enable_time_on_this_layer"));
+			chHabilitarTiempo.addItemListener(new CheckBoxItemListener());
+		}
+		return chHabilitarTiempo;
+	}
+
+	/**
+	 * 
+	 * @return JLabel
+	 */
+	private JLabel getLabel_3_1() {
+		if (lbVisualizarMomento == null) {
+			lbVisualizarMomento = new JLabel(PluginServices.getText(this, "visualize_moment") + ":");
+		}
+		return lbVisualizarMomento;
+	}
+
+	/**
+	 * 
+	 * @return JList
+	 */
+	private JList getVisualize_moment() {
+		if (visualize_moment == null) {
+			visualize_moment = new JList();
+		}
+		return visualize_moment;
+	}
+
+	/**
+	 * 
+	 * @return JLabel
+	 */
+	private JLabel getLabel_3_2() {
+		if (lbHourFormat == null) {
+			lbHourFormat = new JLabel(PluginServices.getText(this, "time_format") + ":");
+		}
+		return lbHourFormat;
+	}
+
+	/**
+	 * 
+	 * @return JComboBox
+	 */
+	private JComboBox getHour_format() {
+		if (hour_format == null) {
+			hour_format = new JComboBox();
+		}
+		return hour_format;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.gvsig.gui.beans.panelGroup.panels.IPanel#accept()
+	 */
+	@Override
+	public void accept() {
+		// TODO Auto-generated method stub
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.gvsig.gui.beans.panelGroup.panels.IPanel#apply()
+	 */
+	@Override
+	public void apply() {
+
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.gvsig.gui.beans.panelGroup.panels.IPanel#cancel()
+	 */
+	@Override
+	public void cancel() {
+		// TODO Auto-generated method stub
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.gvsig.gui.beans.panelGroup.panels.IPanel#selected()
+	 */
+	@Override
+	public void selected() {
+		// TODO Auto-generated method stub
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.gvsig.gui.beans.panelGroup.panels.AbstractPanel#initialize()
+	 */
+	@Override
+	protected void initialize() {
+		// TODO Auto-generated method stub
+	}
+
+	/**
+	 * Obtiene el objeto FLayer para el NetCDF. Se obtiene tambien el
+	 * NetCDFController asociado a este layer
+	 */
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.gvsig.gui.beans.panelGroup.panels.AbstractPanel#setReference(java
+	 * .lang.Object)
+	 */
+	@Override
+	public void setReference(Object ref) {
+		super.setReference(ref);
+		if (!(ref instanceof FLayer))
+			return;
+		FLayer lyr = (FLayer) ref;
+		if (lyr instanceof FLyrRasterSE) {
+			flayer = lyr;
+			// Obtiene el NetCDFControler asociado al layer
+			FLyrRasterSE fr = (FLyrRasterSE) flayer;
+			NetCDFRasterDataset x = (NetCDFRasterDataset) fr.getDataSource()
+					.getDataset(0)[0];
+			controler = x.getNetCDFController();
+			init();
+		}
+	}
+
+	/**
+	 * inicializa las componentes del panel general
+	 */
+	private void init() {
+		getSistema_coordenado().setModel(
+				new DefaultComboBoxModel(controler.getCoordinateSystems()));
+		variable.setModel(new DefaultComboBoxModel(variableToString()));
+		try {
+			x_dimension.setText(controler.getLatitudeForCoordinateSystem(
+					controler.getCoordinateSystems()[0]).getFullName());
+		} catch (RasterDriverException e1) {
+			logger.error(e1.getLocalizedMessage());
+		}
+		try {
+			y_dimension.setText(controler.getLongitudeForCoordinateSystem(
+					controler.getCoordinateSystems()[0]).getFullName());
+		} catch (RasterDriverException e1) {
+			logger.error(e1.getLocalizedMessage());
+		}
+		try {
+			parametro_variable.setText(controler
+					.getParameterForCoordinateSystem(
+							controler.getCoordinateSystems()[0]).getFullName());
+		} catch (IOException e1) {
+			logger.error(e1.getLocalizedMessage());
+		}
+	}
+
+	/**
+	 * convierte el arreglo de objeto <i>Variable</i> en un arreglo de Cadenas
+	 * 
+	 * @return la lista de variables para el primer sistema de coordenadas
+	 */
+	private String[] variableToString() {
+		Variable[] variable = controler
+				.getVariablesForCoordinateSystem(controler
+						.getCoordinateSystems()[0]);
+		String[] var = new String[variable.length];
+		for (int i = 0; i < variable.length; i++) {
+			var[i] = variable[i].getFullName();
+		}
+		return var;
 	}
 
 	/**
@@ -255,7 +716,7 @@ public class NetCDFPanel extends AbstractPanel {
 				logger.error(e1.getLocalizedMessage());
 			}
 			try {
-				variacion.setText(controler
+				parametro_variable.setText(controler
 						.getParameterForCoordinateSystem(
 								(CoordinateSystem) sistema_coordenado
 										.getSelectedItem()).getFullName());
@@ -265,428 +726,55 @@ public class NetCDFPanel extends AbstractPanel {
 		}
 	}
 
+	/**
+	 * Maneja los eventos cuando se activa el time en la capa
+	 * 
+	 * @author dcardoso
+	 * 
+	 */
 	private class CheckBoxItemListener implements ItemListener {
 		public void itemStateChanged(ItemEvent e) {
-			if (checkBox.isSelected()) {
-				comboBox.setEnabled(true);
+			if (chHabilitarTiempo.isSelected()) {
+				layer_time.setEnabled(true);
 				if (controler.hasVariableParameter()) {
-					Component[] componet = panel_1.getComponents();
+					Component[] componet = paPropiedadesTiempo.getComponents();
 					for (Component component : componet) {
 						if (component instanceof JLabel)
 							component.setEnabled(true);
 					}
-					comboBox.setModel(new DefaultComboBoxModel(
+					layer_time.setModel(new DefaultComboBoxModel(
 							new String[] { PluginServices.getText(this,
 									"layer_has_time_as_a_dimension") }));
-					list.setEnabled(true);
+					time_dimension.setEnabled(true);
 					try {
-						list.setListData(new String[] { controler
+						time_dimension.setListData(new String[] { controler
 								.getSelectedParameter().getFullName() });
 					} catch (RasterDriverException e1) {
 						logger.error(e1.getLocalizedMessage());
 					}
-					comboBox_1.setEnabled(true);
-					comboBox_1.setModel(new DefaultComboBoxModel(
+					field_format.setEnabled(true);
+					field_format.setModel(new DefaultComboBoxModel(
 							new DateTimeFormats().getTodayDatesFormat()));
-					comboBox_2.setEnabled(true);
-					comboBox_2.setModel(new DefaultComboBoxModel(
+					hour_format.setEnabled(true);
+					hour_format.setModel(new DefaultComboBoxModel(
 							new DateTimeFormats().getTodayHoursFormat()));
 				} else {
-					label.setEnabled(true);
-					comboBox.setModel(new DefaultComboBoxModel(
+					lbLayerTime.setEnabled(true);
+					layer_time.setModel(new DefaultComboBoxModel(
 							new String[] { PluginServices.getText(this,
 									"layer_has_not_time_as_a_dimension") }));
 
 				}
 			} else {
-				list.setListData(new String[] {});
-				comboBox.setModel(new DefaultComboBoxModel());
-				comboBox_1.setModel(new DefaultComboBoxModel());
-				comboBox_2.setModel(new DefaultComboBoxModel());
-				Component[] componet = panel_1.getComponents();
+				time_dimension.setListData(new String[] {});
+				layer_time.setModel(new DefaultComboBoxModel());
+				field_format.setModel(new DefaultComboBoxModel());
+				hour_format.setModel(new DefaultComboBoxModel());
+				Component[] componet = paPropiedadesTiempo.getComponents();
 				for (Component component : componet) {
 					component.setEnabled(false);
 				}
 			}
 		}
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.gvsig.gui.beans.panelGroup.panels.IPanel#accept()
-	 */
-	@Override
-	public void accept() {
-		// TODO Auto-generated method stub
-
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.gvsig.gui.beans.panelGroup.panels.IPanel#apply()
-	 */
-	@Override
-	public void apply() {
-
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.gvsig.gui.beans.panelGroup.panels.IPanel#cancel()
-	 */
-	@Override
-	public void cancel() {
-		// TODO Auto-generated method stub
-
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.gvsig.gui.beans.panelGroup.panels.IPanel#selected()
-	 */
-	@Override
-	public void selected() {
-		// TODO Auto-generated method stub
-
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.gvsig.gui.beans.panelGroup.panels.AbstractPanel#initialize()
-	 */
-	@Override
-	protected void initialize() {
-
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.gvsig.gui.beans.panelGroup.panels.AbstractPanel#setReference(java
-	 * .lang.Object)
-	 */
-	@Override
-	public void setReference(Object ref) {
-		super.setReference(ref);
-
-		if (!(ref instanceof FLayer))
-			return;
-
-		FLayer lyr = (FLayer) ref;
-
-		if (lyr instanceof FLyrRasterSE) {
-			flayer = lyr;
-
-			// Obtiene el NetCDFControler asociado al layer
-			FLyrRasterSE fr = (FLyrRasterSE) flayer;
-			NetCDFRasterDataset x = (NetCDFRasterDataset) fr.getDataSource()
-					.getDataset(0)[0];
-			controler = x.getNetCDFController();
-			init();
-		}
-	}
-
-	/**
-	 * 
-	 */
-	private void init() {
-		getSistema_coordenado().setModel(
-				new DefaultComboBoxModel(controler.getCoordinateSystems()));
-		variable.setModel(new DefaultComboBoxModel(variableToString()));
-
-		try {
-			x_dimension.setText(controler.getLatitudeForCoordinateSystem(
-					controler.getCoordinateSystems()[0]).getFullName());
-		} catch (RasterDriverException e1) {
-			logger.error(e1.getLocalizedMessage());
-		}
-		try {
-			y_dimension.setText(controler.getLongitudeForCoordinateSystem(
-					controler.getCoordinateSystems()[0]).getFullName());
-		} catch (RasterDriverException e1) {
-			logger.error(e1.getLocalizedMessage());
-		}
-		try {
-			variacion.setText(controler.getParameterForCoordinateSystem(
-					controler.getCoordinateSystems()[0]).getFullName());
-		} catch (IOException e1) {
-			logger.error(e1.getLocalizedMessage());
-		}
-	}
-
-	private String[] variableToString() {
-		Variable[] variable = controler
-				.getVariablesForCoordinateSystem(controler
-						.getCoordinateSystems()[0]);
-		String[] var = new String[variable.length];
-		for (int i = 0; i < variable.length; i++) {
-			var[i] = variable[i].getFullName();
-		}
-		return var;
-	}
-
-	private JPanel getPanel() {
-		if (panel == null) {
-			panel = new JPanel();
-			GridBagLayout gbl_panel = new GridBagLayout();
-			gbl_panel.columnWidths = new int[] { 0, 0 };
-			gbl_panel.rowHeights = new int[] { 0, 0 };
-			gbl_panel.columnWeights = new double[] { 1.0, Double.MIN_VALUE };
-			gbl_panel.rowWeights = new double[] { 0.0, Double.MIN_VALUE };
-			panel.setLayout(gbl_panel);
-			GridBagConstraints gbc_panel_2 = new GridBagConstraints();
-			gbc_panel_2.fill = GridBagConstraints.BOTH;
-			gbc_panel_2.gridx = 0;
-			gbc_panel_2.gridy = 0;
-			panel.add(getPanel_2(), gbc_panel_2);
-		}
-		return panel;
-	}
-
-	private JPanel getPanel_1() {
-		if (panel_1 == null) {
-			panel_1 = new JPanel();
-			panel_1.setBorder(new TitledBorder(null, PluginServices.getText(
-					this, "time_properties"), TitledBorder.LEADING,
-					TitledBorder.TOP, null, null));
-			GridBagLayout gbl_panel_1 = new GridBagLayout();
-			gbl_panel_1.columnWidths = new int[] { 0, 0, 0, 0, 0 };
-			gbl_panel_1.rowHeights = new int[] { 0, 0, 0, 0, 0 };
-			gbl_panel_1.columnWeights = new double[] { 0.0, 1.0, 1.0, 1.0,
-					Double.MIN_VALUE };
-			gbl_panel_1.rowWeights = new double[] { 0.0, 0.0, 0.0, 0.0,
-					Double.MIN_VALUE };
-			panel_1.setLayout(gbl_panel_1);
-			GridBagConstraints gbc_label = new GridBagConstraints();
-			gbc_label.anchor = GridBagConstraints.WEST;
-			gbc_label.insets = new Insets(0, 0, 5, 5);
-			gbc_label.gridx = 0;
-			gbc_label.gridy = 0;
-			panel_1.add(getLabel_6(), gbc_label);
-			GridBagConstraints gbc_comboBox = new GridBagConstraints();
-			gbc_comboBox.fill = GridBagConstraints.HORIZONTAL;
-			gbc_comboBox.gridwidth = 3;
-			gbc_comboBox.insets = new Insets(0, 0, 5, 0);
-			gbc_comboBox.gridx = 1;
-			gbc_comboBox.gridy = 0;
-			panel_1.add(getComboBox(), gbc_comboBox);
-			GridBagConstraints gbc_label_1 = new GridBagConstraints();
-			gbc_label_1.anchor = GridBagConstraints.WEST;
-			gbc_label_1.insets = new Insets(0, 0, 5, 5);
-			gbc_label_1.gridx = 0;
-			gbc_label_1.gridy = 1;
-			panel_1.add(getLabel_1_1(), gbc_label_1);
-			GridBagConstraints gbc_list = new GridBagConstraints();
-			gbc_list.fill = GridBagConstraints.BOTH;
-			gbc_list.gridwidth = 2;
-			gbc_list.insets = new Insets(0, 0, 5, 5);
-			gbc_list.gridx = 1;
-			gbc_list.gridy = 1;
-			panel_1.add(getList(), gbc_list);
-			GridBagConstraints gbc_label_2 = new GridBagConstraints();
-			gbc_label_2.anchor = GridBagConstraints.WEST;
-			gbc_label_2.insets = new Insets(0, 0, 5, 5);
-			gbc_label_2.gridx = 0;
-			gbc_label_2.gridy = 2;
-			panel_1.add(getLabel_2_1(), gbc_label_2);
-			GridBagConstraints gbc_comboBox_1 = new GridBagConstraints();
-			gbc_comboBox_1.fill = GridBagConstraints.HORIZONTAL;
-			gbc_comboBox_1.gridwidth = 2;
-			gbc_comboBox_1.insets = new Insets(0, 0, 5, 5);
-			gbc_comboBox_1.gridx = 1;
-			gbc_comboBox_1.gridy = 2;
-			panel_1.add(getComboBox_1(), gbc_comboBox_1);
-			GridBagConstraints gbc_lblHourFormat = new GridBagConstraints();
-			gbc_lblHourFormat.anchor = GridBagConstraints.WEST;
-			gbc_lblHourFormat.insets = new Insets(0, 0, 0, 5);
-			gbc_lblHourFormat.gridx = 0;
-			gbc_lblHourFormat.gridy = 3;
-			panel_1.add(getLabel_3_2(), gbc_lblHourFormat);
-			GridBagConstraints gbc_comboBox_2 = new GridBagConstraints();
-			gbc_comboBox_2.gridwidth = 2;
-			gbc_comboBox_2.insets = new Insets(0, 0, 0, 5);
-			gbc_comboBox_2.fill = GridBagConstraints.HORIZONTAL;
-			gbc_comboBox_2.gridx = 1;
-			gbc_comboBox_2.gridy = 3;
-			panel_1.add(getComboBox_2(), gbc_comboBox_2);
-			Component[] componet = panel_1.getComponents();
-			for (Component component : componet) {
-				component.setEnabled(false);
-			}
-		}
-		return panel_1;
-	}
-
-	private JLabel getLabel_6() {
-		if (label == null) {
-			label = new JLabel("layer_time:");
-		}
-		return label;
-	}
-
-	private JComboBox getComboBox() {
-		if (comboBox == null) {
-			comboBox = new JComboBox();
-		}
-		return comboBox;
-	}
-
-	private JLabel getLabel_1_1() {
-		if (label_1 == null) {
-			label_1 = new JLabel("time_dimension:");
-		}
-		return label_1;
-	}
-
-	private JList getList() {
-		if (list == null) {
-			list = new JList();
-		}
-		return list;
-	}
-
-	private JLabel getLabel_2_1() {
-		if (label_2 == null) {
-			label_2 = new JLabel("field_format:");
-		}
-		return label_2;
-	}
-
-	private JComboBox getComboBox_1() {
-		if (comboBox_1 == null) {
-			comboBox_1 = new JComboBox();
-		}
-		return comboBox_1;
-	}
-
-	private JCheckBox getCheckBox() {
-		if (checkBox == null) {
-			checkBox = new JCheckBox("enable_time_on_this_layer");
-			checkBox.addItemListener(new CheckBoxItemListener());
-		}
-		return checkBox;
-	}
-
-	private JLabel getLabel_3_1() {
-		if (lblVisualizemoment == null) {
-			lblVisualizemoment = new JLabel("visualize_moment");
-		}
-		return lblVisualizemoment;
-	}
-
-	private JList getList_1() {
-		if (list_1 == null) {
-			list_1 = new JList();
-		}
-		return list_1;
-	}
-
-	private JPanel getPanel_2() {
-		if (panel_2 == null) {
-			panel_2 = new JPanel();
-			panel_2.setBorder(new TitledBorder(null, "general",
-					TitledBorder.LEFT, TitledBorder.TOP, null, new Color(59,
-							59, 59)));
-			GridBagLayout gbl_panel_2 = new GridBagLayout();
-			gbl_panel_2.columnWidths = new int[] { 0, 0, 0 };
-			gbl_panel_2.rowHeights = new int[] { 0, 0, 0, 0, 0, 0, 0 };
-			gbl_panel_2.columnWeights = new double[] { 0.0, 1.0,
-					Double.MIN_VALUE };
-			gbl_panel_2.rowWeights = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0,
-					1.0, Double.MIN_VALUE };
-			panel_2.setLayout(gbl_panel_2);
-			GridBagConstraints gbc_lblNewLabel = new GridBagConstraints();
-			gbc_lblNewLabel.anchor = GridBagConstraints.ABOVE_BASELINE_LEADING;
-			gbc_lblNewLabel.insets = new Insets(0, 0, 5, 5);
-			gbc_lblNewLabel.gridx = 0;
-			gbc_lblNewLabel.gridy = 0;
-			panel_2.add(getLabel_1(), gbc_lblNewLabel);
-			GridBagConstraints gbc_sistema_coordenado = new GridBagConstraints();
-			gbc_sistema_coordenado.fill = GridBagConstraints.HORIZONTAL;
-			gbc_sistema_coordenado.insets = new Insets(0, 0, 5, 0);
-			gbc_sistema_coordenado.gridx = 1;
-			gbc_sistema_coordenado.gridy = 0;
-			panel_2.add(getSistema_coordenado(), gbc_sistema_coordenado);
-			GridBagConstraints gbc_lblNewLabel_1 = new GridBagConstraints();
-			gbc_lblNewLabel_1.anchor = GridBagConstraints.ABOVE_BASELINE_LEADING;
-			gbc_lblNewLabel_1.insets = new Insets(0, 0, 5, 5);
-			gbc_lblNewLabel_1.gridx = 0;
-			gbc_lblNewLabel_1.gridy = 1;
-			panel_2.add(getLabel_2(), gbc_lblNewLabel_1);
-			GridBagConstraints gbc_variable = new GridBagConstraints();
-			gbc_variable.fill = GridBagConstraints.HORIZONTAL;
-			gbc_variable.insets = new Insets(0, 0, 5, 0);
-			gbc_variable.gridx = 1;
-			gbc_variable.gridy = 1;
-			panel_2.add(getVariable(), gbc_variable);
-			GridBagConstraints gbc_lblNewLabel_2 = new GridBagConstraints();
-			gbc_lblNewLabel_2.anchor = GridBagConstraints.ABOVE_BASELINE_LEADING;
-			gbc_lblNewLabel_2.insets = new Insets(0, 0, 5, 5);
-			gbc_lblNewLabel_2.gridx = 0;
-			gbc_lblNewLabel_2.gridy = 2;
-			panel_2.add(getLabel_3(), gbc_lblNewLabel_2);
-			GridBagConstraints gbc_x_dimension = new GridBagConstraints();
-			gbc_x_dimension.fill = GridBagConstraints.HORIZONTAL;
-			gbc_x_dimension.insets = new Insets(0, 0, 5, 0);
-			gbc_x_dimension.gridx = 1;
-			gbc_x_dimension.gridy = 2;
-			panel_2.add(getX_dimension(), gbc_x_dimension);
-			GridBagConstraints gbc_lblNewLabel_3 = new GridBagConstraints();
-			gbc_lblNewLabel_3.anchor = GridBagConstraints.ABOVE_BASELINE_LEADING;
-			gbc_lblNewLabel_3.insets = new Insets(0, 0, 5, 5);
-			gbc_lblNewLabel_3.gridx = 0;
-			gbc_lblNewLabel_3.gridy = 3;
-			panel_2.add(getLabel_4(), gbc_lblNewLabel_3);
-			GridBagConstraints gbc_y_dimension = new GridBagConstraints();
-			gbc_y_dimension.fill = GridBagConstraints.HORIZONTAL;
-			gbc_y_dimension.insets = new Insets(0, 0, 5, 0);
-			gbc_y_dimension.gridx = 1;
-			gbc_y_dimension.gridy = 3;
-			panel_2.add(getY_dimension(), gbc_y_dimension);
-			GridBagConstraints gbc_lblNewLabel_4 = new GridBagConstraints();
-			gbc_lblNewLabel_4.anchor = GridBagConstraints.ABOVE_BASELINE_LEADING;
-			gbc_lblNewLabel_4.insets = new Insets(0, 0, 5, 5);
-			gbc_lblNewLabel_4.gridx = 0;
-			gbc_lblNewLabel_4.gridy = 4;
-			panel_2.add(getLabel_5(), gbc_lblNewLabel_4);
-			GridBagConstraints gbc_variacion = new GridBagConstraints();
-			gbc_variacion.fill = GridBagConstraints.HORIZONTAL;
-			gbc_variacion.insets = new Insets(0, 0, 5, 0);
-			gbc_variacion.gridx = 1;
-			gbc_variacion.gridy = 4;
-			panel_2.add(getVariacion(), gbc_variacion);
-			GridBagConstraints gbc_lblVisualizemoment = new GridBagConstraints();
-			gbc_lblVisualizemoment.anchor = GridBagConstraints.WEST;
-			gbc_lblVisualizemoment.insets = new Insets(0, 0, 0, 5);
-			gbc_lblVisualizemoment.gridx = 0;
-			gbc_lblVisualizemoment.gridy = 5;
-			panel_2.add(getLabel_3_1(), gbc_lblVisualizemoment);
-			GridBagConstraints gbc_list_1 = new GridBagConstraints();
-			gbc_list_1.fill = GridBagConstraints.BOTH;
-			gbc_list_1.gridx = 1;
-			gbc_list_1.gridy = 5;
-			panel_2.add(getList_1(), gbc_list_1);
-		}
-		return panel_2;
-	}
-
-	private JLabel getLabel_3_2() {
-		if (lblHourFormat == null) {
-			lblHourFormat = new JLabel("hour format");
-		}
-		return lblHourFormat;
-	}
-
-	private JComboBox getComboBox_2() {
-		if (comboBox_2 == null) {
-			comboBox_2 = new JComboBox();
-		}
-		return comboBox_2;
 	}
 }
