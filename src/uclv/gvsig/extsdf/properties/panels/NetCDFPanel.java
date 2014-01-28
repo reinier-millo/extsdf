@@ -48,6 +48,7 @@ import org.gvsig.fmap.raster.layers.FLyrRasterSE;
 import org.gvsig.gui.beans.panelGroup.panels.AbstractPanel;
 import org.gvsig.raster.dataset.io.RasterDriverException;
 
+import ucar.ma2.InvalidRangeException;
 import ucar.nc2.Variable;
 import ucar.nc2.dataset.CoordinateSystem;
 import uclv.gvsig.extsdf.NetCDFConfiguration;
@@ -595,7 +596,20 @@ public class NetCDFPanel extends AbstractPanel {
 	 */
 	@Override
 	public void apply() {
-		// visualize_moment.getSelectedItem()
+		// se carga el instante de tiempo seleccionado
+		 try {
+			controler.setParameter(visualize_moment.getSelectedIndex());
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (InvalidRangeException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (RasterDriverException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		 flayer.getMapContext().invalidate();
 		// se guardan las configuraciones si se habilito el tiempo
 		if (chHabilitarTiempo.isSelected() && controler.hasVariableParameter()) {
 			configuration.setEnable(true);
@@ -644,7 +658,7 @@ public class NetCDFPanel extends AbstractPanel {
 	protected void initialize() {
 		// TODO Auto-generated method stub
 	}
-
+	
 	/**
 	 * Obtiene el objeto FLayer para el NetCDF. Se obtiene tambien el
 	 * NetCDFController asociado a este layer
@@ -713,6 +727,7 @@ public class NetCDFPanel extends AbstractPanel {
 					.getParameterForCoordinateSystem(
 							(CoordinateSystem) sistema_coordenado
 									.getSelectedItem()).getTimeDates()));
+			visualize_moment.setSelectedIndex(controler.getParameter());
 		} catch (IOException e) {
 			logger.error(e.getLocalizedMessage());
 		}
@@ -822,6 +837,7 @@ public class NetCDFPanel extends AbstractPanel {
 		public void itemStateChanged(ItemEvent e) {
 			// si se habilito el time
 			if (chHabilitarTiempo.isSelected()) {
+				paPropiedadesTiempo.setEnabled(true);
 				layer_time.setEnabled(true);
 				if (controler.hasVariableParameter()) {
 					Component[] componet = paPropiedadesTiempo.getComponents();

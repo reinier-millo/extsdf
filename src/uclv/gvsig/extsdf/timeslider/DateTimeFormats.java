@@ -87,7 +87,7 @@ public class DateTimeFormats {
 
 	/**
 	 * 
-	 * @return la fecha actual como ejemplo en todos los formatos
+	 * @return la  hora actual como ejemplo en todos los formatos
 	 */
 	public String[] getTodayHoursFormat() {
 		return getTodayFormat(hours);
