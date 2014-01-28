@@ -26,6 +26,8 @@
 package uclv.gvsig.extsdf.timeslider;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -92,6 +94,7 @@ public class NetCDFAnimation {
 			layer.getMapContext().invalidate();
 			i++;
 			i %= 120;
+			fireChange();
 			System.out.println("Change " + i);
 		}
 		
@@ -108,6 +111,7 @@ public class NetCDFAnimation {
 		try {
 			controller.setParameter((controller.getParameter() + 1));
 			System.out.println(controller.getParameter());
+			fireChange();
 		} catch (IOException e) {
 			e.printStackTrace();
 		} catch (InvalidRangeException e) {
@@ -122,6 +126,7 @@ public class NetCDFAnimation {
 		try {
 			controller.setParameter((controller.getParameter() - 1));
 			System.out.println(controller.getParameter());
+			fireChange();
 		} catch (IOException e) {
 			e.printStackTrace();
 		} catch (InvalidRangeException e) {
@@ -130,6 +135,22 @@ public class NetCDFAnimation {
 			e.printStackTrace();
 		}
 		layer.getMapContext().invalidate();
+	}
+	
+	private List<AnimationListener> listeners = new ArrayList<AnimationListener>(0);
+	
+	public void addAnimationListener(AnimationListener listener) {
+		listeners.add(listener);
+	}
+	
+	public void removeAnimationListener(AnimationListener listener) {
+		listeners.remove(listener);
+	}
+	
+	private void fireChange() {
+		for (AnimationListener e : listeners) {
+			e.animationStateChanged();
+		}
 	}
 	
 }

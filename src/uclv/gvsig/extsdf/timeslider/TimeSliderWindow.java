@@ -29,6 +29,8 @@ import java.awt.Color;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
 import javax.swing.JPanel;
@@ -37,21 +39,14 @@ import javax.swing.JTextField;
 import javax.swing.JToolBar;
 
 import org.gvsig.fmap.raster.layers.FLyrRasterSE;
-import org.gvsig.raster.dataset.io.RasterDriverException;
 
-import ucar.ma2.InvalidRangeException;
+import uclv.gvsig.extsdf.NetCDFConfiguration;
 import uclv.gvsig.extsdf.NetCDFController;
 import uclv.gvsig.extsdf.raster.NetCDFRasterDataset;
 
 import com.iver.andami.PluginServices;
 import com.iver.andami.ui.mdiManager.IWindow;
 import com.iver.andami.ui.mdiManager.WindowInfo;
-
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
-import java.io.IOException;
-import java.util.Timer;
-import java.util.TimerTask;
 
 /**
  * <p>
@@ -80,6 +75,10 @@ public class TimeSliderWindow extends JPanel implements IWindow{
 	
 	private FLyrRasterSE layer;
 	private NetCDFRasterDataset dataset = null;
+
+	private NetCDFController controller;
+
+	private NetCDFConfiguration configuration;
 	
 	public TimeSliderWindow() {
 		super();
@@ -151,8 +150,17 @@ public class TimeSliderWindow extends JPanel implements IWindow{
 	public void setLayer(FLyrRasterSE layer) {
 		this.layer = layer;
 		dataset = (NetCDFRasterDataset) layer.getDataSource().getDataset(0)[0];
+		controller = dataset.getNetCDFController();
+		configuration = dataset.getConfiguration();
 		getAnimationOptionsActionListener().setLayer(layer);
 		animation = new NetCDFAnimation(layer);
+		animation.addAnimationListener(new AnimationListener() {
+			
+			@Override
+			public void animationStateChanged() {
+				infoField.setText(controller.getParameter() + " ");
+			}
+		});
 	}
 	
 	/**
