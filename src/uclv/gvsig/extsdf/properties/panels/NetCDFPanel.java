@@ -38,7 +38,6 @@ import javax.swing.DefaultComboBoxModel;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
-import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.border.TitledBorder;
@@ -67,6 +66,10 @@ import com.iver.cit.gvsig.fmap.layers.FLayer;
  * @author dcardoso
  */
 
+/**
+ * @author dcardoso
+ * 
+ */
 public class NetCDFPanel extends AbstractPanel {
 
 	private FLayer flayer = null;
@@ -587,6 +590,18 @@ public class NetCDFPanel extends AbstractPanel {
 	@Override
 	public void accept() {
 		apply();
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.gvsig.gui.beans.panelGroup.panels.AbstractPanel#isAlwaysApplicable()
+	 */
+	public boolean isAlwaysApplicable() {
+		return ((sistema_coordenado.getSelectedIndex() != -1)
+				&& (variable.getSelectedIndex() != -1) && (visualize_moment
+					.getSelectedIndex() != -1));
 	}
 
 	/*
