@@ -334,6 +334,27 @@ public class NetCDFController {
     }
 
     /**
+     * Devuelve el &iacute;ndice de la variable par&aacute;metro en la
+     * renderizaci&oacute;n
+     * 
+     * @return &iacute;ndice
+     */
+    public int getParameter() {
+        return timeIdx;
+    }
+
+    /**
+     * Establece el &iacute;ndice de la variable par&aacute;metro en la
+     * renderizaci&oacute;n
+     * 
+     * @param timeIdx
+     *            &iacute;ndice
+     */
+    public void setParameter(int timeIdx){
+        this.timeIdx = timeIdx;
+    }
+
+    /**
      * Devuelve la cantidad de puntos horizontales que contiene el archivo
      * NetCDF de la variable a representar
      * 
@@ -546,8 +567,6 @@ public class NetCDFController {
 
         // Toma los rangos de las variables, de solo lectura
         List<Range> ranges = dataVar.getRanges();
-
-        
 
         // Verifica que el formato del archivo sea correcto
         // La variable debe tener una dimensión de longitud y una de latitud
