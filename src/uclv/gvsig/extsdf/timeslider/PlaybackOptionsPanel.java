@@ -205,12 +205,6 @@ public class PlaybackOptionsPanel extends NetCDFOptionsPanel {
 		return durationSpinner;
 	}
 	
-	// TODO move from here
-	String[] playingOptions = new String[] {
-			PluginServices.getText(this, "repeat"), //$NON-NLS-1$
-			PluginServices.getText(this, "reverse"), //$NON-NLS-1$
-			PluginServices.getText(this, "stop") //$NON-NLS-1$
-	};
 	private ButtonGroup playButtonGroup;
 
 	/**
@@ -218,7 +212,7 @@ public class PlaybackOptionsPanel extends NetCDFOptionsPanel {
 	 */
 	private JComboBox getActionAfterPlayingCB() {
 		if(actionAfterPlayingCB == null) {
-			actionAfterPlayingCB = new JComboBox(playingOptions);
+			actionAfterPlayingCB = new JComboBox(AnimationBehaviour.values());
 		}
 		return actionAfterPlayingCB;
 	}
@@ -247,8 +241,7 @@ public class PlaybackOptionsPanel extends NetCDFOptionsPanel {
 	 */
 	@Override
 	public void apply() {
-		// TODO Auto-generated method stub
-		System.out.println(getClass().getName());
+		configuration.setAnimationBehaviour((AnimationBehaviour) getActionAfterPlayingCB().getSelectedItem());
 	}
 
 	/* (non-Javadoc)
@@ -296,5 +289,13 @@ public class PlaybackOptionsPanel extends NetCDFOptionsPanel {
 			playButtonGroup.add(getDisplayForEachRB());
 		}
 		return playButtonGroup;
+	}
+	
+	/* (non-Javadoc)
+	 * @see uclv.gvsig.extsdf.timeslider.NetCDFOptionsPanel#postInitialize()
+	 */
+	@Override
+	protected void postInitialize() {
+		actionAfterPlayingCB.setSelectedItem(configuration.getAnimationBehaviour());
 	}
 }

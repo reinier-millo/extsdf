@@ -24,6 +24,8 @@
  */
 package uclv.gvsig.extsdf;
 
+import uclv.gvsig.extsdf.timeslider.AnimationBehaviour;
+
 /**
  * clase donde se guarda la configuración de las propiedades. Es un puente entre
  * el Dialog de propiedades y las propiedades en la animacilón
@@ -35,15 +37,17 @@ public class NetCDFConfiguration {
 	/**
 	 * indice del formato de fecha seleccionado
 	 */
-	private int dateformat =0;
+	private int dateformat = 0;
 	/**
 	 * indice del formato de hora seleccionado
 	 */
-	private int timeformat =0;
+	private int timeformat = 0;
 	/**
 	 * Dice si debe activarse el TimeSlider
 	 */
 	private Boolean enabled = false;
+	
+	private AnimationBehaviour animationBehaviour = AnimationBehaviour.REPEAT;
 
 	/**
 	 * Constructor
@@ -95,6 +99,20 @@ public class NetCDFConfiguration {
 	 */
 	public void setEnable(Boolean enabled) {
 		this.enabled = enabled;
+	}
+	
+	/**
+	 * @return the animationBehaviour
+	 */
+	public AnimationBehaviour getAnimationBehaviour() {
+		return animationBehaviour;
+	}
+	
+	/**
+	 * @param animationBehaviour the animationBehaviour to set
+	 */
+	public void setAnimationBehaviour(AnimationBehaviour animationBehaviour) {
+		this.animationBehaviour = animationBehaviour;
 	}
 
 }
