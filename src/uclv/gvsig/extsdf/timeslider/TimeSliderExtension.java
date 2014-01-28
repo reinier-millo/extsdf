@@ -32,7 +32,7 @@ import uclv.gvsig.extsdf.raster.NetCDFRasterDataset;
 import com.iver.andami.PluginServices;
 import com.iver.andami.plugins.Extension;
 import com.iver.andami.ui.mdiManager.IWindow;
-import com.iver.cit.gvsig.fmap.layers.FLayers;
+import com.iver.cit.gvsig.fmap.layers.FLayer;
 import com.iver.cit.gvsig.project.documents.view.gui.View;
 import com.iver.utiles.extensionPoints.ExtensionPoint;
 import com.iver.utiles.extensionPoints.ExtensionPoints;
@@ -125,21 +125,19 @@ public class TimeSliderExtension extends Extension {
 
 			// Obtener el dataset asociado a esta capa
 			View activeView = (View) activeWindow;
-			FLayers fLayers = activeView.getMapControl().getMapContext()
-					.getLayers();
-			int layersCount = fLayers.getLayersCount();
+			FLayer lyr = activeView.getTOC().getActiveLayer();
+			
+			// Verificar sólo si capa activa en el TOC es de tipo NetCDF
+      if (lyr instanceof FLyrRasterSE) {
+          layer = (FLyrRasterSE) lyr;
+          if(layer.getDataSource().getDataset(0)[0] instanceof NetCDFRasterDataset){
+              dataset = (NetCDFRasterDataset)layer.getDataSource().getDataset(0)[0];
+              return dataset.getConfiguration().getEnabled();
+          }
+      }
+   }
 
-			for (int i = 0; i < layersCount; ++i) {
-				if (fLayers.getLayer(i) instanceof FLyrRasterSE) {
-					layer = (FLyrRasterSE) fLayers.getLayer(i);
-					dataset = (NetCDFRasterDataset) layer.getDataSource()
-							.getDataset(0)[0];
-					break;
-				}
-			}
-		}
-
-		return dataset != null && dataset.getConfiguration().getEnabled();
+		return false;
 	}
 
 	/**
@@ -151,17 +149,15 @@ public class TimeSliderExtension extends Extension {
 	public boolean isVisible() {
 		IWindow iWindow = PluginServices.getMDIManager().getActiveWindow();
 		if (iWindow instanceof View) {
-			FLayers fLayers = ((View) iWindow).getMapControl().getMapContext()
-					.getLayers();
-			int numberOfLayers = fLayers.getLayersCount();
-			for (int index = 0; index < numberOfLayers; ++index) {
-				// OJO: Suprimir FLyrRasterSE por la capa que se defina en el
-				// plugin
-				if (fLayers.getLayer(index) instanceof FLyrRasterSE) {
-					FLyrRasterSE fr = (FLyrRasterSE) fLayers.getLayer(index);
-					return fr.getDataSource().getDataset(0)[0] instanceof NetCDFRasterDataset;
-				}
-			}
+		    // Obtener el dataset asociado a esta capa
+	      View activeView = (View) iWindow;
+	      FLayer lyr = activeView.getTOC().getActiveLayer();
+	      
+	      // Verificar sólo si capa activa en el TOC es de tipo NetCDF
+	      if (lyr instanceof FLyrRasterSE) {
+	          layer = (FLyrRasterSE) lyr;
+	          return layer.getDataSource().getDataset(0)[0] instanceof NetCDFRasterDataset;
+	      }
 		}
 		return false;
 	}
@@ -175,12 +171,13 @@ public class TimeSliderExtension extends Extension {
 		String[] icons = new String[] { "decrease-icon", "increase-icon",
 				"seek-backward-icon", "seek-forward-icon", "settings-icon",
 				"skip-backward-icon", "skip-forward-icon", "start-icon",
-				"time-on-map-icon", "full-icon", "video-icon" };
+				"pause-icon", "time-on-map-icon", "full-icon", "video-icon" };
 		String[] resources = new String[] { "Decrease-32.png",
 				"Increase-32.png", "Seek-Backward-32.png",
 				"Seek-Forward-32.png", "Settings-32.png",
 				"Skip-Backward-32.png", "Skip-Forward-32.png", "Start-32.png",
-				"Time-On-Map-32.png", "Full-32.png", "Video-32.png" };
+				"Pause-32.png", "Time-On-Map-32.png", "Full-32.png",
+				"Video-32.png" };
 
 		for (int i = 0; i < icons.length; i++) {
 			if (!PluginServices.getIconTheme().exists(icons[i])) {
