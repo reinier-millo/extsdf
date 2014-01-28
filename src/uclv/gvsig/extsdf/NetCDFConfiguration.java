@@ -47,6 +47,8 @@ public class NetCDFConfiguration {
 	 */
 	private Boolean enabled = false;
 	
+	private int delayPeriod;
+	
 	private AnimationBehaviour animationBehaviour = AnimationBehaviour.REPEAT;
 
 	/**
@@ -114,5 +116,18 @@ public class NetCDFConfiguration {
 	public void setAnimationBehaviour(AnimationBehaviour animationBehaviour) {
 		this.animationBehaviour = animationBehaviour;
 	}
+	
+	/**
+	 * @return the delayPeriod
+	 */
+	public int getDelayPeriod() {
+		return delayPeriod;
+	}
 
+	/**
+	 * @param delayPeriod the delayPeriod to set
+	 */
+	public void setDelayPeriod(int delayPeriod) {
+		this.delayPeriod = delayPeriod;
+	}
 }

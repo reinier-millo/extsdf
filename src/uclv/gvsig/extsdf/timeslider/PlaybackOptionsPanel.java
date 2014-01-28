@@ -165,6 +165,8 @@ public class PlaybackOptionsPanel extends NetCDFOptionsPanel {
 	private Component getSpeedSlider() {
 		if(speedSlider == null) {
 			speedSlider = new JSlider();
+			speedSlider.setValue(1499);
+			speedSlider.setMaximum(1500);
 			speedSlider.setEnabled(displayForEachRB.isSelected());
 		}
 		return speedSlider;
@@ -242,6 +244,8 @@ public class PlaybackOptionsPanel extends NetCDFOptionsPanel {
 	@Override
 	public void apply() {
 		configuration.setAnimationBehaviour((AnimationBehaviour) getActionAfterPlayingCB().getSelectedItem());
+		int delay = speedSlider.getMaximum() + 499 - speedSlider.getValue();
+		configuration.setDelayPeriod(delay);
 	}
 
 	/* (non-Javadoc)

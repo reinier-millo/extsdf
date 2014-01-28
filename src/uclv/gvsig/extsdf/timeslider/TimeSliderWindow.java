@@ -53,6 +53,8 @@ import uclv.gvsig.extsdf.raster.NetCDFRasterDataset;
 import com.iver.andami.PluginServices;
 import com.iver.andami.ui.mdiManager.IWindow;
 import com.iver.andami.ui.mdiManager.WindowInfo;
+import javax.swing.event.ChangeListener;
+import javax.swing.event.ChangeEvent;
 
 /**
  * <p>
@@ -187,7 +189,7 @@ public class TimeSliderWindow extends JPanel implements IWindow {
 									.getCoordinateSystemIndex()]).getTimeDate(
 							controller.getParameter());
 					infoField.setText(formatter.format(date));
-					slider.setValue(controller.getParameter());
+					getSlider().setValue(controller.getParameter());
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -419,8 +421,12 @@ public class TimeSliderWindow extends JPanel implements IWindow {
 	private JSlider getSlider() {
 		if (slider == null) {
 			slider = new JSlider();
+			slider.addChangeListener(new SliderChangeListener());
 			slider.addMouseListener(new SliderMouseListener());
 			slider.addMouseMotionListener(new SliderMouseMotionListener());
+			slider.setMajorTickSpacing(1);
+			slider.setPaintTicks(true);
+			slider.setForeground(Color.DARK_GRAY);
 		}
 		return slider;
 	}
@@ -545,9 +551,31 @@ public class TimeSliderWindow extends JPanel implements IWindow {
 		public void mouseReleased(MouseEvent e) {
 			if(dragging) {
 				dragging = false;
-				animation.move(slider.getValue());
+				animation.move(getSlider().getValue());
 			}
 		}
 	}	
+	private class SliderChangeListener implements ChangeListener {
+		public void stateChanged(ChangeEvent e) {
+			if(getSlider().getValue() == getSlider().getMaximum() - 1) {
+				switch(configuration.getAnimationBehaviour()) {
+				case REPEAT:
+					break;
+				case REVERSE:
+					animation.playInReverse();
+					break;
+				case STOP:
+					animation.pause();
+					break;
+				default:
+					break;
+				}
+			} else if (getSlider().getValue() == getSlider().getMinimum()) {
+				if(configuration.getAnimationBehaviour() == AnimationBehaviour.REVERSE) {
+					animation.play();
+				}
+			}
+		}
+	}
 	
 }
