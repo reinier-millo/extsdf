@@ -43,7 +43,7 @@ import uclv.gvsig.extsdf.raster.NetCDFRasterDataset;
 
 /**
  * @author rmartinez
- *
+ * 
  */
 public class NetCDFAnimation {
 
@@ -52,7 +52,7 @@ public class NetCDFAnimation {
 	private NetCDFController controller;
 	private NetCDFConfiguration configuration;
 	private Timer timer = new Timer();
-	private NetCDFAnimationTimerTask timerTask;
+	private TimerTask timerTask;
 	private Logger logger = LoggerFactory.getLogger(getClass());
 
 	/**
@@ -63,47 +63,96 @@ public class NetCDFAnimation {
 		dataset = (NetCDFRasterDataset) layer.getDataSource().getDataset(0)[0];
 		controller = dataset.getNetCDFController();
 		configuration = dataset.getConfiguration();
-//		timer = new Timer();
-//		timerTask = new NetCDFAnimationTimerTask();
+		// timer = new Timer();
+		// timerTask = new NetCDFAnimationTimerTask();
+		try {
+			n = (int) controller.getParameterForCoordinateSystem(controller.getCoordinateSystems()[controller.getCoordinateSystemIndex()]).getSize();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
-	
+
+	/**
+	 * Reproducir la animación.
+	 */
 	public void play() {
-		timerTask = new NetCDFAnimationTimerTask();
+		if(timerTask != null) timerTask.cancel();
+		timerTask = new PlayTimerTask();
 		timer = new Timer();
 		timer.schedule(timerTask, 250, 500);
 	}
 	
-	private class NetCDFAnimationTimerTask extends TimerTask {
+	private int n;
+
+	private class PlayTimerTask extends TimerTask {
 
 		private int i = 1;
-		
-		/* (non-Javadoc)
+
+		/*
+		 * (non-Javadoc)
+		 * 
 		 * @see java.util.TimerTask#run()
 		 */
 		@Override
 		public void run() {
 			i = controller.getParameter() + 1;
-			i %= 120;
+			i %= n;
+			move(i);
+		}
+
+	}
+	
+	public void playInReverse() {
+		if(timerTask != null) timerTask.cancel();
+		timerTask = new PlayBackwardsTimerTask();
+		timer = new Timer();
+		timer.schedule(timerTask, 250, 500);
+	}
+	
+	private class PlayBackwardsTimerTask extends TimerTask {
+
+		private int i;
+		/* (non-Javadoc)
+		 * @see java.util.TimerTask#run()
+		 */
+		@Override
+		public void run() {
+			i = controller.getParameter() - 1;
+			i %= n;
 			move(i);
 		}
 		
 	}
 
 	/**
-	 * 
+	 * Pausa la animación
 	 */
 	public void pause() {
 		timer.cancel();
 	}
-	
+
+	/**
+	 * Mover un paso hacia adelante a partir de de la posición actual.
+	 */
 	public void moveForward() {
 		move(controller.getParameter() + 1);
 	}
-	
+
+	/**
+	 * Mover un paso hacia atrás a partir de la posición actual.
+	 */
 	public void moveBackward() {
 		move(controller.getParameter() - 1);
 	}
-	
+
+	/**
+	 * Permite visualizar la capa en un instante de tiempo pasado como
+	 * párametro.
+	 * 
+	 * @param position
+	 *            El índice de la fecha en el parámetro variable que indica el
+	 *            instante de tiempo a visualizar.
+	 */
 	public void move(int position) {
 		try {
 			controller.setParameter(position);
@@ -117,21 +166,21 @@ public class NetCDFAnimation {
 		}
 		layer.getMapContext().invalidate();
 	}
-	
+
 	private List<AnimationListener> listeners = new ArrayList<AnimationListener>(0);
-	
+
 	public void addAnimationListener(AnimationListener listener) {
 		listeners.add(listener);
 	}
-	
+
 	public void removeAnimationListener(AnimationListener listener) {
 		listeners.remove(listener);
 	}
-	
+
 	private void fireChange() {
 		for (AnimationListener e : listeners) {
 			e.animationStateChanged();
 		}
 	}
-	
+
 }
