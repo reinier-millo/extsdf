@@ -35,6 +35,7 @@ import uclv.gvsig.extsdf.properties.panels.NetCDFPanel;
 
 
 /**
+ * Esta es una prueba que solo sirve para ver la interfaz visual no incluye la logica del panel
  * @author dcardoso
  *
  */
