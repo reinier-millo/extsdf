@@ -76,11 +76,11 @@ public class TimeSliderExtension extends Extension {
 		timeSliderWindow.setLayer(layer);
 		PluginServices.getMDIManager().addWindow(timeSliderWindow);
 
-		// Obtiene todos los puntos de extensión del gvSIG
+		// Obtiene todos los puntos de extensiÃ³n del gvSIG
 		ExtensionPoints extensionPoints = ExtensionPointsSingleton
 				.getInstance();
 
-		// Creación del punto de extensión para registrar paneles en el cuadro
+		// CreaciÃ³n del punto de extensiÃ³n para registrar paneles en el cuadro
 		// de propiedades.
 		if (!extensionPoints.containsKey("NetCDFAnimationSettingsDialog")) {
 			extensionPoints
@@ -89,7 +89,7 @@ public class TimeSliderExtension extends Extension {
 							"NetCDF Properties registrable panels (register instances of javax.swing.JPanel)"));
 		}
 
-		// Añadimos paneles al cuadro de propiedades.
+		// AÃ±adimos paneles al cuadro de propiedades.
 		extensionPoints.add("NetCDFAnimationSettingsDialog", "Time Display",
 				TimeDisplayOptionsPanel.class);
 		extensionPoints.add("NetCDFAnimationSettingsDialog", "Time Extent",
@@ -127,7 +127,7 @@ public class TimeSliderExtension extends Extension {
 			View activeView = (View) activeWindow;
 			FLayer lyr = activeView.getTOC().getActiveLayer();
 			
-			// Verificar sólo si capa activa en el TOC es de tipo NetCDF
+			// Verificar sÃ³lo si capa activa en el TOC es de tipo NetCDF
       if (lyr instanceof FLyrRasterSE) {
           layer = (FLyrRasterSE) lyr;
           if(layer.getDataSource().getDataset(0)[0] instanceof NetCDFRasterDataset){
@@ -153,7 +153,7 @@ public class TimeSliderExtension extends Extension {
 	      View activeView = (View) iWindow;
 	      FLayer lyr = activeView.getTOC().getActiveLayer();
 	      
-	      // Verificar sólo si capa activa en el TOC es de tipo NetCDF
+	      // Verificar sÃ³lo si capa activa en el TOC es de tipo NetCDF
 	      if (lyr instanceof FLyrRasterSE) {
 	          layer = (FLyrRasterSE) lyr;
 	          return layer.getDataSource().getDataset(0)[0] instanceof NetCDFRasterDataset;
@@ -171,12 +171,13 @@ public class TimeSliderExtension extends Extension {
 		String[] icons = new String[] { "decrease-icon", "increase-icon",
 				"seek-backward-icon", "seek-forward-icon", "settings-icon",
 				"skip-backward-icon", "skip-forward-icon", "start-icon",
-				"time-on-map-icon", "full-icon", "video-icon" };
+				"pause-icon", "time-on-map-icon", "full-icon", "video-icon" };
 		String[] resources = new String[] { "Decrease-32.png",
 				"Increase-32.png", "Seek-Backward-32.png",
 				"Seek-Forward-32.png", "Settings-32.png",
 				"Skip-Backward-32.png", "Skip-Forward-32.png", "Start-32.png",
-				"Time-On-Map-32.png", "Full-32.png", "Video-32.png" };
+				"Pause-32.png", "Time-On-Map-32.png", "Full-32.png",
+				"Video-32.png" };
 
 		for (int i = 0; i < icons.length; i++) {
 			if (!PluginServices.getIconTheme().exists(icons[i])) {
