@@ -25,6 +25,7 @@
 
 package uclv.gvsig.extsdf.timeslider;
 
+import org.gvsig.fmap.raster.layers.FLyrRasterSE;
 import org.gvsig.gui.beans.panelGroup.panels.AbstractPanel;
 
 import uclv.gvsig.extsdf.NetCDFConfiguration;
@@ -41,6 +42,7 @@ public abstract class NetCDFOptionsPanel extends AbstractPanel {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
+	protected FLyrRasterSE layer;
 	protected NetCDFRasterDataset dataset;
 	protected NetCDFConfiguration configuration;
 	protected NetCDFController controller;
@@ -51,7 +53,8 @@ public abstract class NetCDFOptionsPanel extends AbstractPanel {
 	@Override
 	public void setReference(Object ref) {
 		super.setReference(ref);
-		dataset = (NetCDFRasterDataset) ref;
+		layer = (FLyrRasterSE) ref;
+		dataset = (NetCDFRasterDataset) layer.getDataSource().getDataset(0)[0];
 		configuration = dataset.getConfiguration();
 		controller = dataset.getNetCDFController();
 		postInitialize();

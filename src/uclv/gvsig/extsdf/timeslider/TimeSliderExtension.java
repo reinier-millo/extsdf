@@ -43,14 +43,14 @@ import com.iver.utiles.extensionPoints.ExtensionPointsSingleton;
  * Extensi&oacute;n para el deslizador de tiempo de la capa raster NetCDF.
  * </p>
  * 
- * Esta extensi&oacute;n adiciona un bot&oacute;n a la barra de herramientas de 
- * <i>gvSIG</i> que ejecuta el deslizador en el tiempo de la capa raster asociada
- * a un archivo NetCDF de la Vista (<i>View</i>) activa.
+ * Esta extensi&oacute;n adiciona un bot&oacute;n a la barra de herramientas de
+ * <i>gvSIG</i> que ejecuta el deslizador en el tiempo de la capa raster
+ * asociada a un archivo NetCDF de la Vista (<i>View</i>) activa.
  * 
  * @author afmoya
  * @version 1.0.0
  */
-public class TimeSliderExtension extends Extension{
+public class TimeSliderExtension extends Extension {
 
 	/**
 	 * (non javadoc)
@@ -70,48 +70,35 @@ public class TimeSliderExtension extends Extension{
 	@Override
 	public void execute(String actionCommand) {
 		IWindow activeWindow = PluginServices.getMDIManager().getActiveWindow();
-//		if(activeWindow instanceof View) {
-//			View activeView = (View)activeWindow;
-//			FLayers fLayers = activeView.getMapControl().getMapContext().getLayers();
-//			int layersCount = fLayers.getLayersCount();
-//			
-//			for(int i=0; i<layersCount; ++i) {
-//				if(fLayer instanceof FlyrNetCDFRaster) {
-//				cdfRaster = (FlyrNetCDFRaster)fLayer;
-//				if(fLayers.getLayer(i) instanceof FLyrRasterSE) {
-//					FLyrRasterSE fr = (FLyrRasterSE) fLayers.getLayer(i);
-//					NetCDFRasterDataset dataset = (NetCDFRasterDataset) fr.getDataSource().getDataset(0)[0];
 
-					TimeSliderWindow timeSliderWindow = new TimeSliderWindow();
-					timeSliderWindow.setRelatedWindow(activeWindow);
-					timeSliderWindow.setDataset(dataset);
-					PluginServices.getMDIManager().addWindow(timeSliderWindow);
-//					
-//					break;
-//				}				
-//			}
-//		}
-		
+		TimeSliderWindow timeSliderWindow = new TimeSliderWindow();
+		timeSliderWindow.setRelatedWindow(activeWindow);
+		timeSliderWindow.setLayer(layer);
+		PluginServices.getMDIManager().addWindow(timeSliderWindow);
+
 		// Obtiene todos los puntos de extensión del gvSIG
-        ExtensionPoints extensionPoints = ExtensionPointsSingleton
-                .getInstance();
-		
-		// Creación del punto de extensión para registrar paneles en el cuadro
-        // de propiedades.
-        if (!extensionPoints.containsKey("NetCDFAnimationSettingsDialog")) {
-            extensionPoints
-                    .put(new ExtensionPoint(
-                            "NetCDFAnimationSettingsDialog",
-                            "NetCDF Properties registrable panels (register instances of javax.swing.JPanel)"));
-        }
+		ExtensionPoints extensionPoints = ExtensionPointsSingleton
+				.getInstance();
 
-        // Añadimos paneles al cuadro de propiedades.
-        extensionPoints.add("NetCDFAnimationSettingsDialog", "Time Display", TimeDisplayOptionsPanel.class);
-        extensionPoints.add("NetCDFAnimationSettingsDialog", "Time Extent", TimeExtentOptionsPanel.class);
-        extensionPoints.add("NetCDFAnimationSettingsDialog", "Playback", PlaybackOptionsPanel.class);
+		// Creación del punto de extensión para registrar paneles en el cuadro
+		// de propiedades.
+		if (!extensionPoints.containsKey("NetCDFAnimationSettingsDialog")) {
+			extensionPoints
+					.put(new ExtensionPoint(
+							"NetCDFAnimationSettingsDialog",
+							"NetCDF Properties registrable panels (register instances of javax.swing.JPanel)"));
+		}
+
+		// Añadimos paneles al cuadro de propiedades.
+		extensionPoints.add("NetCDFAnimationSettingsDialog", "Time Display",
+				TimeDisplayOptionsPanel.class);
+		extensionPoints.add("NetCDFAnimationSettingsDialog", "Time Extent",
+				TimeExtentOptionsPanel.class);
+		extensionPoints.add("NetCDFAnimationSettingsDialog", "Playback",
+				PlaybackOptionsPanel.class);
 	}
 	
-	private NetCDFRasterDataset dataset;
+	private FLyrRasterSE layer;
 
 	/**
 	 * (non javadoc)
@@ -121,33 +108,37 @@ public class TimeSliderExtension extends Extension{
 	@Override
 	public boolean isEnabled() {
 		IWindow activeWindow = PluginServices.getMDIManager().getActiveWindow();
-		dataset = null;
-		
-		if(activeWindow instanceof View) {
+		NetCDFRasterDataset dataset = null;
+
+		if (activeWindow instanceof View) {
 			// Desactivar si existe un slider abierto para esta ventana
-			IWindow[] allWindows = PluginServices.getMDIManager().getAllWindows();
-			for(IWindow analized : allWindows) {
-				if(analized instanceof TimeSliderWindow) {
-					if(activeWindow.equals(((TimeSliderWindow)analized).getRelatedWindow())) {
+			IWindow[] allWindows = PluginServices.getMDIManager()
+					.getAllWindows();
+			for (IWindow analized : allWindows) {
+				if (analized instanceof TimeSliderWindow) {
+					if (activeWindow.equals(((TimeSliderWindow) analized)
+							.getRelatedWindow())) {
 						return false;
 					}
-				}				
+				}
 			}
-			
+
 			// Obtener el dataset asociado a esta capa
-			View activeView = (View)activeWindow;
-			FLayers fLayers = activeView.getMapControl().getMapContext().getLayers();
+			View activeView = (View) activeWindow;
+			FLayers fLayers = activeView.getMapControl().getMapContext()
+					.getLayers();
 			int layersCount = fLayers.getLayersCount();
-			
-			for(int i=0; i<layersCount; ++i) {
-				if(fLayers.getLayer(i) instanceof FLyrRasterSE) {
-					FLyrRasterSE fr = (FLyrRasterSE) fLayers.getLayer(i);
-					dataset = (NetCDFRasterDataset) fr.getDataSource().getDataset(0)[0];
+
+			for (int i = 0; i < layersCount; ++i) {
+				if (fLayers.getLayer(i) instanceof FLyrRasterSE) {
+					layer = (FLyrRasterSE) fLayers.getLayer(i);
+					dataset = (NetCDFRasterDataset) layer.getDataSource()
+							.getDataset(0)[0];
 					break;
-				}				
+				}
 			}
 		}
-		
+
 		return dataset != null && dataset.getConfiguration().getEnabled();
 	}
 
@@ -158,60 +149,45 @@ public class TimeSliderExtension extends Extension{
 	 */
 	@Override
 	public boolean isVisible() {
-		IWindow iWindow = PluginServices.getMDIManager().getActiveWindow();		
-		if(iWindow instanceof View) {
-			FLayers fLayers = ((View)iWindow).getMapControl().getMapContext().getLayers();
+		IWindow iWindow = PluginServices.getMDIManager().getActiveWindow();
+		if (iWindow instanceof View) {
+			FLayers fLayers = ((View) iWindow).getMapControl().getMapContext()
+					.getLayers();
 			int numberOfLayers = fLayers.getLayersCount();
-			for(int index=0; index<numberOfLayers; ++index) {
-				// OJO: Suprimir FLyrRasterSE por la capa que se defina en el plugin
-				if(fLayers.getLayer(index) instanceof FLyrRasterSE) {
+			for (int index = 0; index < numberOfLayers; ++index) {
+				// OJO: Suprimir FLyrRasterSE por la capa que se defina en el
+				// plugin
+				if (fLayers.getLayer(index) instanceof FLyrRasterSE) {
 					FLyrRasterSE fr = (FLyrRasterSE) fLayers.getLayer(index);
 					return fr.getDataSource().getDataset(0)[0] instanceof NetCDFRasterDataset;
 				}
-			}			
-		}		
+			}
+		}
 		return false;
 	}
-	
+
 	/**
 	 * <p>
 	 * Registra los iconos de la extensi&oacute;n
-	 * </p> 
+	 * </p>
 	 */
 	private void registerIcons() {
-		String[] icons = new String[] {
-				"decrease-icon",
-				"increase-icon",
-				"seek-backward-icon",
-				"seek-forward-icon",
-				"settings-icon",
-				"skip-backward-icon",
-				"skip-forward-icon",
-				"start-icon",
-				"time-on-map-icon",
-				"full-icon",
-				"video-icon"
-		};
-		String[] resources = new String[] {
-				"Decrease-32.png",
-				"Increase-32.png",
-				"Seek-Backward-32.png",
-				"Seek-Forward-32.png",
-				"Settings-32.png",
-				"Skip-Backward-32.png",
-				"Skip-Forward-32.png",
-				"Start-32.png",
-				"Time-On-Map-32.png",
-				"Full-32.png",
-				"Video-32.png"
-		};
-		
-		for(int i = 0; i < icons.length; i++) {
-			if(!PluginServices.getIconTheme().exists(icons[i])) {
+		String[] icons = new String[] { "decrease-icon", "increase-icon",
+				"seek-backward-icon", "seek-forward-icon", "settings-icon",
+				"skip-backward-icon", "skip-forward-icon", "start-icon",
+				"time-on-map-icon", "full-icon", "video-icon" };
+		String[] resources = new String[] { "Decrease-32.png",
+				"Increase-32.png", "Seek-Backward-32.png",
+				"Seek-Forward-32.png", "Settings-32.png",
+				"Skip-Backward-32.png", "Skip-Forward-32.png", "Start-32.png",
+				"Time-On-Map-32.png", "Full-32.png", "Video-32.png" };
+
+		for (int i = 0; i < icons.length; i++) {
+			if (!PluginServices.getIconTheme().exists(icons[i])) {
 				PluginServices.getIconTheme().registerDefault(
 						icons[i],
-						this.getClass().getClassLoader().getResource("images/" + resources[i])
-				);
+						this.getClass().getClassLoader()
+								.getResource("images/" + resources[i]));
 			}
 		}
 	}

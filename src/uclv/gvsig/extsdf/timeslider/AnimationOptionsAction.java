@@ -29,6 +29,7 @@ import java.awt.event.ActionEvent;
 
 import javax.swing.AbstractAction;
 
+import org.gvsig.fmap.raster.layers.FLyrRasterSE;
 import org.gvsig.gui.beans.panelGroup.PanelGroupManager;
 import org.gvsig.gui.beans.panelGroup.tabbedPanel.TabbedPanel;
 
@@ -51,7 +52,7 @@ public class AnimationOptionsAction extends AbstractAction  {
 	 */
 	private static final long serialVersionUID = 1L;
 	private PanelGroupDialog optionsDialog;
-	private NetCDFRasterDataset dataset;
+	private FLyrRasterSE layer;
 
 	/**
 	 * 
@@ -74,7 +75,7 @@ public class AnimationOptionsAction extends AbstractAction  {
 
 			TabbedPanel panelGroup = null;
 			try {				
-				panelGroup = (TabbedPanel) manager.getPanelGroup(dataset); //$NON-NLS-1$
+				panelGroup = (TabbedPanel) manager.getPanelGroup(layer); //$NON-NLS-1$
 				PanelGroupLoaderFromExtensionPoint loader = new PanelGroupLoaderFromExtensionPoint("NetCDFAnimationSettingsDialog"); //$NON-NLS-1$
 				panelGroup.loadPanels(loader);
 			} catch (Exception e1) {
@@ -86,10 +87,10 @@ public class AnimationOptionsAction extends AbstractAction  {
 	}
 	
 	/**
-	 * @param dataset the dataset to set
+	 * @param layer the layer to set
 	 */
-	public void setDataset(NetCDFRasterDataset dataset) {
-		this.dataset = dataset;
+	public void setLayer(FLyrRasterSE layer) {
+		this.layer = layer;
 	}
 
 }

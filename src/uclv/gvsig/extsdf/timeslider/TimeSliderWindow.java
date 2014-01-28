@@ -36,11 +36,22 @@ import javax.swing.JSlider;
 import javax.swing.JTextField;
 import javax.swing.JToolBar;
 
+import org.gvsig.fmap.raster.layers.FLyrRasterSE;
+import org.gvsig.raster.dataset.io.RasterDriverException;
+
+import ucar.ma2.InvalidRangeException;
+import uclv.gvsig.extsdf.NetCDFController;
 import uclv.gvsig.extsdf.raster.NetCDFRasterDataset;
 
 import com.iver.andami.PluginServices;
 import com.iver.andami.ui.mdiManager.IWindow;
 import com.iver.andami.ui.mdiManager.WindowInfo;
+
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+import java.io.IOException;
+import java.util.Timer;
+import java.util.TimerTask;
 
 /**
  * <p>
@@ -67,6 +78,7 @@ public class TimeSliderWindow extends JPanel implements IWindow{
 	 */
 	private IWindow relatedWindow = null;
 	
+	private FLyrRasterSE layer;
 	private NetCDFRasterDataset dataset = null;
 	
 	public TimeSliderWindow() {
@@ -134,11 +146,19 @@ public class TimeSliderWindow extends JPanel implements IWindow{
 	}
 	
 	/**
-	 * @param dataset the dataset to set
+	 * @param layer the layer to set
 	 */
-	public void setDataset(NetCDFRasterDataset dataset) {
-		this.dataset = dataset;
-		getAnimationOptionsActionListener().setDataset(dataset);
+	public void setLayer(FLyrRasterSE layer) {
+		this.layer = layer;
+		dataset = (NetCDFRasterDataset) layer.getDataSource().getDataset(0)[0];
+		getAnimationOptionsActionListener().setLayer(layer);
+	}
+	
+	/**
+	 * @return the layer
+	 */
+	public FLyrRasterSE getLayer() {
+		return layer;
 	}
 	
 	/**
@@ -366,6 +386,7 @@ public class TimeSliderWindow extends JPanel implements IWindow{
 	private JButton getPlayPauseButton() {
 		if(playPauseButton == null) {
 			playPauseButton = new JButton("");
+			playPauseButton.addActionListener(new PlayPauseButtonActionListener());
 			playPauseButton.setIcon(PluginServices.getIconTheme().get("start-icon"));
 		}
 		return playPauseButton;
@@ -415,4 +436,36 @@ public class TimeSliderWindow extends JPanel implements IWindow{
 	private JButton playPauseButton;
 	private JButton seekBackwardButton;
 	private JButton seekForwardButton;
+	
+	private class PlayPauseButtonActionListener implements ActionListener {
+		public void actionPerformed(ActionEvent e) {
+			System.out.println("animando");
+			TimerTask ts = new TimerTask() {
+				int i = 1;
+				NetCDFController controler = dataset.getNetCDFController();
+
+				@Override
+				public void run() {
+					try {
+						controler.setParameter(i);
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					} catch (InvalidRangeException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					} catch (RasterDriverException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					layer.getMapContext().invalidate();
+					i++;
+					i %= 120;
+					System.out.println("Change " + i);
+				}
+			};
+			Timer t = new Timer();
+			t.schedule(ts, 250, 500);
+		}
+	}
 }
