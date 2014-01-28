@@ -597,7 +597,7 @@ public class NetCDFPanel extends AbstractPanel {
 	@Override
 	public void apply() {
 		// se carga el instante de tiempo seleccionado
-		 try {
+		try {
 			controler.setParameter(visualize_moment.getSelectedIndex());
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -609,7 +609,7 @@ public class NetCDFPanel extends AbstractPanel {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		 flayer.getMapContext().invalidate();
+		flayer.getMapContext().invalidate();
 		// se guardan las configuraciones si se habilito el tiempo
 		if (chHabilitarTiempo.isSelected() && controler.hasVariableParameter()) {
 			configuration.setEnable(true);
@@ -658,7 +658,7 @@ public class NetCDFPanel extends AbstractPanel {
 	protected void initialize() {
 		// TODO Auto-generated method stub
 	}
-	
+
 	/**
 	 * Obtiene el objeto FLayer para el NetCDF. Se obtiene tambien el
 	 * NetCDFController asociado a este layer
@@ -699,7 +699,11 @@ public class NetCDFPanel extends AbstractPanel {
 		try {
 			x_dimension.setText(controler.getLatitudeForCoordinateSystem(
 					(CoordinateSystem) sistema_coordenado.getSelectedItem())
-					.getFullName());
+					.getFullName()
+					+ "("
+					+ controler.getLatitudeForCoordinateSystem(
+							(CoordinateSystem) sistema_coordenado
+									.getSelectedItem()).getSize() + ")");
 		} catch (RasterDriverException e1) {
 			logger.error(e1.getLocalizedMessage());
 		}
@@ -707,7 +711,11 @@ public class NetCDFPanel extends AbstractPanel {
 		try {
 			y_dimension.setText(controler.getLongitudeForCoordinateSystem(
 					(CoordinateSystem) sistema_coordenado.getSelectedItem())
-					.getFullName());
+					.getFullName()
+					+ "("
+					+ controler.getLongitudeForCoordinateSystem(
+							(CoordinateSystem) sistema_coordenado
+									.getSelectedItem()).getSize() + ")");
 		} catch (RasterDriverException e1) {
 			logger.error(e1.getLocalizedMessage());
 		}
@@ -717,7 +725,11 @@ public class NetCDFPanel extends AbstractPanel {
 			parametro_variable.setText(controler
 					.getParameterForCoordinateSystem(
 							(CoordinateSystem) sistema_coordenado
-									.getSelectedItem()).getFullName());
+									.getSelectedItem()).getFullName()
+					+ "("
+					+ controler.getParameterForCoordinateSystem(
+							(CoordinateSystem) sistema_coordenado
+									.getSelectedItem()).getSize() + ")");
 		} catch (IOException e1) {
 			logger.error(e1.getLocalizedMessage());
 		}
@@ -794,17 +806,25 @@ public class NetCDFPanel extends AbstractPanel {
 									.getSelectedItem())));
 			try {
 				x_dimension.setText(controler
-						.getLatitudeForCoordinateSystem(
+						.getLongitudeForCoordinateSystem(
 								(CoordinateSystem) sistema_coordenado
-										.getSelectedItem()).getFullName());
+										.getSelectedItem()).getFullName()
+						+ "("
+						+ controler.getLongitudeForCoordinateSystem(
+								(CoordinateSystem) sistema_coordenado
+										.getSelectedItem()).getSize() + ")");
 			} catch (RasterDriverException e1) {
 				logger.error(e1.getLocalizedMessage());
 			}
 			try {
 				y_dimension.setText(controler
-						.getLatitudeForCoordinateSystem(
+						.getLongitudeForCoordinateSystem(
 								(CoordinateSystem) sistema_coordenado
-										.getSelectedItem()).getFullName());
+										.getSelectedItem()).getFullName()
+						+ "("
+						+ controler.getLongitudeForCoordinateSystem(
+								(CoordinateSystem) sistema_coordenado
+										.getSelectedItem()).getSize() + ")");
 			} catch (RasterDriverException e1) {
 				logger.error(e1.getLocalizedMessage());
 			}
@@ -812,7 +832,11 @@ public class NetCDFPanel extends AbstractPanel {
 				parametro_variable.setText(controler
 						.getParameterForCoordinateSystem(
 								(CoordinateSystem) sistema_coordenado
-										.getSelectedItem()).getFullName());
+										.getSelectedItem()).getFullName()
+						+ "("
+						+ controler.getParameterForCoordinateSystem(
+								(CoordinateSystem) sistema_coordenado
+										.getSelectedItem()).getSize() + ")");
 			} catch (IOException e1) {
 				logger.error(e1.getLocalizedMessage());
 			}
