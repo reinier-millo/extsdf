@@ -33,6 +33,8 @@ import java.util.TimerTask;
 
 import org.gvsig.fmap.raster.layers.FLyrRasterSE;
 import org.gvsig.raster.dataset.io.RasterDriverException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import ucar.ma2.InvalidRangeException;
 import uclv.gvsig.extsdf.NetCDFConfiguration;
@@ -51,6 +53,7 @@ public class NetCDFAnimation {
 	private NetCDFConfiguration configuration;
 	private Timer timer = new Timer();
 	private NetCDFAnimationTimerTask timerTask;
+	private Logger logger = LoggerFactory.getLogger(getClass());
 
 	/**
 	 * @param layer
@@ -70,32 +73,18 @@ public class NetCDFAnimation {
 		timer.schedule(timerTask, 250, 500);
 	}
 	
-	private int i = 1;
-	
 	private class NetCDFAnimationTimerTask extends TimerTask {
 
+		private int i = 1;
+		
 		/* (non-Javadoc)
 		 * @see java.util.TimerTask#run()
 		 */
 		@Override
 		public void run() {
-			try {
-				controller.setParameter(i);
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (InvalidRangeException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (RasterDriverException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			layer.getMapContext().invalidate();
-			i++;
+			i = controller.getParameter() + 1;
 			i %= 120;
-			fireChange();
-			System.out.println("Change " + i);
+			move(i);
 		}
 		
 	}
@@ -108,31 +97,11 @@ public class NetCDFAnimation {
 	}
 	
 	public void moveForward() {
-		try {
-			controller.setParameter((controller.getParameter() + 1));
-			fireChange();
-		} catch (IOException e) {
-			e.printStackTrace();
-		} catch (InvalidRangeException e) {
-			e.printStackTrace();
-		} catch (RasterDriverException e) {
-			e.printStackTrace();
-		}
-		layer.getMapContext().invalidate();
+		move(controller.getParameter() + 1);
 	}
 	
 	public void moveBackward() {
-		try {
-			controller.setParameter((controller.getParameter() - 1));
-			fireChange();
-		} catch (IOException e) {
-			e.printStackTrace();
-		} catch (InvalidRangeException e) {
-			e.printStackTrace();
-		} catch (RasterDriverException e) {
-			e.printStackTrace();
-		}
-		layer.getMapContext().invalidate();
+		move(controller.getParameter() - 1);
 	}
 	
 	public void move(int position) {

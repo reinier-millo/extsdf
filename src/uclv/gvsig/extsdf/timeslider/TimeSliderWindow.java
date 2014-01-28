@@ -259,9 +259,6 @@ public class TimeSliderWindow extends JPanel implements IWindow {
 		gbl_panel.rowWeights = new double[] { 0.0, 0.0, Double.MIN_VALUE };
 		panel.setLayout(gbl_panel);
 
-		skipBackwardButton = new JButton("");
-		skipBackwardButton.setIcon(PluginServices.getIconTheme().get(
-				"skip-backward-icon"));
 		GridBagConstraints gbc_skipBackwardButton = new GridBagConstraints();
 		gbc_skipBackwardButton.fill = GridBagConstraints.HORIZONTAL;
 		gbc_skipBackwardButton.insets = new Insets(0, 0, 5, 5);
@@ -409,8 +406,7 @@ public class TimeSliderWindow extends JPanel implements IWindow {
 	private JButton getSkipBackwardButton() {
 		if (skipBackwardButton == null) {
 			skipBackwardButton = new JButton("");
-			skipBackwardButton
-					.addActionListener(new SkipBackwardButtonActionListener());
+			skipBackwardButton.addActionListener(new SkipBackwardButtonActionListener());
 			skipBackwardButton.setIcon(PluginServices.getIconTheme().get(
 					"skip-backward-icon"));
 		}
@@ -522,7 +518,7 @@ public class TimeSliderWindow extends JPanel implements IWindow {
 			}
 		}
 	}
-
+	
 	private class SkipBackwardButtonActionListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
 			animation.moveBackward();
@@ -552,7 +548,6 @@ public class TimeSliderWindow extends JPanel implements IWindow {
 				animation.move(slider.getValue());
 			}
 		}
-	}
-	
+	}	
 	
 }
