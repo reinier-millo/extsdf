@@ -33,6 +33,7 @@ import com.iver.andami.PluginServices;
 import com.iver.andami.plugins.Extension;
 import com.iver.andami.ui.mdiManager.IWindow;
 import com.iver.cit.gvsig.fmap.layers.FLayer;
+import com.iver.cit.gvsig.fmap.layers.FLayers;
 import com.iver.cit.gvsig.project.documents.view.gui.View;
 import com.iver.utiles.extensionPoints.ExtensionPoint;
 import com.iver.utiles.extensionPoints.ExtensionPoints;
@@ -97,7 +98,7 @@ public class TimeSliderExtension extends Extension {
 		extensionPoints.add("NetCDFAnimationSettingsDialog", "Playback",
 				PlaybackOptionsPanel.class);
 	}
-	
+
 	private FLyrRasterSE layer;
 
 	/**
@@ -109,7 +110,7 @@ public class TimeSliderExtension extends Extension {
 	public boolean isEnabled() {
 		IWindow activeWindow = PluginServices.getMDIManager().getActiveWindow();
 		NetCDFRasterDataset dataset = null;
-
+		
 		if (activeWindow instanceof View) {
 			// Desactivar si existe un slider abierto para esta ventana
 			IWindow[] allWindows = PluginServices.getMDIManager()
@@ -122,20 +123,41 @@ public class TimeSliderExtension extends Extension {
 					}
 				}
 			}
-
 			// Obtener el dataset asociado a esta capa
 			View activeView = (View) activeWindow;
+			// Para el caso en que hay solamente una capa en el TOC si es NetCDF no hace falta que este activa para activar el TimeSlider
+			int count = activeView.getTOC().getMapContext().getLayers()
+					.getLayersCount();
+			if (count == 1) {
+				FLayer lyr = activeView.getTOC().getMapContext().getLayers()
+						.getLayer(0);
+				if (lyr != null) {
+					if (lyr instanceof FLyrRasterSE) {
+						layer = (FLyrRasterSE) lyr;
+						if (layer.getDataSource().getDataset(0)[0] instanceof NetCDFRasterDataset)
+							dataset = (NetCDFRasterDataset) layer
+									.getDataSource().getDataset(0)[0];
+						if (dataset.getConfiguration().getEnabled())
+							return true;
+					}
+				}
+			}
 			FLayer lyr = activeView.getTOC().getActiveLayer();
-			
+			// Cuando hay mas de una capa en el TOC
 			// Verificar sÃ³lo si capa activa en el TOC es de tipo NetCDF
-      if (lyr instanceof FLyrRasterSE) {
-          layer = (FLyrRasterSE) lyr;
-          if(layer.getDataSource().getDataset(0)[0] instanceof NetCDFRasterDataset){
-              dataset = (NetCDFRasterDataset)layer.getDataSource().getDataset(0)[0];
-              return dataset.getConfiguration().getEnabled();
-          }
-      }
-   }
+			if (lyr instanceof FLyrRasterSE) {
+				if (layer != null) {
+					layer = (FLyrRasterSE) lyr;
+					if (layer.getDataSource() != null) {
+						if (layer.getDataSource().getDataset(0)[0] instanceof NetCDFRasterDataset) {
+							dataset = (NetCDFRasterDataset) layer
+									.getDataSource().getDataset(0)[0];
+							return dataset.getConfiguration().getEnabled();
+						}
+					}
+				}
+			}
+		}
 
 		return false;
 	}
@@ -148,16 +170,27 @@ public class TimeSliderExtension extends Extension {
 	@Override
 	public boolean isVisible() {
 		IWindow iWindow = PluginServices.getMDIManager().getActiveWindow();
+		Boolean state = false;
 		if (iWindow instanceof View) {
-		    // Obtener el dataset asociado a esta capa
-	      View activeView = (View) iWindow;
-	      FLayer lyr = activeView.getTOC().getActiveLayer();
-	      
-	      // Verificar sÃ³lo si capa activa en el TOC es de tipo NetCDF
-	      if (lyr instanceof FLyrRasterSE) {
-	          layer = (FLyrRasterSE) lyr;
-	          return layer.getDataSource().getDataset(0)[0] instanceof NetCDFRasterDataset;
-	      }
+			// Obtener el dataset asociado a esta capa
+			View activeView = (View) iWindow;
+			// Es visible si en el TOC hay alguna capa NetCDF
+			FLayers lyr1 = activeView.getTOC().getMapContext().getLayers();
+			FLayer lyr = activeView.getTOC().getActiveLayer();
+		      if (lyr instanceof FLyrRasterSE) {
+		          layer = (FLyrRasterSE) lyr;
+		          if(layer.getDataSource()!= null)
+		          state = layer.getDataSource().getDataset(0)[0] instanceof NetCDFRasterDataset;
+		      }
+			for (int i = 0; i < lyr1.getLayersCount(); i++) {
+				if (lyr1.getLayer(i) != null) {
+					if (lyr1.getLayer(i) instanceof FLyrRasterSE) {
+						layer = (FLyrRasterSE) lyr1.getLayer(i);
+						return (layer.getDataSource().getDataset(0)[0] instanceof NetCDFRasterDataset || state);
+					}
+				}
+
+			}
 		}
 		return false;
 	}
