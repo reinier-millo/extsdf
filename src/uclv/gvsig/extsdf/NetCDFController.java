@@ -345,13 +345,21 @@ public class NetCDFController {
 
     /**
      * Establece el &iacute;ndice de la variable par&aacute;metro en la
-     * renderizaci&oacute;n
+     * renderizaci&oacute;n. Lee la nueva capa desde al archivo NetCDF.
      * 
      * @param timeIdx
      *            &iacute;ndice
+     *            
+     * @throws IOException
+     *             error de entrada/salida del archivo NetCDF
+     * @throws InvalidRangeException
+     *             formato de archivo NetCDF no soportado
+     * @throws RasterDriverException
+     *             formato de archivo NetCDF no soportado
      */
-    public void setParameter(int timeIdx){
+    public void setParameter(int timeIdx) throws IOException, InvalidRangeException, RasterDriverException{
         this.timeIdx = timeIdx;
+        readData();
     }
 
     /**
