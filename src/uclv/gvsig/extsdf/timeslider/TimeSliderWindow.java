@@ -152,6 +152,7 @@ public class TimeSliderWindow extends JPanel implements IWindow{
 		this.layer = layer;
 		dataset = (NetCDFRasterDataset) layer.getDataSource().getDataset(0)[0];
 		getAnimationOptionsActionListener().setLayer(layer);
+		animation = new NetCDFAnimation(layer);
 	}
 	
 	/**
@@ -354,6 +355,7 @@ public class TimeSliderWindow extends JPanel implements IWindow{
 	private JButton getSkipBackwardButton() {
 		if(skipBackwardButton == null) {
 			skipBackwardButton = new JButton("");
+			skipBackwardButton.addActionListener(new SkipBackwardButtonActionListener());
 			skipBackwardButton.setIcon(PluginServices.getIconTheme().get("skip-backward-icon"));
 		}
 		return skipBackwardButton;
@@ -375,6 +377,7 @@ public class TimeSliderWindow extends JPanel implements IWindow{
 	private JButton getSkipForwardButton() {
 		if(skipForwardButton == null) {
 			skipForwardButton = new JButton("");
+			skipForwardButton.addActionListener(new SkipForwardButtonActionListener());
 			skipForwardButton.setIcon(PluginServices.getIconTheme().get("skip-forward-icon"));
 		}
 		return skipForwardButton;
@@ -436,36 +439,32 @@ public class TimeSliderWindow extends JPanel implements IWindow{
 	private JButton playPauseButton;
 	private JButton seekBackwardButton;
 	private JButton seekForwardButton;
+
+	private NetCDFAnimation animation;
+	private boolean playing;
 	
 	private class PlayPauseButtonActionListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
-			System.out.println("animando");
-			TimerTask ts = new TimerTask() {
-				int i = 1;
-				NetCDFController controler = dataset.getNetCDFController();
-
-				@Override
-				public void run() {
-					try {
-						controler.setParameter(i);
-					} catch (IOException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					} catch (InvalidRangeException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					} catch (RasterDriverException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-					layer.getMapContext().invalidate();
-					i++;
-					i %= 120;
-					System.out.println("Change " + i);
-				}
-			};
-			Timer t = new Timer();
-			t.schedule(ts, 250, 500);
+			if(playing) {
+				playing = false;
+				playPauseButton.setIcon(PluginServices.getIconTheme().get("start-icon"));
+				animation.pause();
+			} else {
+				playing = true;
+				playPauseButton.setIcon(PluginServices.getIconTheme().get("pause-icon"));
+				animation.play();
+			}
+		}
+	}
+	private class SkipBackwardButtonActionListener implements ActionListener {
+		public void actionPerformed(ActionEvent e) {
+			animation.moveBackward();
+		}
+	}
+	
+	private class SkipForwardButtonActionListener implements ActionListener {
+		public void actionPerformed(ActionEvent e) {
+			animation.moveForward();
 		}
 	}
 }
