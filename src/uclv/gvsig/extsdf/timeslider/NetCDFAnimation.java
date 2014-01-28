@@ -76,10 +76,11 @@ public class NetCDFAnimation {
 	 * Reproducir la animación.
 	 */
 	public void play() {
+		int period = configuration.getDelayPeriod();
 		if(timerTask != null) timerTask.cancel();
 		timerTask = new PlayTimerTask();
 		timer = new Timer();
-		timer.schedule(timerTask, 250, 500);
+		timer.schedule(timerTask, period, period);
 	}
 	
 	private int n;
@@ -103,10 +104,11 @@ public class NetCDFAnimation {
 	}
 	
 	public void playInReverse() {
+		int period = configuration.getDelayPeriod();
 		if(timerTask != null) timerTask.cancel();
 		timerTask = new PlayBackwardsTimerTask();
 		timer = new Timer();
-		timer.schedule(timerTask, 250, 500);
+		timer.schedule(timerTask, period, period);
 	}
 	
 	private class PlayBackwardsTimerTask extends TimerTask {
