@@ -28,6 +28,7 @@ package uclv.gvsig.extsdf.timeslider;
 import org.gvsig.gui.beans.panelGroup.panels.AbstractPanel;
 
 import uclv.gvsig.extsdf.NetCDFConfiguration;
+import uclv.gvsig.extsdf.NetCDFController;
 import uclv.gvsig.extsdf.raster.NetCDFRasterDataset;
 
 /**
@@ -42,6 +43,7 @@ public abstract class NetCDFOptionsPanel extends AbstractPanel {
 	private static final long serialVersionUID = 1L;
 	protected NetCDFRasterDataset dataset;
 	protected NetCDFConfiguration configuration;
+	protected NetCDFController controller;
 	
 	/* (non-Javadoc)
 	 * @see org.gvsig.gui.beans.panelGroup.panels.AbstractPanel#setReference(java.lang.Object)
@@ -51,5 +53,13 @@ public abstract class NetCDFOptionsPanel extends AbstractPanel {
 		super.setReference(ref);
 		dataset = (NetCDFRasterDataset) ref;
 		configuration = dataset.getConfiguration();
+		controller = dataset.getNetCDFController();
+		postInitialize();
 	}
+	
+	/**
+	 * Código de postinicialización. En este momento ya ha sido pasada
+	 * la referencia al panel mediante el método setReference();
+	 */
+	protected void postInitialize() {}
 }

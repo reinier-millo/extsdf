@@ -405,24 +405,11 @@ public class TimeDisplayOptionsPanel extends NetCDFOptionsPanel {
 
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * uclv.gvsig.extsdf.timeslider.NetCDFOptionsPanel#setReference(java.lang
-	 * .Object)
-	 */
-	@Override
-	public void setReference(Object ref) {
-		super.setReference(ref);
-		postInitialize();
-	}
 
-	/**
-	 * Código que necesita de la referencia (el dataset) pasada al panel.
-	 * Durante el método initialize la referencia es null.
+	/* (non-Javadoc)
+	 * @see uclv.gvsig.extsdf.timeslider.NetCDFOptionsPanel#postInitialize()
 	 */
-	private void postInitialize() {
+	protected void postInitialize() {
 		getTimeFormatCB().setSelectedIndex(
 				dataset.getConfiguration().getTimeformat());
 		getDateFormatCB().setSelectedIndex(
