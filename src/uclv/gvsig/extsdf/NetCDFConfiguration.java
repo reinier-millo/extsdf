@@ -24,6 +24,8 @@
  */
 package uclv.gvsig.extsdf;
 
+import java.util.Date;
+
 import uclv.gvsig.extsdf.timeslider.AnimationBehaviour;
 
 /**
@@ -47,7 +49,11 @@ public class NetCDFConfiguration {
 	 */
 	private Boolean enabled = false;
 	
-	private int delayPeriod;
+	private int delayPeriod = 500;
+	
+	private Date startTime;
+	
+	private Date endTime;
 	
 	private AnimationBehaviour animationBehaviour = AnimationBehaviour.REPEAT;
 
@@ -129,5 +135,33 @@ public class NetCDFConfiguration {
 	 */
 	public void setDelayPeriod(int delayPeriod) {
 		this.delayPeriod = delayPeriod;
+	}
+	
+	/**
+	 * @return the startTime
+	 */
+	public Date getStartTime() {
+		return startTime;
+	}
+	
+	/**
+	 * @param startTime the startTime to set
+	 */
+	public void setStartTime(Date startTime) {
+		this.startTime = startTime;
+	}
+	
+	/**
+	 * @return the endTime
+	 */
+	public Date getEndTime() {
+		return endTime;
+	}
+	
+	/**
+	 * @param endTime the endTime to set
+	 */
+	public void setEndTime(Date endTime) {
+		this.endTime = endTime;
 	}
 }

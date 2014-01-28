@@ -266,8 +266,8 @@ public class TimeExtentOptionsPanel extends NetCDFOptionsPanel {
 	 */
 	@Override
 	public void apply() {
-		// TODO Auto-generated method stub
-		System.out.println(getClass().getName());
+		configuration.setStartTime((Date) startTimeField.getValue());
+		configuration.setEndTime((Date) endTimeField.getValue());
 	}
 
 	/*
