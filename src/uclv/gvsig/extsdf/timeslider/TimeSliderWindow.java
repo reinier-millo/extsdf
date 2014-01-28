@@ -31,6 +31,9 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionAdapter;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -420,6 +423,8 @@ public class TimeSliderWindow extends JPanel implements IWindow {
 	private JSlider getSlider() {
 		if (slider == null) {
 			slider = new JSlider();
+			slider.addMouseListener(new SliderMouseListener());
+			slider.addMouseMotionListener(new SliderMouseMotionListener());
 		}
 		return slider;
 	}
@@ -529,4 +534,25 @@ public class TimeSliderWindow extends JPanel implements IWindow {
 			animation.moveForward();
 		}
 	}
+	
+	
+	private boolean dragging = false;
+	
+	private class SliderMouseMotionListener extends MouseMotionAdapter {
+		@Override
+		public void mouseDragged(MouseEvent e) {
+			dragging = true;
+		}
+	}
+	private class SliderMouseListener extends MouseAdapter {
+		@Override
+		public void mouseReleased(MouseEvent e) {
+			if(dragging) {
+				dragging = false;
+				animation.move(slider.getValue());
+			}
+		}
+	}
+	
+	
 }

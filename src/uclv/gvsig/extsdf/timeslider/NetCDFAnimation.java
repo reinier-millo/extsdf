@@ -110,7 +110,6 @@ public class NetCDFAnimation {
 	public void moveForward() {
 		try {
 			controller.setParameter((controller.getParameter() + 1));
-			System.out.println(controller.getParameter());
 			fireChange();
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -125,7 +124,20 @@ public class NetCDFAnimation {
 	public void moveBackward() {
 		try {
 			controller.setParameter((controller.getParameter() - 1));
-			System.out.println(controller.getParameter());
+			fireChange();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (InvalidRangeException e) {
+			e.printStackTrace();
+		} catch (RasterDriverException e) {
+			e.printStackTrace();
+		}
+		layer.getMapContext().invalidate();
+	}
+	
+	public void move(int position) {
+		try {
+			controller.setParameter(position);
 			fireChange();
 		} catch (IOException e) {
 			e.printStackTrace();
