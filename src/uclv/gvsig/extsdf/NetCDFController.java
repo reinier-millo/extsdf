@@ -357,7 +357,7 @@ public class NetCDFController {
      * @throws RasterDriverException
      *             formato de archivo NetCDF no soportado
      */
-    public void setParameter(int timeIdx) throws IOException, InvalidRangeException, RasterDriverException{
+    public synchronized void setParameter(int timeIdx) throws IOException, InvalidRangeException, RasterDriverException{
         this.timeIdx = timeIdx;
         readData();
     }
@@ -568,7 +568,7 @@ public class NetCDFController {
      * @throws RasterDriverException
      *             formato de archivo NetCDF no soportado
      */
-    public void readData() throws IOException, InvalidRangeException,
+    public synchronized void readData() throws IOException, InvalidRangeException,
             RasterDriverException {
         // Inicializa la matriz de datos
         initDataType();
@@ -1418,7 +1418,7 @@ public class NetCDFController {
      * @throws RasterDriverException
      *             formato de archivo NetCDF no soportado
      */
-    public void readDataToBuffer(IBuffer rasterBuf, int initRow, int initCol,
+    public synchronized void readDataToBuffer(IBuffer rasterBuf, int initRow, int initCol,
             double incRow, double incCol) throws IOException,
             InterruptedException, RasterDriverException {
         switch (getDataType()) {
