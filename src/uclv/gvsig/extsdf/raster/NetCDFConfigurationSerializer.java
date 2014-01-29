@@ -26,13 +26,18 @@
 package uclv.gvsig.extsdf.raster;
 
 import java.io.IOException;
+import java.io.Reader;
+import java.io.StringReader;
 
 import org.gvsig.raster.dataset.io.rmf.ClassSerializer;
 import org.gvsig.raster.dataset.io.rmf.ParsingException;
 import org.gvsig.raster.util.extensionPoints.ExtensionPoint;
+import org.kxml2.io.KXmlParser;
+import org.xmlpull.v1.XmlPullParserException;
 
 
 import uclv.gvsig.extsdf.NetCDFConfiguration;
+import uclv.gvsig.extsdf.timeslider.AnimationBehaviour;
 
 /**
  * Clase empleada para guardar la configuración de la capa NetCDF en el archivo
@@ -86,8 +91,146 @@ public class NetCDFConfigurationSerializer extends ClassSerializer{
     @Override
     public void read(String xml) throws ParsingException {
         // Inicializa la configuración de la capa NetCDF
-        config = new NetCDFConfiguration();
+        NetCDFConfiguration tmpConfig = new NetCDFConfiguration();
+        KXmlParser parser = new KXmlParser();
+        Reader reader = new StringReader(xml);
+        try {
+            parser.setInput(reader);
+        } catch (XmlPullParserException e) {
+            throw new ParsingException(xml);
+        }
 
+        try {
+            int tag = parser.nextTag();
+
+            // Verifica si el XML no ha llegado al final del archivo
+            if (parser.getEventType() != KXmlParser.END_DOCUMENT) {
+                // Obtiene el tag principal de la configuración desde el archivo
+                // RMF
+                parser.require(KXmlParser.START_TAG, null, MAIN_TAG);
+
+                while (tag != KXmlParser.END_DOCUMENT) {
+                    // Verifica el tag encontrado para analizar
+                    switch (tag) {
+                        case KXmlParser.START_TAG:
+                            // Lee el formato de fecha y hora
+                            if (parser.getName().equals("datetime")) {
+                                for (int i = 0; i < parser.getAttributeCount(); i++) {
+                                    // Toma el formato de fecha
+                                    if (parser.getAttributeName(i).equals(
+                                            "date_format")) {
+                                        tmpConfig.setDateformat(Integer
+                                                .parseInt((String) parser
+                                                        .getAttributeValue(i)));
+                                    }
+                                    // Toma el formato de hora
+                                    if (parser.getAttributeName(i).equals(
+                                            "time_format")) {
+                                        tmpConfig.setTimeformat(Integer
+                                                .parseInt((String) parser
+                                                        .getAttributeValue(i)));
+                                    }
+                                }
+                                break;
+                            }
+                            // Lee la información del sistema de coordenadas
+                            // representado
+                            if (parser.getName().equals("render")) {
+                                for (int i = 0; i < parser.getAttributeCount(); i++) {
+                                    // Toma el sistema de coordenadas
+                                    if (parser.getAttributeName(i).equals(
+                                            "system")) {
+                                        tmpConfig.setSistemacoordenada(Integer
+                                                .parseInt((String) parser
+                                                        .getAttributeValue(i)));
+                                    }
+                                    // Toma la variable renderizada
+                                    // TODO Completar la variable renderizada
+                                    if (parser.getAttributeName(i).equals(
+                                            "variable")) {
+                                        // tmpConfig.setTimeformat(Integer.parseInt((String)
+                                        // parser.getAttributeValue(i)));
+                                    }
+                                }
+                                break;
+                            }
+                            // Lee el momento de tiempo renderizado
+                            if (parser.getName().equals("moment")) {
+                                for (int i = 0; i < parser.getAttributeCount(); i++) {
+                                    // Toma el momento de tiempo
+                                    if (parser.getAttributeName(i).equals(
+                                            "value")) {
+                                        tmpConfig.setVisualizemoment(Integer
+                                                .parseInt((String) parser
+                                                        .getAttributeValue(i)));
+                                    }
+                                }
+                                break;
+                            }
+                            // Lee la información del temporizador
+                            if (parser.getName().equals("timer")) {
+                                for (int i = 0; i < parser.getAttributeCount(); i++) {
+                                    // Toma si el temporizador está activo o no
+                                    if (parser.getAttributeName(i).equals(
+                                            "enable")) {
+                                        tmpConfig
+                                                .setEnabled((Integer
+                                                        .parseInt((String) parser
+                                                                .getAttributeValue(i))) == 1);
+                                    }
+                                    // Toma el delay del temporizador
+                                    if (parser.getAttributeName(i).equals(
+                                            "delay")) {
+                                        tmpConfig.setDelayPeriod(Integer
+                                                .parseInt((String) parser
+                                                        .getAttributeValue(i)));
+                                    }
+                                    // Toma la fecha de inicio
+                                    if (parser.getAttributeName(i).equals(
+                                            "start")) {
+                                        tmpConfig.setStartTime(Integer
+                                                .parseInt((String) parser
+                                                        .getAttributeValue(i)));
+                                    }
+                                    // Toma la fecha de fin
+                                    if (parser.getAttributeName(i)
+                                            .equals("end")) {
+                                        tmpConfig.setEndTime(Integer
+                                                .parseInt((String) parser
+                                                        .getAttributeValue(i)));
+                                    }
+                                    // Toma la behaviour
+                                    if (parser.getAttributeName(i).equals(
+                                            "behaviour")) {
+                                        String str = (String) parser
+                                                .getAttributeValue(i);
+                                        if (str.compareToIgnoreCase("repeat") == 0) {
+                                            tmpConfig
+                                                    .setAnimationBehaviour(AnimationBehaviour.REPEAT);
+                                        } else if (str
+                                                .compareToIgnoreCase("reverse") == 0) {
+                                            tmpConfig
+                                                    .setAnimationBehaviour(AnimationBehaviour.REVERSE);
+                                        } else {
+                                            tmpConfig
+                                                    .setAnimationBehaviour(AnimationBehaviour.STOP);
+                                        }
+                                    }
+                                }
+                                break;
+                            }
+                            break;
+                    }
+                    tag = parser.next();
+                }
+                parser.require(KXmlParser.END_DOCUMENT, null, null);
+            }
+            config = tmpConfig;
+        } catch (XmlPullParserException e) {
+            throw new ParsingException(xml);
+        } catch (IOException e) {
+            throw new ParsingException(xml);
+        }
     }
 
     /**
@@ -113,27 +256,25 @@ public class NetCDFConfigurationSerializer extends ClassSerializer{
         b.append("<" + MAIN_TAG + " version=\"1.1\">\n");
 
         // Guarda el formato de fecha y hora
-        b.append("<datetime date_format=\"" + config.getDateformat()
+        b.append("\t<datetime date_format=\"" + config.getDateformat()
                 + "\" time_format=\"" + config.getTimeformat() + "\" />\n");
 
         // Guarda el sistema de coordenadas representado
         // TODO falta guardar la variable del sistema de coordenadas
-        b.append("<render system=\"" + config.getSistemacoordenada()
+        b.append("\t<render system=\"" + config.getSistemacoordenada()
                 + "\"  />\n");
 
         // Guarda el momento de visualización
-        b.append("<moment value=\"" + config.getVisualizemoment() + "\"  />\n");
+        b.append("\t<moment value=\"" + config.getVisualizemoment()
+                + "\"  />\n");
 
         // Guarda si está activo el temporizador o no, el período de espera
         // entre frames y la fecha inicial y final de la animación
-        b.append("<timer enable=\"" + (config.getEnabled() ? 1 : 0)
+        b.append("\t<timer enable=\"" + (config.getEnabled() ? 1 : 0)
                 + "\" delay=\"" + config.getDelayPeriod() + "\" start=\""
                 + config.getStartTime() + "\" end=\"" + config.getEndTime()
+                + "\" behaviour=\"" + config.getAnimationBehaviour().toString()
                 + "\" />\n");
-
-        // Guarda el Behaviour
-        b.append("<behaviour value=\""
-                + config.getAnimationBehaviour().toString() + "\"  />\n");
 
         // Cierra la etiqueta principal
         b.append("</" + MAIN_TAG + ">\n");
