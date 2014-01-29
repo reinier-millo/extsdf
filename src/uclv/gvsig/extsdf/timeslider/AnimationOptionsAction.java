@@ -33,8 +33,6 @@ import org.gvsig.fmap.raster.layers.FLyrRasterSE;
 import org.gvsig.gui.beans.panelGroup.PanelGroupManager;
 import org.gvsig.gui.beans.panelGroup.tabbedPanel.TabbedPanel;
 
-import uclv.gvsig.extsdf.raster.NetCDFRasterDataset;
-
 import com.iver.andami.PluginServices;
 import com.iver.andami.ui.mdiManager.WindowInfo;
 import com.iver.cit.gvsig.panelGroup.PanelGroupDialog;

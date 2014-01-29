@@ -513,6 +513,6 @@ public class TimeSliderWindow extends JPanel implements IWindow {
 				}
 			}
 		}
-	}
+	}	
 	
 }
