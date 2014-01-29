@@ -65,9 +65,9 @@ public class NetCDFConfiguration implements Serializable{
 	
 	private int delayPeriod = 500;
 	
-	private Date startTime= Calendar.getInstance().getTime();
+	private int startTime = 0;
 	
-	private Date endTime= Calendar.getInstance().getTime();
+	private int endTime = 0;
 	
 	private AnimationBehaviour animationBehaviour = AnimationBehaviour.REPEAT;
 	
@@ -154,28 +154,28 @@ public class NetCDFConfiguration implements Serializable{
 	/**
 	 * @return the startTime
 	 */
-	public Date getStartTime() {
+	public int getStartTime() {
 		return startTime;
 	}
 	
 	/**
 	 * @param startTime the startTime to set
 	 */
-	public void setStartTime(Date startTime) {
+	public void setStartTime(int startTime) {
 		this.startTime = startTime;
 	}
 	
 	/**
 	 * @return the endTime
 	 */
-	public Date getEndTime() {
+	public int getEndTime() {
 		return endTime;
 	}
 	
 	/**
 	 * @param endTime the endTime to set
 	 */
-	public void setEndTime(Date endTime) {
+	public void setEndTime(int endTime) {
 		this.endTime = endTime;
 	}
 

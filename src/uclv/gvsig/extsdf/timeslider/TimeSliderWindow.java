@@ -166,13 +166,13 @@ public class TimeSliderWindow extends JPanel implements IWindow {
 		controller = dataset.getNetCDFController();
 		configuration = dataset.getConfiguration();
 		getAnimationOptionsActionListener().setLayer(layer);
+		
 		try {
 			getSlider().setMaximum(
 					(int) controller.getParameterForCoordinateSystem(
 							controller.getCoordinateSystems()[controller
 									.getCoordinateSystemIndex()]).getSize());
 		} catch (IOException e1) {
-			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
 		animation = new NetCDFAnimation(layer);
@@ -365,9 +365,9 @@ public class TimeSliderWindow extends JPanel implements IWindow {
 			slider.addChangeListener(new SliderChangeListener());
 			slider.addMouseListener(new SliderMouseListener());
 			slider.addMouseMotionListener(new SliderMouseMotionListener());
-			slider.setMajorTickSpacing(1);
-			slider.setPaintTicks(true);
-			slider.setForeground(Color.DARK_GRAY);
+//			slider.setMajorTickSpacing(1);
+//			slider.setPaintTicks(true);
+//			slider.setForeground(Color.DARK_GRAY);
 		}
 		return slider;
 	}
@@ -494,7 +494,9 @@ public class TimeSliderWindow extends JPanel implements IWindow {
 
 		@Override
 		public void mousePressed(MouseEvent e) {
-			animation.move(getSlider().getValue());
+			if(dragging == false) {
+				animation.move(getSlider().getValue());
+			}
 		}
 	}
 

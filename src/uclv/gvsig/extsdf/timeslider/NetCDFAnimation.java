@@ -164,6 +164,18 @@ public class NetCDFAnimation {
 	 */
 	public void move(int position) {
 		configuration.setVisualizemoment(position);
+		try {
+			controller.setParameter(position);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (InvalidRangeException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (RasterDriverException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		fireChange();
 		layer.getMapContext().invalidate();
 	}

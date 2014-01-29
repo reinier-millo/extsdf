@@ -210,8 +210,9 @@ public class TimeExtentOptionsPanel extends NetCDFOptionsPanel {
 	 */
 	@Override
 	public void apply() {
-		configuration.setStartTime((Date) startTimeField.getSelectedItem());
-		configuration.setEndTime((Date) endTimeField.getSelectedItem());
+		configuration.setStartTime(startTimeField.getSelectedIndex());
+		configuration.setEndTime(endTimeField.getSelectedIndex());
+		
 		try {
 			dataset.saveObjectToRmf(NetCDFConfiguration.class, configuration);
 		} catch (RmfSerializerException e) {
