@@ -177,7 +177,7 @@ public class TimeSliderWindow extends JPanel implements IWindow {
 			try {
 				endTime = (int) controller.getParameterForCoordinateSystem(
 					controller.getCoordinateSystems()[controller
-							.getCoordinateSystemIndex()]).getSize();
+							.getCoordinateSystemIndex()]).getSize() - 1;
 				configuration.setEndTime(endTime);
 			} catch (IOException e) {
 				configuration.setEndTime(0);
@@ -470,17 +470,25 @@ public class TimeSliderWindow extends JPanel implements IWindow {
 		public void actionPerformed(ActionEvent e) {	
 			update();
 			if (playing) {
-				playing = false;
-				playPauseButton.setIcon(PluginServices.getIconTheme().get(
-						"start-icon"));
-				animation.pause();
+				pause();
 			} else {
-				playing = true;
-				playPauseButton.setIcon(PluginServices.getIconTheme().get(
-						"pause-icon"));
-				animation.play();
+				play();
 			}
 		}
+	}
+	
+	private void pause() {
+		playing = false;
+		playPauseButton.setIcon(PluginServices.getIconTheme().get(
+				"start-icon"));
+		animation.pause();
+	}
+	
+	private void play() {
+		playing = true;
+		playPauseButton.setIcon(PluginServices.getIconTheme().get(
+				"pause-icon"));
+		animation.play();
 	}
 
 	private class SkipBackwardButtonActionListener implements ActionListener {
@@ -531,7 +539,7 @@ public class TimeSliderWindow extends JPanel implements IWindow {
 					animation.playInReverse();
 					break;
 				case STOP:
-					animation.pause();
+					pause();
 					break;
 				default:
 					break;

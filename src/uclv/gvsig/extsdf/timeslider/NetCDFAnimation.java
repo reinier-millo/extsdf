@@ -145,14 +145,26 @@ public class NetCDFAnimation {
 	 * Mover un paso hacia adelante a partir de de la posición actual.
 	 */
 	public void moveForward() {
-		move(configuration.getVisualizemoment() + 1);
+		configuration.setVisualizemoment(configuration.getVisualizemoment() + 1);
+		if(configuration.getVisualizemoment() < configuration.getStartTime()) {
+			configuration.setVisualizemoment(configuration.getEndTime());
+		} else if (configuration.getVisualizemoment() > configuration.getEndTime()) {
+			configuration.setVisualizemoment(configuration.getStartTime());
+		}
+		move(configuration.getVisualizemoment());
 	}
 
 	/**
 	 * Mover un paso hacia atrás a partir de la posición actual.
 	 */
 	public void moveBackward() {
-		move(configuration.getVisualizemoment() - 1);
+		configuration.setVisualizemoment(configuration.getVisualizemoment() - 1);;
+		if(configuration.getVisualizemoment() < configuration.getStartTime()) {
+			configuration.setVisualizemoment(configuration.getEndTime());
+		} else if (configuration.getVisualizemoment() > configuration.getEndTime()) {
+			configuration.setVisualizemoment(configuration.getStartTime());
+		}
+		move(configuration.getVisualizemoment());
 	}
 
 	/**
