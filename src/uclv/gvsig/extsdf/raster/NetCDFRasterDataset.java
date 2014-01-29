@@ -133,7 +133,9 @@ public class NetCDFRasterDataset extends RasterDataset {
 				// Carga la configuración desde el archivo RMF
 				loadConfigFromRMF(getRmfBlocksManager());
 			} catch (Exception e) {
-				// No lee desde rmf
+        // No pudo leer la configuración desde el archivo RMF,
+        // inicializa la configuración por defecto
+        configuration = new NetCDFConfiguration();
 			}
 			super.init();
 		} catch (Exception e) {
@@ -172,6 +174,8 @@ public class NetCDFRasterDataset extends RasterDataset {
         // Verifica si la información leida es correcta
         if (configSerializer.getResult() != null)
             configuration = (NetCDFConfiguration) configSerializer.getResult();
+        else
+            configuration = new NetCDFConfiguration();
     }
 
 	/**
