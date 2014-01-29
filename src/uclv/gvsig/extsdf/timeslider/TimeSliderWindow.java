@@ -533,7 +533,7 @@ public class TimeSliderWindow extends JPanel implements IWindow {
 	private class ExportButtonActionListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
 			JFileChooser fileChooser = new JFileChooser("VIDEO_EXPORT", new File(""));
-			int result = fileChooser.showOpenDialog(TimeSliderWindow.this);
+			int result = fileChooser.showSaveDialog(TimeSliderWindow.this);
 			if(result == JFileChooser.APPROVE_OPTION) {
 				animation.setOutputFile(fileChooser.getSelectedFile());
 				animation.setRecording(true);
