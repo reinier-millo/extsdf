@@ -131,6 +131,10 @@ public class NetCDFConfigurationSerializer extends ClassSerializer{
                 + config.getStartTime() + "\" end=\"" + config.getEndTime()
                 + "\" />\n");
 
+        // Guarda el Behaviour
+        b.append("<behaviour value=\""
+                + config.getAnimationBehaviour().toString() + "\"  />\n");
+
         // Cierra la etiqueta principal
         b.append("</" + MAIN_TAG + ">\n");
         return b.toString();
