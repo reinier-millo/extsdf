@@ -28,24 +28,41 @@ package uclv.gvsig.extsdf.timeslider;
 import com.iver.andami.PluginServices;
 
 /**
+ * Indica el comportamiento de la animación.
+ * 
  * @author rmartinez
- *
+ * 
  */
 public enum AnimationBehaviour {
-	
-	REPEAT(PluginServices.getText(AnimationBehaviour.class, "repeat")),
-	STOP(PluginServices.getText(AnimationBehaviour.class, "stop")),
-	REVERSE(PluginServices.getText(AnimationBehaviour.class, "reverse"));
-	
-	private String name;
+
 	/**
-	 * 
+	 * Establece que la animación continuará reproduciendo indefinidamente hasta
+	 * que sea detenida explícitamente.
+	 */
+	REPEAT(PluginServices.getText(AnimationBehaviour.class, "repeat")),
+	/**
+	 * Detiene la animación al consumirse el último instante de tiempo.
+	 */
+	STOP(PluginServices.getText(AnimationBehaviour.class, "stop")),
+	/**
+	 * Reproduce en orden inverso al actual al arribar al último o al primer
+	 * instante de tiempo.
+	 */
+	REVERSE(PluginServices.getText(AnimationBehaviour.class, "reverse"));
+
+	private String name;
+
+	/**
+	 * Crea una nueva de instancia de AnimationBehaviour. Se usa para introducir
+	 * un nuevo comportamiento de la animación.
 	 */
 	private AnimationBehaviour(String name) {
 		this.name = name;
 	}
-	
-	/* (non-Javadoc)
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.lang.Enum#toString()
 	 */
 	@Override

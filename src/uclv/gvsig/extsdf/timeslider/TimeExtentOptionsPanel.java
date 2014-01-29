@@ -31,14 +31,11 @@ import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
-import java.util.Calendar;
 import java.util.Date;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
-import javax.swing.JSpinner;
-import javax.swing.SpinnerDateModel;
 
 import ucar.nc2.dataset.CoordinateAxis1DTime;
 
@@ -54,12 +51,10 @@ public class TimeExtentOptionsPanel extends NetCDFOptionsPanel {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	private JComboBox restrictFullTimeExtentCB;
-	private JSpinner startTimeField;
+	private JComboBox startTimeField;
 	private JButton minTimeBtn;
-	private JSpinner endTimeField;
+	private JComboBox endTimeField;
 	private JButton maxTimeBtn;
-	private JLabel restrictFullTimeExtentLabel;
 	private JLabel startTimeLabel;
 	private JLabel endTimeLabel;
 
@@ -70,85 +65,63 @@ public class TimeExtentOptionsPanel extends NetCDFOptionsPanel {
 		setLabel("TimeExtent");
 		GridBagLayout gridBagLayout = new GridBagLayout();
 		gridBagLayout.columnWidths = new int[] { 0, 60, 0, 0 };
-		gridBagLayout.rowHeights = new int[] { 0, 0, 0, 0 };
+		gridBagLayout.rowHeights = new int[] { 0, 0, 0 };
 		gridBagLayout.columnWeights = new double[] { 0.0, 0.0, 0.0,
 				Double.MIN_VALUE };
-		gridBagLayout.rowWeights = new double[] { 0.0, 0.0, 0.0,
+		gridBagLayout.rowWeights = new double[] { 0.0, 0.0,
 				Double.MIN_VALUE };
 		setLayout(gridBagLayout);
-		GridBagConstraints gbc_restrictFullTimeExtentLabel = new GridBagConstraints();
-		gbc_restrictFullTimeExtentLabel.insets = new Insets(5, 5, 5, 5);
-		gbc_restrictFullTimeExtentLabel.anchor = GridBagConstraints.WEST;
-		gbc_restrictFullTimeExtentLabel.gridx = 0;
-		gbc_restrictFullTimeExtentLabel.gridy = 0;
-		add(getRestrictFullTimeExtentLabel(), gbc_restrictFullTimeExtentLabel);
-
-		GridBagConstraints gbc_restrictFullTimeExtentCB = new GridBagConstraints();
-		gbc_restrictFullTimeExtentCB.gridwidth = 2;
-		gbc_restrictFullTimeExtentCB.insets = new Insets(5, 5, 5, 0);
-		gbc_restrictFullTimeExtentCB.fill = GridBagConstraints.HORIZONTAL;
-		gbc_restrictFullTimeExtentCB.gridx = 1;
-		gbc_restrictFullTimeExtentCB.gridy = 0;
-		add(getRestrictFullTimeExtentCB(), gbc_restrictFullTimeExtentCB);
 		GridBagConstraints gbc_startTimeLabel = new GridBagConstraints();
 		gbc_startTimeLabel.insets = new Insets(5, 5, 5, 5);
 		gbc_startTimeLabel.anchor = GridBagConstraints.WEST;
 		gbc_startTimeLabel.gridx = 0;
-		gbc_startTimeLabel.gridy = 1;
+		gbc_startTimeLabel.gridy = 0;
 		add(getStartTimeLabel(), gbc_startTimeLabel);
 
 		GridBagConstraints gbc_startTimeField = new GridBagConstraints();
+		gbc_startTimeField.weightx = 1.0;
 		gbc_startTimeField.fill = GridBagConstraints.HORIZONTAL;
 		gbc_startTimeField.insets = new Insets(5, 5, 5, 5);
 		gbc_startTimeField.gridx = 1;
-		gbc_startTimeField.gridy = 1;
+		gbc_startTimeField.gridy = 0;
 		add(getStartTimeField(), gbc_startTimeField);
 
 		GridBagConstraints gbc_minTimeBtn = new GridBagConstraints();
 		gbc_minTimeBtn.fill = GridBagConstraints.HORIZONTAL;
 		gbc_minTimeBtn.insets = new Insets(5, 5, 5, 0);
 		gbc_minTimeBtn.gridx = 2;
-		gbc_minTimeBtn.gridy = 1;
+		gbc_minTimeBtn.gridy = 0;
 		add(getMinTimeBtn(), gbc_minTimeBtn);
 		GridBagConstraints gbc_endTimeLabel = new GridBagConstraints();
 		gbc_endTimeLabel.insets = new Insets(5, 5, 0, 5);
 		gbc_endTimeLabel.anchor = GridBagConstraints.WEST;
 		gbc_endTimeLabel.gridx = 0;
-		gbc_endTimeLabel.gridy = 2;
+		gbc_endTimeLabel.gridy = 1;
 		add(getEndTimeLabel(), gbc_endTimeLabel);
 
 		GridBagConstraints gbc_endTimeField = new GridBagConstraints();
+		gbc_endTimeField.weightx = 1.0;
 		gbc_endTimeField.fill = GridBagConstraints.HORIZONTAL;
 		gbc_endTimeField.insets = new Insets(5, 5, 0, 5);
 		gbc_endTimeField.gridx = 1;
-		gbc_endTimeField.gridy = 2;
+		gbc_endTimeField.gridy = 1;
 		add(getEndTimeField(), gbc_endTimeField);
 
 		GridBagConstraints gbc_maxTimeBtn = new GridBagConstraints();
 		gbc_maxTimeBtn.insets = new Insets(5, 5, 0, 0);
 		gbc_maxTimeBtn.fill = GridBagConstraints.HORIZONTAL;
 		gbc_maxTimeBtn.gridx = 2;
-		gbc_maxTimeBtn.gridy = 2;
+		gbc_maxTimeBtn.gridy = 1;
 		add(getMaxTimeBtn(), gbc_maxTimeBtn);
 		setPreferredSize(getPreferredSize());
 	}
 
 	/**
-	 * @return the restrictFullTimeExtentCB
-	 */
-	private JComboBox getRestrictFullTimeExtentCB() {
-		if (restrictFullTimeExtentCB == null) {
-			restrictFullTimeExtentCB = new JComboBox();
-		}
-		return restrictFullTimeExtentCB;
-	}
-
-	/**
 	 * @return the startTimeField
 	 */
-	private JSpinner getStartTimeField() {
+	private JComboBox getStartTimeField() {
 		if (startTimeField == null) {
-			startTimeField = new JSpinner();
+			startTimeField = new JComboBox();
 		}
 		return startTimeField;
 	}
@@ -167,9 +140,9 @@ public class TimeExtentOptionsPanel extends NetCDFOptionsPanel {
 	/**
 	 * @return the endTimeField
 	 */
-	private JSpinner getEndTimeField() {
+	private JComboBox getEndTimeField() {
 		if (endTimeField == null) {
-			endTimeField = new JSpinner();
+			endTimeField = new JComboBox();
 		}
 		return endTimeField;
 	}
@@ -183,14 +156,6 @@ public class TimeExtentOptionsPanel extends NetCDFOptionsPanel {
 			maxTimeBtn.addActionListener(new MaxTimeBtnActionListener());
 		}
 		return maxTimeBtn;
-	}
-
-	private JLabel getRestrictFullTimeExtentLabel() {
-		if (restrictFullTimeExtentLabel == null) {
-			restrictFullTimeExtentLabel = new JLabel(PluginServices.getText(
-					this, "restrict_full_time_extent")); //$NON-NLS-1$
-		}
-		return restrictFullTimeExtentLabel;
 	}
 
 	private JLabel getStartTimeLabel() {
@@ -213,39 +178,15 @@ public class TimeExtentOptionsPanel extends NetCDFOptionsPanel {
 				.getCoordinateSystems()[controller.getCoordinateSystemIndex()]);
 	}
 
-	private Date getMinDate() {
-		try {
-			Date[] dates = getTimeVariable().getTimeDates();
-			if (dates.length != 0) {
-				return dates[0];
-			}
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		return null;
-	}
-
-	private Date getMaxDate() {
-		try {
-			Date[] dates = getTimeVariable().getTimeDates();
-			if (dates.length != 0) {
-				return dates[dates.length - 1];
-			}
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		return null;
-	}
-
 	private class MinTimeBtnActionListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
-			startTimeField.getModel().setValue(getMinDate());
+//			startTimeField.getModel().setValue(getMinDate());
 		}
 	}
 
 	private class MaxTimeBtnActionListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
-			endTimeField.getModel().setValue(getMaxDate());
+//			endTimeField.getModel().setValue(getMaxDate());
 		}
 	}
 
@@ -266,8 +207,8 @@ public class TimeExtentOptionsPanel extends NetCDFOptionsPanel {
 	 */
 	@Override
 	public void apply() {
-		configuration.setStartTime((Date) startTimeField.getValue());
-		configuration.setEndTime((Date) endTimeField.getValue());
+//		configuration.setStartTime((Date) startTimeField.getValue());
+//		configuration.setEndTime((Date) endTimeField.getValue());
 	}
 
 	/*
@@ -310,9 +251,9 @@ public class TimeExtentOptionsPanel extends NetCDFOptionsPanel {
 	 */
 	@Override
 	protected void postInitialize() {
-		startTimeField.setModel(new SpinnerDateModel(getMinDate(),
-				null, null, Calendar.DAY_OF_YEAR));
-		endTimeField.setModel(new SpinnerDateModel(getMaxDate(), null,
-				null, Calendar.DAY_OF_YEAR));
+//		startTimeField.setModel(new SpinnerDateModel(getMinDate(),
+//				null, null, Calendar.DAY_OF_YEAR));
+//		endTimeField.setModel(new SpinnerDateModel(getMaxDate(), null,
+//				null, Calendar.DAY_OF_YEAR));
 	}
 }
