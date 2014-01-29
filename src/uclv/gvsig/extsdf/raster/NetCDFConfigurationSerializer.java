@@ -112,6 +112,25 @@ public class NetCDFConfigurationSerializer extends ClassSerializer{
         // Crea la etiqueta principal
         b.append("<" + MAIN_TAG + " version=\"1.1\">\n");
 
+        // Guarda el formato de fecha y hora
+        b.append("<datetime date_format=\"" + config.getDateformat()
+                + "\" time_format=\"" + config.getTimeformat() + "\" />\n");
+
+        // Guarda el sistema de coordenadas representado
+        // TODO falta guardar la variable del sistema de coordenadas
+        b.append("<render system=\"" + config.getSistemacoordenada()
+                + "\"  />\n");
+
+        // Guarda el momento de visualización
+        b.append("<moment value=\"" + config.getVisualizemoment() + "\"  />\n");
+
+        // Guarda si está activo el temporizador o no, el período de espera
+        // entre frames y la fecha inicial y final de la animación
+        b.append("<timer enable=\"" + (config.getEnabled() ? 1 : 0)
+                + "\" delay=\"" + config.getDelayPeriod() + "\" start=\""
+                + config.getStartTime() + "\" end=\"" + config.getEndTime()
+                + "\" />\n");
+
         // Cierra la etiqueta principal
         b.append("</" + MAIN_TAG + ">\n");
         return b.toString();
