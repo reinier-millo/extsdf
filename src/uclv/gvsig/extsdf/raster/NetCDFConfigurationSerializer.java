@@ -29,6 +29,10 @@ import java.io.IOException;
 
 import org.gvsig.raster.dataset.io.rmf.ClassSerializer;
 import org.gvsig.raster.dataset.io.rmf.ParsingException;
+import org.gvsig.raster.util.extensionPoints.ExtensionPoint;
+
+
+import uclv.gvsig.extsdf.NetCDFConfiguration;
 
 /**
  * Clase empleada para guardar la configuración de la capa NetCDF en el archivo
@@ -39,7 +43,33 @@ import org.gvsig.raster.dataset.io.rmf.ParsingException;
  */
 public class NetCDFConfigurationSerializer extends ClassSerializer{
 
+    private final String MAIN_TAG = "NetCDFConfiguration";
+
+    private NetCDFConfiguration config = null;
+
+    /**
+     * Registra ColorTableRmfSerializer en los puntos de extension de Serializer
+     */
+    public static void register() {
+      ExtensionPoint point = ExtensionPoint.getExtensionPoint("Serializer");
+      point.register("NetCDFConfiguration", NetCDFConfigurationSerializer.class);
+    }
     
+    /**
+     * Constructor para asignar la configuración a serializar
+     * 
+     * @param configuración de la capa NetCDF a convertir en XML
+     */
+    public NetCDFConfigurationSerializer(NetCDFConfiguration config) {
+      this.config = config;
+    }
+
+    /**
+     * Constructor por defecto
+     */
+    public NetCDFConfigurationSerializer() {
+    }
+
     @Override
     public void read(String xml) throws ParsingException {
         // TODO Auto-generated method stub
@@ -52,15 +82,31 @@ public class NetCDFConfigurationSerializer extends ClassSerializer{
         return null;
     }
 
+
+    /**
+     * Devuelve el nombre del TAG principal de la configuración dentro del
+     * archivo XML
+     * 
+     * @return tag principal
+     * 
+     * @see org.gvsig.raster.dataset.io.rmf.IRmfBlock#getMainTag()
+     */
     @Override
     public String getMainTag() {
-        // TODO Auto-generated method stub
-        return null;
+        return MAIN_TAG;
     }
 
+    
+    /**
+     * Devuelve el objeto creado a partir de la información leída desde el
+     * archivo RMF
+     * 
+     * @return objeto
+     * 
+     * @see org.gvsig.raster.dataset.io.rmf.IRmfBlock#getResult()
+     */
     @Override
     public Object getResult() {
-        // TODO Auto-generated method stub
-        return null;
+        return config;
     }
 }
