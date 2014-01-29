@@ -25,6 +25,7 @@
 package uclv.gvsig.extsdf.properties;
 
 import uclv.gvsig.extsdf.properties.panels.NetCDFPanel;
+import uclv.gvsig.extsdf.raster.NetCDFConfigurationSerializer;
 
 import com.iver.andami.plugins.Extension;
 import com.iver.utiles.extensionPoints.ExtensionPoint;
@@ -64,11 +65,15 @@ public class NetCDFPropertiesExtension extends Extension {
 		// Añadimos la entrada del menú del toc de raster
 		extensionPoints.add("View_TocActions", "NetCDFProperties",
 				PropertiesNetCDFRasterTocMenuEntry.getSingleton());
+
 		// Añadimos la entrada en la Barra de Herramienta Genérica
 		org.gvsig.raster.util.extensionPoints.ExtensionPoint point = org.gvsig.raster.util.extensionPoints.ExtensionPoint
 				.getExtensionPoint("GenericToolBarMenu");
 		point.register("NetCDFProperties",
 				PropertiesNetCDFRasterTocMenuEntry.getSingleton());
+		
+		// Registramos el serializados de las propiedades de la capa NetCDF
+		NetCDFConfigurationSerializer.register();
 	}
 
 	/*

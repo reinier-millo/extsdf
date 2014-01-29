@@ -42,6 +42,8 @@ import org.gvsig.raster.dataset.InvalidSetViewException;
 import org.gvsig.raster.dataset.NotSupportedExtensionException;
 import org.gvsig.raster.dataset.RasterDataset;
 import org.gvsig.raster.dataset.io.RasterDriverException;
+import org.gvsig.raster.dataset.io.rmf.ParsingException;
+import org.gvsig.raster.dataset.io.rmf.RmfBlocksManager;
 import org.gvsig.raster.dataset.properties.DatasetColorInterpretation;
 import org.gvsig.raster.dataset.properties.DatasetMetadata;
 import org.gvsig.raster.datastruct.Extent;
@@ -128,6 +130,8 @@ public class NetCDFRasterDataset extends RasterDataset {
 			setDataType(dt);
 			try {
 				loadFromRmf(getRmfBlocksManager());
+				// Carga la configuración desde el archivo RMF
+				loadConfigFromRMF(getRmfBlocksManager());
 			} catch (Exception e) {
 				// No lee desde rmf
 			}
@@ -136,6 +140,39 @@ public class NetCDFRasterDataset extends RasterDataset {
 			throw new NotSupportedExtensionException("Extension not supported");
 		}
 	}
+
+    /**
+     * Carga la informaci&oacute;n de la configuración de la capa NetCDF desde
+     * el archivo RMF
+     * 
+     * @param manager
+     *            manipulador del archivo RMF
+     * 
+     * @throws ParsingException
+     *             formato XML incorrecto en el archivo RMF
+     */
+    private void loadConfigFromRMF(RmfBlocksManager manager)
+            throws ParsingException {
+        // Verifica que el archivo RMF sea válido
+        if (!manager.checkRmf() || !new File(manager.getPath()).exists())
+            return;
+
+        // Inicializa el serializador
+        NetCDFConfigurationSerializer configSerializer = new NetCDFConfigurationSerializer();
+
+        // Agrega el serializador al manipulador del archivo RMF
+        manager.addClient(configSerializer);
+
+        // Lee la información del archivo RMF
+        manager.read(null);
+
+        // Elimina el serializador del manipulador del archivo RMF
+        manager.removeAllClients();
+
+        // Verifica si la información leida es correcta
+        if (configSerializer.getResult() != null)
+            configuration = (NetCDFConfiguration) configSerializer.getResult();
+    }
 
 	/**
 	 * Crea las transformaciones de la capa raster.
