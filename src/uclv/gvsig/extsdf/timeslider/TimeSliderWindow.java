@@ -234,17 +234,11 @@ public class TimeSliderWindow extends JPanel implements IWindow {
 		gbc_toolBar.gridx = 0;
 		gbc_toolBar.gridy = 0;
 		add(toolBar, gbc_toolBar);
-
-		toolBar.add(getTimeOnMapButton());
 		toolBar.add(getOptionsButton());
 		toolBar.add(getExportButton());
 
 		toolBar.add(getInfoField());
 		getInfoField().setColumns(10);
-
-		toolBar.add(getDecreaseExtentButton());
-		toolBar.add(getIncreaseExtentButton());
-		toolBar.add(getFullExtentButton());
 
 		JPanel panel = new JPanel();
 		GridBagConstraints gbc_panel = new GridBagConstraints();
@@ -321,20 +315,6 @@ public class TimeSliderWindow extends JPanel implements IWindow {
 	}
 
 	/**
-	 * @return the timeOnMapButton
-	 */
-	private JButton getTimeOnMapButton() {
-		if (timeOnMapButton == null) {
-			timeOnMapButton = new JButton("");
-			timeOnMapButton.setIcon(PluginServices.getIconTheme().get(
-					"time-on-map-icon"));
-			timeOnMapButton.setToolTipText(PluginServices.getText(this,
-					"enable_time_on_map"));
-		}
-		return timeOnMapButton;
-	}
-
-	/**
 	 * @return the optionsButton
 	 */
 	private JButton getOptionsButton() {
@@ -357,49 +337,6 @@ public class TimeSliderWindow extends JPanel implements IWindow {
 					"export_video"));
 		}
 		return exportButton;
-	}
-
-	/**
-	 * @return the decreaseExtentButton
-	 */
-	private JButton getDecreaseExtentButton() {
-		if (decreaseExtentButton == null) {
-			decreaseExtentButton = new JButton("");
-			decreaseExtentButton.setIcon(PluginServices.getIconTheme().get(
-					"decrease-icon"));
-			decreaseExtentButton.setToolTipText(PluginServices.getText(this,
-					"decrease_time_extent"));
-
-		}
-		return decreaseExtentButton;
-	}
-
-	/**
-	 * @return the increaseExtentButton
-	 */
-	private JButton getIncreaseExtentButton() {
-		if (increaseExtentButton == null) {
-			increaseExtentButton = new JButton("");
-			increaseExtentButton.setIcon(PluginServices.getIconTheme().get(
-					"increase-icon"));
-			increaseExtentButton.setToolTipText(PluginServices.getText(this,
-					"increase_time_extent"));
-		}
-		return increaseExtentButton;
-	}
-
-	/**
-	 * @return the fullExtentButton
-	 */
-	private JButton getFullExtentButton() {
-		if (fullExtentButton == null) {
-			fullExtentButton = new JButton("");
-			fullExtentButton.setIcon(PluginServices.getIconTheme().get(
-					"full-icon"));
-			fullExtentButton.setToolTipText(PluginServices.getText(this,
-					"full_time_extent"));
-		}
-		return fullExtentButton;
 	}
 
 	/**
@@ -493,12 +430,8 @@ public class TimeSliderWindow extends JPanel implements IWindow {
 	}
 
 	private JTextField infoField;
-	private JButton timeOnMapButton;
 	private JButton optionsButton;
 	private JButton exportButton;
-	private JButton decreaseExtentButton;
-	private JButton increaseExtentButton;
-	private JButton fullExtentButton;
 	private JButton skipBackwardButton;
 	private JSlider slider;
 	private JButton skipForwardButton;
@@ -553,6 +486,10 @@ public class TimeSliderWindow extends JPanel implements IWindow {
 				dragging = false;
 				animation.move(getSlider().getValue());
 			}
+		}
+		@Override
+		public void mousePressed(MouseEvent e) {
+			animation.move(getSlider().getValue());
 		}
 	}	
 	private class SliderChangeListener implements ChangeListener {

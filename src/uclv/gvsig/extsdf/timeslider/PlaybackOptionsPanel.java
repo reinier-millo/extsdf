@@ -66,7 +66,6 @@ public class PlaybackOptionsPanel extends NetCDFOptionsPanel {
 	private JPanel panel_2;
 	private JSpinner durationSpinner;
 	private JComboBox actionAfterPlayingCB;
-	private JCheckBox refreshCheckBox;
 	private JLabel afterPlayingOnceLabel;
 
 	/**
@@ -146,14 +145,6 @@ public class PlaybackOptionsPanel extends NetCDFOptionsPanel {
 		gbc_actionAfterPlayingCB.gridy = 1;
 		add(getActionAfterPlayingCB(), gbc_actionAfterPlayingCB);
 		
-		GridBagConstraints gbc_refreshCheckBox = new GridBagConstraints();
-		gbc_refreshCheckBox.anchor = GridBagConstraints.WEST;
-		gbc_refreshCheckBox.gridwidth = 2;
-		gbc_refreshCheckBox.insets = new Insets(5, 5, 0, 0);
-		gbc_refreshCheckBox.gridx = 0;
-		gbc_refreshCheckBox.gridy = 2;
-		add(getRefreshCheckBox(), gbc_refreshCheckBox);
-		
 		getPlayButtonGroup();
 		
 		setPreferredSize(getPreferredSize());
@@ -217,16 +208,6 @@ public class PlaybackOptionsPanel extends NetCDFOptionsPanel {
 			actionAfterPlayingCB = new JComboBox(AnimationBehaviour.values());
 		}
 		return actionAfterPlayingCB;
-	}
-
-	/**
-	 * @return the refreshCheckBox
-	 */
-	private JCheckBox getRefreshCheckBox() {
-		if(refreshCheckBox == null) {
-			refreshCheckBox = new JCheckBox(PluginServices.getText(this, "refresh_when_dragging")); //$NON-NLS-1$
-		}
-		return refreshCheckBox;
 	}
 	
 
