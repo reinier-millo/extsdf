@@ -25,8 +25,14 @@
 package uclv.gvsig.extsdf;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
 import uclv.gvsig.extsdf.timeslider.AnimationBehaviour;
+import uclv.gvsig.extsdf.timeslider.AnimationListener;
 
 /**
  * clase donde se guarda la configuración de las propiedades. Es un puente entre
@@ -221,6 +227,23 @@ public class NetCDFConfiguration implements Serializable{
 	 */
 	public void setVariable(int variable) {
 		this.variable = variable;
+	}
+	
+	
+	private transient List<ChangeListener> listeners = new ArrayList<ChangeListener>(0);
+
+	public void addChangeListener(ChangeListener listener) {
+		listeners.add(listener);
+	}
+
+	public void removeChangeListener(AnimationListener listener) {
+		listeners.remove(listener);
+	}
+
+	public void fireChange(String source) {
+		for (ChangeListener l : listeners) {
+			l.stateChanged(new ChangeEvent(source));
+		}
 	}
 	
 }

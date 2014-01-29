@@ -28,15 +28,9 @@ package uclv.gvsig.extsdf.timeslider;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
-import java.util.TimeZone;
 
-import javax.swing.JButton;
-import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
-import javax.swing.JTextField;
 
 import com.iver.andami.PluginServices;
 
@@ -97,20 +91,6 @@ public class TimeDisplayOptionsPanel extends NetCDFOptionsPanel {
 		add(getTimeFormatCB(), gbc_timeFormatCB);
 		setPreferredSize(getPreferredSize());
 	}
-
-	// TODO Move this from here
-	private String[] measureUnits = new String[] {
-			PluginServices.getText(this, "milliseconds"), //$NON-NLS-1$
-			PluginServices.getText(this, "seconds"), //$NON-NLS-1$
-			PluginServices.getText(this, "minutes"), //$NON-NLS-1$
-			PluginServices.getText(this, "hours"), //$NON-NLS-1$
-			PluginServices.getText(this, "days"), //$NON-NLS-1$
-			PluginServices.getText(this, "weeks"), //$NON-NLS-1$
-			PluginServices.getText(this, "months"), //$NON-NLS-1$
-			PluginServices.getText(this, "years"), //$NON-NLS-1$
-			PluginServices.getText(this, "decades"), //$NON-NLS-1$
-			PluginServices.getText(this, "centuries") //$NON-NLS-1$
-	};
 
 	DateTimeFormats formats = new DateTimeFormats();
 

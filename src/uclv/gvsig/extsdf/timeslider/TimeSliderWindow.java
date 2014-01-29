@@ -191,6 +191,19 @@ public class TimeSliderWindow extends JPanel implements IWindow {
 		slider.setMinimum(configuration.getStartTime());
 		slider.setMaximum(configuration.getEndTime() + 1);
 		slider.setValue(configuration.getVisualizemoment());
+		
+		configuration.addChangeListener(new ChangeListener() {
+			
+			@Override
+			public void stateChanged(ChangeEvent e) {
+				if(e.getSource().equals("Time_Bounds")) {
+					slider.setMinimum(configuration.getStartTime());
+					slider.setMaximum(configuration.getEndTime() + 1);
+					slider.setValue(configuration.getVisualizemoment());
+					updateUI();
+				}
+			}
+		});
 	}
 	
 	private class SliderAnimationListener implements AnimationListener {
@@ -213,7 +226,6 @@ public class TimeSliderWindow extends JPanel implements IWindow {
 				infoField.setText(formatter.format(date));
 				getSlider().setValue(configuration.getVisualizemoment());
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
@@ -271,15 +283,15 @@ public class TimeSliderWindow extends JPanel implements IWindow {
 		add(panel, gbc_panel);
 		GridBagLayout gbl_panel = new GridBagLayout();
 		gbl_panel.columnWidths = new int[] { 54, 200, 54, 44, 0 };
-		gbl_panel.rowHeights = new int[] { 25, 25, 0 };
+		gbl_panel.rowHeights = new int[] { 25, 0 };
 		gbl_panel.columnWeights = new double[] { 0.0, 1.0, 0.0, 0.0,
 				Double.MIN_VALUE };
-		gbl_panel.rowWeights = new double[] { 0.0, 0.0, Double.MIN_VALUE };
+		gbl_panel.rowWeights = new double[] { 0.0, Double.MIN_VALUE };
 		panel.setLayout(gbl_panel);
 
 		GridBagConstraints gbc_skipBackwardButton = new GridBagConstraints();
 		gbc_skipBackwardButton.fill = GridBagConstraints.HORIZONTAL;
-		gbc_skipBackwardButton.insets = new Insets(0, 0, 5, 5);
+		gbc_skipBackwardButton.insets = new Insets(0, 0, 0, 5);
 		gbc_skipBackwardButton.gridx = 0;
 		gbc_skipBackwardButton.gridy = 0;
 		panel.add(getSkipBackwardButton(), gbc_skipBackwardButton);
@@ -287,38 +299,23 @@ public class TimeSliderWindow extends JPanel implements IWindow {
 		GridBagConstraints gbc_slider = new GridBagConstraints();
 		gbc_slider.fill = GridBagConstraints.HORIZONTAL;
 		gbc_slider.weightx = 10.0;
-		gbc_slider.insets = new Insets(0, 0, 5, 5);
+		gbc_slider.insets = new Insets(0, 0, 0, 5);
 		gbc_slider.gridx = 1;
 		gbc_slider.gridy = 0;
 		panel.add(getSlider(), gbc_slider);
 
 		GridBagConstraints gbc_skipForwardButton = new GridBagConstraints();
 		gbc_skipForwardButton.fill = GridBagConstraints.HORIZONTAL;
-		gbc_skipForwardButton.insets = new Insets(0, 0, 5, 5);
+		gbc_skipForwardButton.insets = new Insets(0, 0, 0, 5);
 		gbc_skipForwardButton.gridx = 2;
 		gbc_skipForwardButton.gridy = 0;
 		panel.add(getSkipForwardButton(), gbc_skipForwardButton);
 
 		GridBagConstraints gbc_playPauseButton = new GridBagConstraints();
 		gbc_playPauseButton.fill = GridBagConstraints.HORIZONTAL;
-		gbc_playPauseButton.insets = new Insets(0, 0, 5, 0);
 		gbc_playPauseButton.gridx = 3;
 		gbc_playPauseButton.gridy = 0;
 		panel.add(getPlayPauseButton(), gbc_playPauseButton);
-
-		GridBagConstraints gbc_seekBackwardButton = new GridBagConstraints();
-		gbc_seekBackwardButton.fill = GridBagConstraints.HORIZONTAL;
-		gbc_seekBackwardButton.insets = new Insets(0, 0, 0, 5);
-		gbc_seekBackwardButton.gridx = 0;
-		gbc_seekBackwardButton.gridy = 1;
-		panel.add(getSeekBackwardButton(), gbc_seekBackwardButton);
-
-		GridBagConstraints gbc_seekForwardButton = new GridBagConstraints();
-		gbc_seekForwardButton.fill = GridBagConstraints.HORIZONTAL;
-		gbc_seekForwardButton.insets = new Insets(0, 0, 0, 5);
-		gbc_seekForwardButton.gridx = 2;
-		gbc_seekForwardButton.gridy = 1;
-		panel.add(getSeekForwardButton(), gbc_seekForwardButton);
 
 		setBounds(0, 0, 600, getPreferredSize().height);
 	}
@@ -384,9 +381,6 @@ public class TimeSliderWindow extends JPanel implements IWindow {
 			slider.addChangeListener(new SliderChangeListener());
 			slider.addMouseListener(new SliderMouseListener());
 			slider.addMouseMotionListener(new SliderMouseMotionListener());
-//			slider.setMajorTickSpacing(1);
-//			slider.setPaintTicks(true);
-//			slider.setForeground(Color.DARK_GRAY);
 		}
 		return slider;
 	}
@@ -419,30 +413,6 @@ public class TimeSliderWindow extends JPanel implements IWindow {
 		return playPauseButton;
 	}
 
-	/**
-	 * @return the seekBackwardButton
-	 */
-	private JButton getSeekBackwardButton() {
-		if (seekBackwardButton == null) {
-			seekBackwardButton = new JButton("");
-			seekBackwardButton.setIcon(PluginServices.getIconTheme().get(
-					"seek-backward-icon"));
-		}
-		return seekBackwardButton;
-	}
-
-	/**
-	 * @return the seekForwardButton
-	 */
-	private JButton getSeekForwardButton() {
-		if (seekForwardButton == null) {
-			seekForwardButton = new JButton("");
-			seekForwardButton.setIcon(PluginServices.getIconTheme().get(
-					"seek-forward-icon"));
-		}
-		return seekForwardButton;
-	}
-
 	private AnimationOptionsAction animationOptionsActionListener;
 
 	private AnimationOptionsAction getAnimationOptionsActionListener() {
@@ -459,16 +429,13 @@ public class TimeSliderWindow extends JPanel implements IWindow {
 	private JSlider slider;
 	private JButton skipForwardButton;
 	private JButton playPauseButton;
-	private JButton seekBackwardButton;
-	private JButton seekForwardButton;
 
 	private NetCDFAnimation animation;
 	private boolean playing;
 
 	private class PlayPauseButtonActionListener implements ActionListener {
 		
-		public void actionPerformed(ActionEvent e) {	
-			update();
+		public void actionPerformed(ActionEvent e) {
 			if (playing) {
 				pause();
 			} else {
@@ -550,16 +517,6 @@ public class TimeSliderWindow extends JPanel implements IWindow {
 				}
 			}
 		}
-	}
-
-	/**
-	 * 
-	 */
-	public void update() {
-		slider.setMinimum(configuration.getStartTime());
-		slider.setMaximum(configuration.getEndTime() + 1);
-		slider.setValue(configuration.getVisualizemoment());
-		updateUI();
 	}
 
 }
