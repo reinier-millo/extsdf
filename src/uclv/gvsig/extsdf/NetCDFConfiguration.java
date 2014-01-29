@@ -56,8 +56,14 @@ public class NetCDFConfiguration implements Serializable{
 	 * indice del instante de tiempo a visualizar
 	 */
 	private int visualizemoment = 0;
-	
+	/**
+	 * indice del sistema de coordenadas seleccionado
+	 */
 	private int sistemacoordenada = 0;
+	/**
+	 * indice de la variable seleccionada
+	 */
+	private int variable = 0;
 	
 	private int delayPeriod = 400;
 	
@@ -201,6 +207,20 @@ public class NetCDFConfiguration implements Serializable{
 	 */
 	public void setSistemacoordenada(int sistemacoordenada) {
 		this.sistemacoordenada = sistemacoordenada;
+	}
+
+	/**
+	 * @return the variable
+	 */
+	public int getVariable() {
+		return variable;
+	}
+
+	/**
+	 * @param variable the variable to set
+	 */
+	public void setVariable(int variable) {
+		this.variable = variable;
 	}
 	
 }
