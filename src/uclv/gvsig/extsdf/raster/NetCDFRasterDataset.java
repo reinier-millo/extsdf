@@ -132,6 +132,8 @@ public class NetCDFRasterDataset extends RasterDataset {
 				loadFromRmf(getRmfBlocksManager());
 				// Carga la configuración desde el archivo RMF
 				loadConfigFromRMF(getRmfBlocksManager());
+				// Inicializa el momento renderizado
+				controller.setParameter(configuration.getVisualizemoment());
 			} catch (Exception e) {
         // No pudo leer la configuración desde el archivo RMF,
         // inicializa la configuración por defecto
