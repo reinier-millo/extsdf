@@ -24,7 +24,6 @@
  */
 package uclv.gvsig.extsdf.properties;
 
-import uclv.gvsig.extsdf.TooC2;
 import uclv.gvsig.extsdf.properties.panels.NetCDFPanel;
 import uclv.gvsig.extsdf.raster.NetCDFConfigurationSerializer;
 
