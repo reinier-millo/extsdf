@@ -45,7 +45,11 @@ import javax.swing.border.TitledBorder;
 import org.apache.log4j.Logger;
 import org.gvsig.fmap.raster.layers.FLyrRasterSE;
 import org.gvsig.gui.beans.panelGroup.panels.AbstractPanel;
+import org.gvsig.raster.dataset.RasterDataset;
 import org.gvsig.raster.dataset.io.RasterDriverException;
+import org.gvsig.raster.dataset.serializer.RmfSerializerException;
+import org.gvsig.raster.datastruct.ColorTable;
+import org.gvsig.raster.util.RasterToolsUtil;
 
 import ucar.ma2.InvalidRangeException;
 import ucar.nc2.Variable;
@@ -625,13 +629,17 @@ public class NetCDFPanel extends AbstractPanel {
 			e.printStackTrace();
 		}
 		flayer.getMapContext().invalidate();
+		// se guarda el instante de tiempo a visualizar
+		configuration.setVisualizemoment(visualize_moment.getSelectedIndex());
+		// se guarda el sistema de coordenada seleccionado
+		configuration.setSistemacoordenada(sistema_coordenado.getSelectedIndex());
 		// se guardan las configuraciones si se habilito el tiempo
 		if (chHabilitarTiempo.isSelected() && controler.hasVariableParameter()) {
-			configuration.setEnable(true);
+			configuration.setEnabled(true);
 			configuration.setDateformat(field_format.getSelectedIndex());
 			configuration.setTimeformat(hour_format.getSelectedIndex());
 		} else {
-			configuration.setEnable(false);
+			configuration.setEnabled(false);
 			// cierra el TimerSlider si estaba abierto y se desabilito el tiempo
 			IWindow[] allWindows = PluginServices.getMDIManager()
 					.getAllWindows();
@@ -642,8 +650,22 @@ public class NetCDFPanel extends AbstractPanel {
 				}
 			}
 		}
+		saveNetCDFPanel();
 	}
-
+	
+	/**
+	 * Salva el estado del panel al fichero rmf.
+	 * @param fName
+	 * @throws IOException
+	 */
+	private void saveNetCDFPanel() {
+		try {
+			dataset.saveObjectToRmf(NetCDFConfiguration.class,configuration);
+		} catch (RmfSerializerException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -709,6 +731,7 @@ public class NetCDFPanel extends AbstractPanel {
 				new DefaultComboBoxModel(controler.getCoordinateSystems()));
 		// muestra la lista de variable para el sistema de coordenadas
 		// seleccionado
+		sistema_coordenado.setSelectedIndex(configuration.getSistemacoordenada());
 		variable.setModel(new DefaultComboBoxModel(variablesToString()));
 		// muestra la X_dimensión para el sistema de coordenadas seleccionado
 		try {
@@ -754,7 +777,7 @@ public class NetCDFPanel extends AbstractPanel {
 					.getParameterForCoordinateSystem(
 							(CoordinateSystem) sistema_coordenado
 									.getSelectedItem()).getTimeDates()));
-			visualize_moment.setSelectedIndex(controler.getParameter());
+			visualize_moment.setSelectedIndex(configuration.getVisualizemoment());
 		} catch (IOException e) {
 			logger.error(e.getLocalizedMessage());
 		}
@@ -863,6 +886,7 @@ public class NetCDFPanel extends AbstractPanel {
 			} catch (IOException e1) {
 				logger.error(e1.getLocalizedMessage());
 			}
+		//	visualize_moment.setSelectedIndex(configuration.getVisualizemoment());
 		}
 	}
 
@@ -898,9 +922,11 @@ public class NetCDFPanel extends AbstractPanel {
 					field_format.setEnabled(true);
 					field_format.setModel(new DefaultComboBoxModel(
 							new DateTimeFormats().getTodayDatesFormat()));
+					field_format.setSelectedIndex(configuration.getDateformat());
 					hour_format.setEnabled(true);
 					hour_format.setModel(new DefaultComboBoxModel(
 							new DateTimeFormats().getTodayHoursFormat()));
+					hour_format.setSelectedIndex(configuration.getTimeformat());
 				} else {
 					lbLayerTime.setEnabled(true);
 					layer_time.setModel(new DefaultComboBoxModel(
