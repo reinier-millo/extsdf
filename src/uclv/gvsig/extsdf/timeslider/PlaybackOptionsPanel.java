@@ -32,6 +32,7 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.io.IOException;
 
 import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
@@ -45,10 +46,13 @@ import javax.swing.border.TitledBorder;
 
 import com.iver.andami.PluginServices;
 
+import javax.swing.SpinnerNumberModel;
+
 /**
  * Panel designed to adjust the Playback options of the animation.
+ * 
  * @author rmartinez
- *
+ * 
  */
 public class PlaybackOptionsPanel extends NetCDFOptionsPanel {
 
@@ -73,14 +77,16 @@ public class PlaybackOptionsPanel extends NetCDFOptionsPanel {
 	public PlaybackOptionsPanel() {
 		setLabel(PluginServices.getText(this, "playback")); //$NON-NLS-1$
 		GridBagLayout gridBagLayout = new GridBagLayout();
-		gridBagLayout.columnWidths = new int[]{0, 0, 0};
-		gridBagLayout.rowHeights = new int[]{0, 0, 0, 0};
-		gridBagLayout.columnWeights = new double[]{0.0, 1.0, Double.MIN_VALUE};
-		gridBagLayout.rowWeights = new double[]{0.0, 0.0, 0.0, Double.MIN_VALUE};
+		gridBagLayout.columnWidths = new int[] { 0, 0, 0 };
+		gridBagLayout.rowHeights = new int[] { 0, 0, 0, 0 };
+		gridBagLayout.columnWeights = new double[] { 0.0, 1.0, Double.MIN_VALUE };
+		gridBagLayout.rowWeights = new double[] { 0.0, 0.0, 0.0,
+				Double.MIN_VALUE };
 		setLayout(gridBagLayout);
-		
+
 		panel = new JPanel();
-		panel.setBorder(new TitledBorder(null, "", TitledBorder.LEADING, TitledBorder.TOP, null, null)); //$NON-NLS-1$
+		panel.setBorder(new TitledBorder(null,
+				"", TitledBorder.LEADING, TitledBorder.TOP, null, null)); //$NON-NLS-1$
 		GridBagConstraints gbc_panel = new GridBagConstraints();
 		gbc_panel.gridwidth = 2;
 		gbc_panel.insets = new Insets(5, 5, 5, 0);
@@ -89,19 +95,19 @@ public class PlaybackOptionsPanel extends NetCDFOptionsPanel {
 		gbc_panel.gridy = 0;
 		add(panel, gbc_panel);
 		GridBagLayout gbl_panel = new GridBagLayout();
-		gbl_panel.columnWidths = new int[]{0, 0};
-		gbl_panel.rowHeights = new int[]{0, 0, 0, 0};
-		gbl_panel.columnWeights = new double[]{1.0, Double.MIN_VALUE};
-		gbl_panel.rowWeights = new double[]{0.0, 0.0, 0.0, Double.MIN_VALUE};
+		gbl_panel.columnWidths = new int[] { 0, 0 };
+		gbl_panel.rowHeights = new int[] { 0, 0, 0, 0 };
+		gbl_panel.columnWeights = new double[] { 1.0, Double.MIN_VALUE };
+		gbl_panel.rowWeights = new double[] { 0.0, 0.0, 0.0, Double.MIN_VALUE };
 		panel.setLayout(gbl_panel);
-		
+
 		GridBagConstraints gbc_displayForEachRB = new GridBagConstraints();
 		gbc_displayForEachRB.anchor = GridBagConstraints.WEST;
 		gbc_displayForEachRB.insets = new Insets(5, 5, 5, 5);
 		gbc_displayForEachRB.gridx = 0;
 		gbc_displayForEachRB.gridy = 0;
 		panel.add(getDisplayForEachRB(), gbc_displayForEachRB);
-		
+
 		panel_1 = new JPanel();
 		panel_1.setBorder(null);
 		GridBagConstraints gbc_panel_1 = new GridBagConstraints();
@@ -111,12 +117,12 @@ public class PlaybackOptionsPanel extends NetCDFOptionsPanel {
 		gbc_panel_1.gridy = 1;
 		panel.add(panel_1, gbc_panel_1);
 		panel_1.setLayout(new BoxLayout(panel_1, BoxLayout.X_AXIS));
-		
+
 		lblSpeed = new JLabel(PluginServices.getText(this, "speed")); //$NON-NLS-1$
 		panel_1.add(lblSpeed);
-		
+
 		panel_1.add(getSpeedSlider());
-		
+
 		panel_2 = new JPanel();
 		GridBagConstraints gbc_panel_2 = new GridBagConstraints();
 		gbc_panel_2.insets = new Insets(5, 5, 5, 5);
@@ -125,27 +131,28 @@ public class PlaybackOptionsPanel extends NetCDFOptionsPanel {
 		gbc_panel_2.gridy = 2;
 		panel.add(panel_2, gbc_panel_2);
 		panel_2.setLayout(new BoxLayout(panel_2, BoxLayout.X_AXIS));
-		
+
 		panel_2.add(getPlaySpecifiedRB());
 		panel_2.add(getDurationSpinner());
-		
-		afterPlayingOnceLabel = new JLabel(PluginServices.getText(this, "after_playing_once")); //$NON-NLS-1$
+
+		afterPlayingOnceLabel = new JLabel(PluginServices.getText(this,
+				"after_playing_once")); //$NON-NLS-1$
 		GridBagConstraints gbc_afterPlayingOnceLabel = new GridBagConstraints();
 		gbc_afterPlayingOnceLabel.insets = new Insets(5, 5, 5, 5);
 		gbc_afterPlayingOnceLabel.anchor = GridBagConstraints.WEST;
 		gbc_afterPlayingOnceLabel.gridx = 0;
 		gbc_afterPlayingOnceLabel.gridy = 1;
 		add(afterPlayingOnceLabel, gbc_afterPlayingOnceLabel);
-		
+
 		GridBagConstraints gbc_actionAfterPlayingCB = new GridBagConstraints();
 		gbc_actionAfterPlayingCB.insets = new Insets(5, 5, 5, 0);
 		gbc_actionAfterPlayingCB.anchor = GridBagConstraints.WEST;
 		gbc_actionAfterPlayingCB.gridx = 1;
 		gbc_actionAfterPlayingCB.gridy = 1;
 		add(getActionAfterPlayingCB(), gbc_actionAfterPlayingCB);
-		
+
 		getPlayButtonGroup();
-		
+
 		setPreferredSize(getPreferredSize());
 	}
 
@@ -153,7 +160,7 @@ public class PlaybackOptionsPanel extends NetCDFOptionsPanel {
 	 * @return the speed slider
 	 */
 	private Component getSpeedSlider() {
-		if(speedSlider == null) {
+		if (speedSlider == null) {
 			speedSlider = new JSlider();
 			speedSlider.setMaximum(1500);
 			speedSlider.setEnabled(displayForEachRB.isSelected());
@@ -165,9 +172,11 @@ public class PlaybackOptionsPanel extends NetCDFOptionsPanel {
 	 * @return the displayForEachRB
 	 */
 	private JRadioButton getDisplayForEachRB() {
-		if(displayForEachRB == null) {
-			displayForEachRB = new JRadioButton(PluginServices.getText(this, "display_for_each_timestamp")); //$NON-NLS-1$
-			displayForEachRB.addItemListener(new DisplayForEachRBItemListener());
+		if (displayForEachRB == null) {
+			displayForEachRB = new JRadioButton(PluginServices.getText(this,
+					"display_for_each_timestamp")); //$NON-NLS-1$
+			displayForEachRB
+					.addItemListener(new DisplayForEachRBItemListener());
 			displayForEachRB.setSelected(true);
 		}
 		return displayForEachRB;
@@ -177,8 +186,9 @@ public class PlaybackOptionsPanel extends NetCDFOptionsPanel {
 	 * @return the playSpecifiedRB
 	 */
 	private JRadioButton getPlaySpecifiedRB() {
-		if(playSpecifiedRB == null) {
-			playSpecifiedRB = new JRadioButton(PluginServices.getText(this, "play_in_specified_duration")); //$NON-NLS-1$
+		if (playSpecifiedRB == null) {
+			playSpecifiedRB = new JRadioButton(PluginServices.getText(this,
+					"play_in_specified_duration")); //$NON-NLS-1$
 			playSpecifiedRB.addItemListener(new PlaySpecifiedRBItemListener());
 		}
 		return playSpecifiedRB;
@@ -188,72 +198,96 @@ public class PlaybackOptionsPanel extends NetCDFOptionsPanel {
 	 * @return the durationSpinner
 	 */
 	private JSpinner getDurationSpinner() {
-		if(durationSpinner == null) {
+		if (durationSpinner == null) {
 			durationSpinner = new JSpinner();
-			durationSpinner.setMaximumSize(new Dimension(50, Integer.MAX_VALUE));
+			durationSpinner.setModel(new SpinnerNumberModel(new Integer(1),
+					new Integer(1), null, new Integer(1)));
+			durationSpinner
+					.setMaximumSize(new Dimension(50, Integer.MAX_VALUE));
 			durationSpinner.setEnabled(playSpecifiedRB.isSelected());
 		}
 		return durationSpinner;
 	}
-	
+
 	private ButtonGroup playButtonGroup;
 
 	/**
 	 * @return the actionAfterPlayingCB
 	 */
 	private JComboBox getActionAfterPlayingCB() {
-		if(actionAfterPlayingCB == null) {
+		if (actionAfterPlayingCB == null) {
 			actionAfterPlayingCB = new JComboBox(AnimationBehaviour.values());
 		}
 		return actionAfterPlayingCB;
 	}
-	
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.gvsig.gui.beans.panelGroup.panels.IPanel#accept()
 	 */
 	@Override
 	public void accept() {
 		apply();
 	}
-	
+
 	private int minimum_delay = 99;
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.gvsig.gui.beans.panelGroup.panels.IPanel#apply()
 	 */
 	@Override
 	public void apply() {
-		configuration.setAnimationBehaviour((AnimationBehaviour) getActionAfterPlayingCB().getSelectedItem());
-		int delay = speedSlider.getMaximum() + minimum_delay - speedSlider.getValue();
-		configuration.setDelayPeriod(delay);
+		if (displayForEachRB.isSelected()) {
+			configuration
+					.setAnimationBehaviour((AnimationBehaviour) getActionAfterPlayingCB()
+							.getSelectedItem());
+			int delay = speedSlider.getMaximum() + minimum_delay
+					- speedSlider.getValue();
+			configuration.setDelayPeriod(delay);
+		} else {
+			int seconds = (Integer) durationSpinner.getValue();
+			int size = configuration.getEndTime()
+					- configuration.getStartTime() + 1;
+			float delay = (float) seconds * 1000 / size;
+			if(delay <= 0) delay = 1;
+			configuration.setDelayPeriod((int) delay);
+		}
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.gvsig.gui.beans.panelGroup.panels.IPanel#cancel()
 	 */
 	@Override
 	public void cancel() {
 		// TODO Auto-generated method stub
-		
+
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.gvsig.gui.beans.panelGroup.panels.IPanel#selected()
 	 */
 	@Override
 	public void selected() {
 		// TODO Auto-generated method stub
-		
+
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.gvsig.gui.beans.panelGroup.panels.AbstractPanel#initialize()
 	 */
 	@Override
 	protected void initialize() {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	private class PlaySpecifiedRBItemListener implements ItemListener {
@@ -261,6 +295,7 @@ public class PlaybackOptionsPanel extends NetCDFOptionsPanel {
 			getDurationSpinner().setEnabled(getPlaySpecifiedRB().isSelected());
 		}
 	}
+
 	private class DisplayForEachRBItemListener implements ItemListener {
 		public void itemStateChanged(ItemEvent e) {
 			getSpeedSlider().setEnabled(getDisplayForEachRB().isSelected());
@@ -275,13 +310,17 @@ public class PlaybackOptionsPanel extends NetCDFOptionsPanel {
 		}
 		return playButtonGroup;
 	}
-	
-	/* (non-Javadoc)
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see uclv.gvsig.extsdf.timeslider.NetCDFOptionsPanel#postInitialize()
 	 */
 	@Override
 	protected void postInitialize() {
-		actionAfterPlayingCB.setSelectedItem(configuration.getAnimationBehaviour());
-		speedSlider.setValue(speedSlider.getMaximum() + minimum_delay - configuration.getDelayPeriod());
+		actionAfterPlayingCB.setSelectedItem(configuration
+				.getAnimationBehaviour());
+		speedSlider.setValue(speedSlider.getMaximum() + minimum_delay
+				- configuration.getDelayPeriod());
 	}
 }
