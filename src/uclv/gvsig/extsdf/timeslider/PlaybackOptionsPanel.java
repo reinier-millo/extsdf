@@ -32,7 +32,6 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
-import java.io.IOException;
 
 import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
@@ -42,11 +41,10 @@ import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JSlider;
 import javax.swing.JSpinner;
+import javax.swing.SpinnerNumberModel;
 import javax.swing.border.TitledBorder;
 
 import com.iver.andami.PluginServices;
-
-import javax.swing.SpinnerNumberModel;
 
 /**
  * Panel designed to adjust the Playback options of the animation.

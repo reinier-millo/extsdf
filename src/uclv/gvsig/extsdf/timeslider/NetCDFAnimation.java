@@ -25,7 +25,10 @@
 
 package uclv.gvsig.extsdf.timeslider;
 
+import java.awt.Graphics2D;
+import java.awt.Image;
 import java.awt.image.BufferedImage;
+import java.awt.image.ImageObserver;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -64,6 +67,8 @@ public class NetCDFAnimation {
 	private boolean recording;
 	IView view;
 	private File file;
+	private int height;
+	private int width;
 	
 	/**
 	 * @param layer
@@ -88,7 +93,9 @@ public class NetCDFAnimation {
 				if (activeWindow instanceof View) {
 					view = (IView) activeWindow;
 					BufferedImage image = view.getMapControl().getImage();
-					writer.addVideoTrack(VideoFormat.RLE, 4, image.getWidth(), image.getHeight());
+					width = image.getWidth();
+					height = image.getHeight();
+					writer.addVideoTrack(VideoFormat.RLE, 4, width, height);
 				}
 			} catch (IOException e) {
 				e.printStackTrace();
@@ -135,7 +142,13 @@ public class NetCDFAnimation {
 	private void writeFrame() {
 		if(recording) {
 			try {
-				writer.writeFrame(0, view.getMapControl().getImage(), 1);
+				BufferedImage image = view.getMapControl().getImage();
+				if(image.getHeight() != height || image.getWidth() != width) {
+					Image image2 = image.getScaledInstance(width, height, Image.SCALE_DEFAULT);
+					image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
+					image.getGraphics().drawImage(image2, 0, 0, null);
+				}
+				writer.writeFrame(0, image, 1);
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
