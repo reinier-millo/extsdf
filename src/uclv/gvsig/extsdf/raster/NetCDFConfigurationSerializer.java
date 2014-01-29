@@ -48,20 +48,22 @@ public class NetCDFConfigurationSerializer extends ClassSerializer{
     private NetCDFConfiguration config = null;
 
     /**
-     * Registra ColorTableRmfSerializer en los puntos de extension de Serializer
+     * Registra el serializador en los puntos de extensi&oacute;n de Serializer
      */
     public static void register() {
-      ExtensionPoint point = ExtensionPoint.getExtensionPoint("Serializer");
-      point.register("NetCDFConfiguration", NetCDFConfigurationSerializer.class);
+        ExtensionPoint point = ExtensionPoint.getExtensionPoint("Serializer");
+        point.register("NetCDFConfiguration",
+                NetCDFConfigurationSerializer.class);
     }
-    
+
     /**
-     * Constructor para asignar la configuración a serializar
+     * Constructor para asignar la configuraci&oacute;n a serializar
      * 
-     * @param configuración de la capa NetCDF a convertir en XML
+     * @param config
+     *            configuraci&oacute;n de la capa NetCDF a convertir en XML
      */
     public NetCDFConfigurationSerializer(NetCDFConfiguration config) {
-      this.config = config;
+        this.config = config;
     }
 
     /**
@@ -70,18 +72,40 @@ public class NetCDFConfigurationSerializer extends ClassSerializer{
     public NetCDFConfigurationSerializer() {
     }
 
+    /**
+     * Lee la configuraci&oacute;n de la capa NetCDF a partir de una cadena en
+     * formato XML le&iacute;da desde el archivo RMF
+     * 
+     * @param xml
+     *            cadena en formato XML
+     * @throws ParsingException
+     *             formato XML incorrecto
+     * 
+     * @see org.gvsig.raster.dataset.io.rmf.IRmfBlock#read(java.lang.String)
+     */
     @Override
     public void read(String xml) throws ParsingException {
-        // TODO Auto-generated method stub
-        
+        // Inicializa la configuración de la capa NetCDF
+        config = new NetCDFConfiguration();
+
     }
 
+    /**
+     * Devuelve una cadena en formato XML con la informaci&oacute;n de la
+     * configuraci&oacute;n de la capa NetCDF
+     * 
+     * @return cadena en formato XML
+     * 
+     * @throws IOException
+     *             error de entrada/salida del archivo XML
+     * 
+     * @see org.gvsig.raster.dataset.io.rmf.IRmfBlock#write()
+     */
     @Override
     public String write() throws IOException {
         // TODO Auto-generated method stub
         return null;
     }
-
 
     /**
      * Devuelve el nombre del TAG principal de la configuración dentro del
