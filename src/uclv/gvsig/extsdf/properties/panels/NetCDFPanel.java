@@ -68,9 +68,23 @@ import com.iver.cit.gvsig.fmap.layers.FLayer;
  */
 
 public class NetCDFPanel extends AbstractPanel {
-
+	/**
+	 * Capa correspondiente a esta Panel
+	 */
 	private FLayer flayer = null;
+	/**
+	 * Manejador del archivo NetCDF correspondiente a la capa
+	 */
 	private NetCDFController controler = null;
+	/**
+	 * Configuración del NetCDf 
+	 */
+	private NetCDFConfiguration configuration;
+	/**
+	 * Dataset correspondiente al Layer
+	 */
+	private NetCDFRasterDataset dataset;
+
 	private Logger logger = Logger.getLogger(NetCDFPanel.class);
 	private static final long serialVersionUID = 1L;
 	private JLabel lbSistemaDeCoordenada;
@@ -95,8 +109,6 @@ public class NetCDFPanel extends AbstractPanel {
 	private JPanel paGeneral;
 	private JLabel lbHourFormat;
 	private JComboBox hour_format;
-	private NetCDFConfiguration configuration;
-	private NetCDFRasterDataset dataset;
 	private JComboBox visualize_moment;
 	private JComboBox time_dimension;
 
