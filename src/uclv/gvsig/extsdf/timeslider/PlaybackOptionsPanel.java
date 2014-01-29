@@ -217,7 +217,7 @@ public class PlaybackOptionsPanel extends NetCDFOptionsPanel {
 		apply();
 	}
 	
-	private int minimum_delay = 399;
+	private int minimum_delay = 99;
 
 	/* (non-Javadoc)
 	 * @see org.gvsig.gui.beans.panelGroup.panels.IPanel#apply()

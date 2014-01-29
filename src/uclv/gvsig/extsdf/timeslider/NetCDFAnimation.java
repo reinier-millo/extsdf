@@ -53,8 +53,6 @@ public class NetCDFAnimation {
 	private NetCDFConfiguration configuration;
 	private Timer timer = new Timer();
 	private TimerTask timerTask;
-	private Logger logger = LoggerFactory.getLogger(getClass());
-
 	/**
 	 * @param layer
 	 */

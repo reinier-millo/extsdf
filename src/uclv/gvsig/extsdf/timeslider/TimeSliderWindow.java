@@ -204,7 +204,7 @@ public class TimeSliderWindow extends JPanel implements IWindow {
 					slider.setMinimum(configuration.getStartTime());
 					slider.setMaximum(configuration.getEndTime() + 1);
 					slider.setValue(configuration.getVisualizemoment());
-					slider_needs_update = true;
+					slider.updateUI();
 				} else if (e.getSource().equals("Format")) {
 					formatter.applyLocalizedPattern(formats.getDates()[configuration.getDateformat()]);
 					updateCurrentDate();
@@ -213,7 +213,6 @@ public class TimeSliderWindow extends JPanel implements IWindow {
 		});
 	}
 	
-	private boolean slider_needs_update;
 	private SimpleDateFormat formatter;
 	private Date currentDate;
 	private DateTimeFormats formats;
@@ -445,7 +444,6 @@ public class TimeSliderWindow extends JPanel implements IWindow {
 	private class PlayPauseButtonActionListener implements ActionListener {
 
 		public void actionPerformed(ActionEvent e) {
-			checkSliderUpdate();
 			if (playing) {
 				pause();
 			} else {
@@ -467,24 +465,15 @@ public class TimeSliderWindow extends JPanel implements IWindow {
 				.setIcon(PluginServices.getIconTheme().get("pause-icon"));
 		animation.play();
 	}
-	
-	private void checkSliderUpdate() {
-		if(slider_needs_update) {
-			slider_needs_update = false;
-			updateUI();
-		}
-	}
 
 	private class SkipBackwardButtonActionListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
-			checkSliderUpdate();
 			animation.moveBackward();
 		}
 	}
 
 	private class SkipForwardButtonActionListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
-			checkSliderUpdate();
 			animation.moveForward();
 		}
 	}
@@ -494,7 +483,6 @@ public class TimeSliderWindow extends JPanel implements IWindow {
 	private class SliderMouseMotionListener extends MouseMotionAdapter {
 		@Override
 		public void mouseDragged(MouseEvent e) {
-			checkSliderUpdate();
 			dragging = true;
 		}
 	}
@@ -502,7 +490,6 @@ public class TimeSliderWindow extends JPanel implements IWindow {
 	private class SliderMouseListener extends MouseAdapter {
 		@Override
 		public void mouseReleased(MouseEvent e) {
-			checkSliderUpdate();
 			if (dragging) {
 				dragging = false;
 				animation.move(getSlider().getValue());
@@ -511,7 +498,6 @@ public class TimeSliderWindow extends JPanel implements IWindow {
 
 		@Override
 		public void mousePressed(MouseEvent e) {
-			checkSliderUpdate();
 			if (dragging == false) {
 				animation.move(getSlider().getValue());
 			}
@@ -520,7 +506,6 @@ public class TimeSliderWindow extends JPanel implements IWindow {
 
 	private class SliderChangeListener implements ChangeListener {
 		public void stateChanged(ChangeEvent e) {
-			checkSliderUpdate();
 			if (getSlider().getValue() == getSlider().getMaximum() - 1) {
 				switch (configuration.getAnimationBehaviour()) {
 				case REPEAT:
