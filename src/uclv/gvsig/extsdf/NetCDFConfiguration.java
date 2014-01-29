@@ -24,7 +24,11 @@
  */
 package uclv.gvsig.extsdf;
 
+import java.io.Serializable;
+import java.util.Calendar;
 import java.util.Date;
+
+import org.gvsig.rastertools.colortable.ui.ColorTablePanel;
 
 import uclv.gvsig.extsdf.timeslider.AnimationBehaviour;
 
@@ -35,7 +39,11 @@ import uclv.gvsig.extsdf.timeslider.AnimationBehaviour;
  * @author dcardoso
  * 
  */
-public class NetCDFConfiguration {
+public class NetCDFConfiguration implements Serializable{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	/**
 	 * indice del formato de fecha seleccionado
 	 */
@@ -48,15 +56,21 @@ public class NetCDFConfiguration {
 	 * Dice si debe activarse el TimeSlider
 	 */
 	private Boolean enabled = false;
+	/**
+	 * indice del instante de tiempo a visualizar
+	 */
+	private int visualizemoment = 0;
+	
+	private int sistemacoordenada = 0;
 	
 	private int delayPeriod = 500;
 	
-	private Date startTime;
+	private Date startTime= Calendar.getInstance().getTime();
 	
-	private Date endTime;
+	private Date endTime= Calendar.getInstance().getTime();
 	
 	private AnimationBehaviour animationBehaviour = AnimationBehaviour.REPEAT;
-
+	
 	/**
 	 * Constructor
 	 */
@@ -105,7 +119,7 @@ public class NetCDFConfiguration {
 	 * @param enable
 	 *            the enable to set
 	 */
-	public void setEnable(Boolean enabled) {
+	public void setEnabled(Boolean enabled) {
 		this.enabled = enabled;
 	}
 	
@@ -164,4 +178,33 @@ public class NetCDFConfiguration {
 	public void setEndTime(Date endTime) {
 		this.endTime = endTime;
 	}
+
+	/**
+	 * @return the visualizemoment
+	 */
+	public int getVisualizemoment() {
+		return visualizemoment;
+	}
+
+	/**
+	 * @param visualizemoment the visualizemoment to set
+	 */
+	public void setVisualizemoment(int visualizemoment) {
+		this.visualizemoment = visualizemoment;
+	}
+
+	/**
+	 * @return the sistemacoordenada
+	 */
+	public int getSistemacoordenada() {
+		return sistemacoordenada;
+	}
+
+	/**
+	 * @param sistemacoordenada the sistemacoordenada to set
+	 */
+	public void setSistemacoordenada(int sistemacoordenada) {
+		this.sistemacoordenada = sistemacoordenada;
+	}
+	
 }
