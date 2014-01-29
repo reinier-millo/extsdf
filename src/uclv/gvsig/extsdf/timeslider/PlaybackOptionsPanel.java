@@ -35,7 +35,6 @@ import java.awt.event.ItemListener;
 
 import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
-import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -156,7 +155,6 @@ public class PlaybackOptionsPanel extends NetCDFOptionsPanel {
 	private Component getSpeedSlider() {
 		if(speedSlider == null) {
 			speedSlider = new JSlider();
-			speedSlider.setValue(1499);
 			speedSlider.setMaximum(1500);
 			speedSlider.setEnabled(displayForEachRB.isSelected());
 		}
@@ -218,6 +216,8 @@ public class PlaybackOptionsPanel extends NetCDFOptionsPanel {
 	public void accept() {
 		apply();
 	}
+	
+	private int minimum_delay = 399;
 
 	/* (non-Javadoc)
 	 * @see org.gvsig.gui.beans.panelGroup.panels.IPanel#apply()
@@ -225,7 +225,7 @@ public class PlaybackOptionsPanel extends NetCDFOptionsPanel {
 	@Override
 	public void apply() {
 		configuration.setAnimationBehaviour((AnimationBehaviour) getActionAfterPlayingCB().getSelectedItem());
-		int delay = speedSlider.getMaximum() + 499 - speedSlider.getValue();
+		int delay = speedSlider.getMaximum() + minimum_delay - speedSlider.getValue();
 		configuration.setDelayPeriod(delay);
 	}
 
@@ -282,5 +282,6 @@ public class PlaybackOptionsPanel extends NetCDFOptionsPanel {
 	@Override
 	protected void postInitialize() {
 		actionAfterPlayingCB.setSelectedItem(configuration.getAnimationBehaviour());
+		speedSlider.setValue(speedSlider.getMaximum() + minimum_delay - configuration.getDelayPeriod());
 	}
 }

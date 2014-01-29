@@ -25,10 +25,6 @@
 package uclv.gvsig.extsdf;
 
 import java.io.Serializable;
-import java.util.Calendar;
-import java.util.Date;
-
-import org.gvsig.rastertools.colortable.ui.ColorTablePanel;
 
 import uclv.gvsig.extsdf.timeslider.AnimationBehaviour;
 
@@ -63,11 +59,11 @@ public class NetCDFConfiguration implements Serializable{
 	
 	private int sistemacoordenada = 0;
 	
-	private int delayPeriod = 500;
+	private int delayPeriod = 400;
 	
 	private int startTime = 0;
 	
-	private int endTime = 0;
+	private int endTime = -1;
 	
 	private AnimationBehaviour animationBehaviour = AnimationBehaviour.REPEAT;
 	

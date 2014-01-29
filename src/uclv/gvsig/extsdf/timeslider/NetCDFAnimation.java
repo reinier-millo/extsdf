@@ -63,15 +63,6 @@ public class NetCDFAnimation {
 		dataset = (NetCDFRasterDataset) layer.getDataSource().getDataset(0)[0];
 		controller = dataset.getNetCDFController();
 		configuration = dataset.getConfiguration();
-		// timer = new Timer();
-		// timerTask = new NetCDFAnimationTimerTask();
-		try {
-			n = (int) controller.getParameterForCoordinateSystem(
-					controller.getCoordinateSystems()[controller
-							.getCoordinateSystemIndex()]).getSize();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
 	}
 
 	/**
@@ -86,11 +77,9 @@ public class NetCDFAnimation {
 		timer.schedule(timerTask, period, period);
 	}
 
-	private int n;
-
 	private class PlayTimerTask extends TimerTask {
 
-		private int i = 1;
+		private int i;
 
 		/*
 		 * (non-Javadoc)
@@ -99,9 +88,15 @@ public class NetCDFAnimation {
 		 */
 		@Override
 		public void run() {
-			i = configuration.getVisualizemoment() + 1;
-			i %= n;
+			if(configuration.getVisualizemoment() < configuration.getStartTime()) {
+				configuration.setVisualizemoment(configuration.getEndTime());
+			} else if (configuration.getVisualizemoment() > configuration.getEndTime()) {
+				configuration.setVisualizemoment(configuration.getStartTime());
+			}
+			
+			i = configuration.getVisualizemoment();
 			move(i);
+			configuration.setVisualizemoment(configuration.getVisualizemoment() + 1);
 		}
 
 	}
@@ -126,9 +121,15 @@ public class NetCDFAnimation {
 		 */
 		@Override
 		public void run() {
-			i = configuration.getVisualizemoment() - 1;
-			i %= n;
+			if(configuration.getVisualizemoment() < configuration.getStartTime()) {
+				configuration.setVisualizemoment(configuration.getStartTime());
+			} else if (configuration.getVisualizemoment() > configuration.getEndTime()) {
+				configuration.setVisualizemoment(configuration.getEndTime());
+			}
+			
+			i = configuration.getVisualizemoment();
 			move(i);
+			configuration.setVisualizemoment(configuration.getVisualizemoment() - 1);
 		}
 
 	}
