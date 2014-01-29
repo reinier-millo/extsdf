@@ -103,8 +103,18 @@ public class NetCDFConfigurationSerializer extends ClassSerializer{
      */
     @Override
     public String write() throws IOException {
-        // TODO Auto-generated method stub
-        return null;
+        StringBuffer b = new StringBuffer();
+
+        // Verifica si la configuración es nula
+        if (config == null)
+            return "";
+
+        // Crea la etiqueta principal
+        b.append("<" + MAIN_TAG + " version=\"1.1\">\n");
+
+        // Cierra la etiqueta principal
+        b.append("</" + MAIN_TAG + ">\n");
+        return b.toString();
     }
 
     /**
