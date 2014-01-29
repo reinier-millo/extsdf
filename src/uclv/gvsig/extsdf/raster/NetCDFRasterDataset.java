@@ -46,7 +46,6 @@ import org.gvsig.raster.dataset.io.rmf.ParsingException;
 import org.gvsig.raster.dataset.io.rmf.RmfBlocksManager;
 import org.gvsig.raster.dataset.properties.DatasetColorInterpretation;
 import org.gvsig.raster.dataset.properties.DatasetMetadata;
-import org.gvsig.raster.datastruct.ColorTable;
 import org.gvsig.raster.datastruct.Extent;
 import org.gvsig.raster.datastruct.Transparency;
 import org.gvsig.raster.process.RasterTask;
