@@ -34,6 +34,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
+import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -45,6 +46,7 @@ import javax.swing.JTextField;
 import javax.swing.JToolBar;
 
 import org.gvsig.fmap.raster.layers.FLyrRasterSE;
+import org.gvsig.gui.beans.swing.JFileChooser;
 
 import uclv.gvsig.extsdf.NetCDFConfiguration;
 import uclv.gvsig.extsdf.NetCDFController;
@@ -53,6 +55,7 @@ import uclv.gvsig.extsdf.raster.NetCDFRasterDataset;
 import com.iver.andami.PluginServices;
 import com.iver.andami.ui.mdiManager.IWindow;
 import com.iver.andami.ui.mdiManager.WindowInfo;
+
 import javax.swing.event.ChangeListener;
 import javax.swing.event.ChangeEvent;
 
@@ -358,6 +361,7 @@ public class TimeSliderWindow extends JPanel implements IWindow {
 	private JButton getExportButton() {
 		if (exportButton == null) {
 			exportButton = new JButton("");
+			exportButton.addActionListener(new ExportButtonActionListener());
 			exportButton.setIcon(PluginServices.getIconTheme()
 					.get("video-icon"));
 			exportButton.setToolTipText(PluginServices.getText(this,
@@ -523,6 +527,16 @@ public class TimeSliderWindow extends JPanel implements IWindow {
 				if (configuration.getAnimationBehaviour() == AnimationBehaviour.REVERSE) {
 					animation.play();
 				}
+			}
+		}
+	}
+	private class ExportButtonActionListener implements ActionListener {
+		public void actionPerformed(ActionEvent e) {
+			JFileChooser fileChooser = new JFileChooser("VIDEO_EXPORT", new File(""));
+			int result = fileChooser.showOpenDialog(TimeSliderWindow.this);
+			if(result == JFileChooser.APPROVE_OPTION) {
+				animation.setOutputFile(fileChooser.getSelectedFile());
+				animation.setRecording(true);
 			}
 		}
 	}

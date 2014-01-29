@@ -25,6 +25,8 @@
 
 package uclv.gvsig.extsdf.timeslider;
 
+import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -33,9 +35,14 @@ import java.util.TimerTask;
 
 import org.gvsig.fmap.raster.layers.FLyrRasterSE;
 import org.gvsig.raster.dataset.io.RasterDriverException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
+import com.iver.andami.PluginServices;
+import com.iver.andami.ui.mdiManager.IWindow;
+import com.iver.cit.gvsig.project.documents.view.gui.IView;
+import com.iver.cit.gvsig.project.documents.view.gui.View;
+
+import ch.randelshofer.media.quicktime.QuickTimeWriter;
+import ch.randelshofer.media.quicktime.QuickTimeWriter.VideoFormat;
 import ucar.ma2.InvalidRangeException;
 import uclv.gvsig.extsdf.NetCDFConfiguration;
 import uclv.gvsig.extsdf.NetCDFController;
@@ -53,6 +60,11 @@ public class NetCDFAnimation {
 	private NetCDFConfiguration configuration;
 	private Timer timer = new Timer();
 	private TimerTask timerTask;
+	private QuickTimeWriter writer;
+	private boolean recording;
+	IView view;
+	private File file;
+	
 	/**
 	 * @param layer
 	 */
@@ -68,11 +80,26 @@ public class NetCDFAnimation {
 	 */
 	public void play() {
 		int period = configuration.getDelayPeriod();
+		
+		if(recording) {
+			try {
+				writer = new QuickTimeWriter(file);
+				IWindow activeWindow = PluginServices.getMDIManager().getActiveWindow();
+				if (activeWindow instanceof View) {
+					view = (IView) activeWindow;
+					BufferedImage image = view.getMapControl().getImage();
+					writer.addVideoTrack(VideoFormat.RLE, 4, image.getWidth(), image.getHeight());
+				}
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		
 		if (timerTask != null)
 			timerTask.cancel();
 		timerTask = new PlayTimerTask();
 		timer = new Timer();
-		timer.schedule(timerTask, period, period);
+		timer.schedule(timerTask, 0, period);
 	}
 
 	private class PlayTimerTask extends TimerTask {
@@ -93,10 +120,26 @@ public class NetCDFAnimation {
 			}
 			
 			i = configuration.getVisualizemoment();
+			
+			writeFrame();
+			
 			move(i);
 			configuration.setVisualizemoment(configuration.getVisualizemoment() + 1);
 		}
 
+	}
+	
+	/**
+	 * 
+	 */
+	private void writeFrame() {
+		if(recording) {
+			try {
+				writer.writeFrame(0, view.getMapControl().getImage(), 1);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
 	}
 
 	public void playInReverse() {
@@ -105,7 +148,7 @@ public class NetCDFAnimation {
 			timerTask.cancel();
 		timerTask = new PlayBackwardsTimerTask();
 		timer = new Timer();
-		timer.schedule(timerTask, period, period);
+		timer.schedule(timerTask, 0, period);
 	}
 
 	private class PlayBackwardsTimerTask extends TimerTask {
@@ -126,6 +169,9 @@ public class NetCDFAnimation {
 			}
 			
 			i = configuration.getVisualizemoment();
+			
+			writeFrame();
+			
 			move(i);
 			configuration.setVisualizemoment(configuration.getVisualizemoment() - 1);
 		}
@@ -136,6 +182,15 @@ public class NetCDFAnimation {
 	 * Pausa la animación
 	 */
 	public void pause() {
+		if(recording) {
+			recording = false;
+			try {
+				writer.close();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 		timer.cancel();
 	}
 
@@ -178,13 +233,10 @@ public class NetCDFAnimation {
 		try {
 			controller.setParameter(position);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (InvalidRangeException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (RasterDriverException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		fireChange();
@@ -206,6 +258,27 @@ public class NetCDFAnimation {
 		for (AnimationListener e : listeners) {
 			e.animationStateChanged();
 		}
+	}
+	
+	/**
+	 * @param recording the recording to set
+	 */
+	public void setRecording(boolean recording) {
+		this.recording = recording;
+	}
+	
+	/**
+	 * @return the recording
+	 */
+	public boolean isRecording() {
+		return recording;
+	}
+
+	/**
+	 * @param selectedFile
+	 */
+	public void setOutputFile(File selectedFile) {
+		file = selectedFile;
 	}
 
 }
