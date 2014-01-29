@@ -28,11 +28,14 @@ package uclv.gvsig.extsdf.timeslider;
 import java.util.EventListener;
 
 /**
+ * Interfaz que debe implementar todo el que desee escuchar los cambios que
+ * afectan a la animación del NetCDF.
+ * 
  * @author rmartinez
- *
+ * 
  */
 public interface AnimationListener extends EventListener {
-	
+
 	public void animationStateChanged();
 
 }

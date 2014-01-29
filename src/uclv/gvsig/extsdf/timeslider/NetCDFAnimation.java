@@ -69,7 +69,7 @@ public class NetCDFAnimation {
 	private File file;
 	private int height;
 	private int width;
-	
+
 	/**
 	 * @param layer
 	 */
@@ -85,11 +85,12 @@ public class NetCDFAnimation {
 	 */
 	public void play() {
 		int period = configuration.getDelayPeriod();
-		
-		if(recording) {
+
+		if (recording) {
 			try {
 				writer = new QuickTimeWriter(file);
-				IWindow activeWindow = PluginServices.getMDIManager().getActiveWindow();
+				IWindow activeWindow = PluginServices.getMDIManager()
+						.getActiveWindow();
 				if (activeWindow instanceof View) {
 					view = (IView) activeWindow;
 					BufferedImage image = view.getMapControl().getImage();
@@ -101,7 +102,7 @@ public class NetCDFAnimation {
 				e.printStackTrace();
 			}
 		}
-		
+
 		if (timerTask != null)
 			timerTask.cancel();
 		timerTask = new PlayTimerTask();
@@ -120,32 +121,37 @@ public class NetCDFAnimation {
 		 */
 		@Override
 		public void run() {
-			if(configuration.getVisualizemoment() < configuration.getStartTime()) {
+			if (configuration.getVisualizemoment() < configuration
+					.getStartTime()) {
 				configuration.setVisualizemoment(configuration.getEndTime());
-			} else if (configuration.getVisualizemoment() > configuration.getEndTime()) {
+			} else if (configuration.getVisualizemoment() > configuration
+					.getEndTime()) {
 				configuration.setVisualizemoment(configuration.getStartTime());
 			}
-			
+
 			i = configuration.getVisualizemoment();
-			
+
 			writeFrame();
-			
+
 			move(i);
-			configuration.setVisualizemoment(configuration.getVisualizemoment() + 1);
+			configuration
+					.setVisualizemoment(configuration.getVisualizemoment() + 1);
 		}
 
 	}
-	
+
 	/**
-	 * 
+	 * Escribe un cuadro al video cuando se está grabando.
 	 */
 	private void writeFrame() {
-		if(recording) {
+		if (recording) {
 			try {
 				BufferedImage image = view.getMapControl().getImage();
-				if(image.getHeight() != height || image.getWidth() != width) {
-					Image image2 = image.getScaledInstance(width, height, Image.SCALE_DEFAULT);
-					image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
+				if (image.getHeight() != height || image.getWidth() != width) {
+					Image image2 = image.getScaledInstance(width, height,
+							Image.SCALE_DEFAULT);
+					image = new BufferedImage(width, height,
+							BufferedImage.TYPE_INT_RGB);
 					image.getGraphics().drawImage(image2, 0, 0, null);
 				}
 				writer.writeFrame(0, image, 1);
@@ -155,6 +161,9 @@ public class NetCDFAnimation {
 		}
 	}
 
+	/**
+	 * Reproduce la animación en orden inverso.
+	 */
 	public void playInReverse() {
 		int period = configuration.getDelayPeriod();
 		if (timerTask != null)
@@ -175,18 +184,21 @@ public class NetCDFAnimation {
 		 */
 		@Override
 		public void run() {
-			if(configuration.getVisualizemoment() < configuration.getStartTime()) {
+			if (configuration.getVisualizemoment() < configuration
+					.getStartTime()) {
 				configuration.setVisualizemoment(configuration.getStartTime());
-			} else if (configuration.getVisualizemoment() > configuration.getEndTime()) {
+			} else if (configuration.getVisualizemoment() > configuration
+					.getEndTime()) {
 				configuration.setVisualizemoment(configuration.getEndTime());
 			}
-			
+
 			i = configuration.getVisualizemoment();
-			
+
 			writeFrame();
-			
+
 			move(i);
-			configuration.setVisualizemoment(configuration.getVisualizemoment() - 1);
+			configuration
+					.setVisualizemoment(configuration.getVisualizemoment() - 1);
 		}
 
 	}
@@ -195,7 +207,7 @@ public class NetCDFAnimation {
 	 * Pausa la animación
 	 */
 	public void pause() {
-		if(recording) {
+		if (recording) {
 			recording = false;
 			try {
 				writer.close();
@@ -211,10 +223,12 @@ public class NetCDFAnimation {
 	 * Mover un paso hacia adelante a partir de de la posición actual.
 	 */
 	public void moveForward() {
-		configuration.setVisualizemoment(configuration.getVisualizemoment() + 1);
-		if(configuration.getVisualizemoment() < configuration.getStartTime()) {
+		configuration
+				.setVisualizemoment(configuration.getVisualizemoment() + 1);
+		if (configuration.getVisualizemoment() < configuration.getStartTime()) {
 			configuration.setVisualizemoment(configuration.getEndTime());
-		} else if (configuration.getVisualizemoment() > configuration.getEndTime()) {
+		} else if (configuration.getVisualizemoment() > configuration
+				.getEndTime()) {
 			configuration.setVisualizemoment(configuration.getStartTime());
 		}
 		move(configuration.getVisualizemoment());
@@ -224,10 +238,13 @@ public class NetCDFAnimation {
 	 * Mover un paso hacia atrás a partir de la posición actual.
 	 */
 	public void moveBackward() {
-		configuration.setVisualizemoment(configuration.getVisualizemoment() - 1);;
-		if(configuration.getVisualizemoment() < configuration.getStartTime()) {
+		configuration
+				.setVisualizemoment(configuration.getVisualizemoment() - 1);
+		;
+		if (configuration.getVisualizemoment() < configuration.getStartTime()) {
 			configuration.setVisualizemoment(configuration.getEndTime());
-		} else if (configuration.getVisualizemoment() > configuration.getEndTime()) {
+		} else if (configuration.getVisualizemoment() > configuration
+				.getEndTime()) {
 			configuration.setVisualizemoment(configuration.getStartTime());
 		}
 		move(configuration.getVisualizemoment());
@@ -272,14 +289,15 @@ public class NetCDFAnimation {
 			e.animationStateChanged();
 		}
 	}
-	
+
 	/**
-	 * @param recording the recording to set
+	 * @param recording
+	 *            the recording to set
 	 */
 	public void setRecording(boolean recording) {
 		this.recording = recording;
 	}
-	
+
 	/**
 	 * @return the recording
 	 */
@@ -288,6 +306,8 @@ public class NetCDFAnimation {
 	}
 
 	/**
+	 * Establece el archivo donde se escribirá el video exportado.
+	 * 
 	 * @param selectedFile
 	 */
 	public void setOutputFile(File selectedFile) {

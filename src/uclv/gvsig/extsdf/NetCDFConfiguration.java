@@ -41,7 +41,7 @@ import uclv.gvsig.extsdf.timeslider.AnimationListener;
  * @author dcardoso
  * 
  */
-public class NetCDFConfiguration implements Serializable{
+public class NetCDFConfiguration implements Serializable {
 	/**
 	 * 
 	 */
@@ -70,15 +70,27 @@ public class NetCDFConfiguration implements Serializable{
 	 * indice de la variable seleccionada
 	 */
 	private int variable = 0;
-	
+
+	/**
+	 * Período de duración de cada cuadro durante la animación.
+	 */
 	private int delayPeriod = 400;
-	
+
+	/**
+	 * Instante de tiempo inicial durante la animación.
+	 */
 	private int startTime = 0;
-	
+
+	/**
+	 * Instante de tiempo final durante la animación.
+	 */
 	private int endTime = -1;
-	
+
+	/**
+	 * Comportamiento de la animación al arribar a los puntos extremos.
+	 */
 	private AnimationBehaviour animationBehaviour = AnimationBehaviour.REPEAT;
-	
+
 	/**
 	 * Constructor
 	 */
@@ -132,21 +144,22 @@ public class NetCDFConfiguration implements Serializable{
 	public void setEnabled(Boolean enabled) {
 		this.enabled = enabled;
 	}
-	
+
 	/**
 	 * @return the animationBehaviour
 	 */
 	public AnimationBehaviour getAnimationBehaviour() {
 		return animationBehaviour;
 	}
-	
+
 	/**
-	 * @param animationBehaviour the animationBehaviour to set
+	 * @param animationBehaviour
+	 *            the animationBehaviour to set
 	 */
 	public void setAnimationBehaviour(AnimationBehaviour animationBehaviour) {
 		this.animationBehaviour = animationBehaviour;
 	}
-	
+
 	/**
 	 * @return the delayPeriod
 	 */
@@ -155,36 +168,39 @@ public class NetCDFConfiguration implements Serializable{
 	}
 
 	/**
-	 * @param delayPeriod the delayPeriod to set
+	 * @param delayPeriod
+	 *            the delayPeriod to set
 	 */
 	public void setDelayPeriod(int delayPeriod) {
 		this.delayPeriod = delayPeriod;
 	}
-	
+
 	/**
 	 * @return the startTime
 	 */
 	public int getStartTime() {
 		return startTime;
 	}
-	
+
 	/**
-	 * @param startTime the startTime to set
+	 * @param startTime
+	 *            the startTime to set
 	 */
 	public void setStartTime(int startTime) {
 		fireChange("Start_Time");
 		this.startTime = startTime;
 	}
-	
+
 	/**
 	 * @return the endTime
 	 */
 	public int getEndTime() {
 		return endTime;
 	}
-	
+
 	/**
-	 * @param endTime the endTime to set
+	 * @param endTime
+	 *            the endTime to set
 	 */
 	public void setEndTime(int endTime) {
 		fireChange("Time_Bounds");
@@ -199,7 +215,8 @@ public class NetCDFConfiguration implements Serializable{
 	}
 
 	/**
-	 * @param visualizemoment the visualizemoment to set
+	 * @param visualizemoment
+	 *            the visualizemoment to set
 	 */
 	public void setVisualizemoment(int visualizemoment) {
 		this.visualizemoment = visualizemoment;
@@ -213,7 +230,8 @@ public class NetCDFConfiguration implements Serializable{
 	}
 
 	/**
-	 * @param sistemacoordenada the sistemacoordenada to set
+	 * @param sistemacoordenada
+	 *            the sistemacoordenada to set
 	 */
 	public void setSistemacoordenada(int sistemacoordenada) {
 		this.sistemacoordenada = sistemacoordenada;
@@ -227,27 +245,46 @@ public class NetCDFConfiguration implements Serializable{
 	}
 
 	/**
-	 * @param variable the variable to set
+	 * @param variable
+	 *            the variable to set
 	 */
 	public void setVariable(int variable) {
 		this.variable = variable;
 	}
-	
-	
-	private transient List<ChangeListener> listeners = new ArrayList<ChangeListener>(0);
 
+	private transient List<ChangeListener> listeners = new ArrayList<ChangeListener>(
+			0);
+
+	/**
+	 * Agregar un ChangeListener
+	 * 
+	 * @param listener
+	 */
 	public void addChangeListener(ChangeListener listener) {
 		listeners.add(listener);
 	}
 
+	/**
+	 * Eliminar un EventListener de la clase.
+	 * 
+	 * @param listener
+	 *            el objeto listener a eliminar.
+	 */
 	public void removeChangeListener(AnimationListener listener) {
 		listeners.remove(listener);
 	}
 
+	/**
+	 * Establece que ha ocurrido un cambio en la configuración para ser
+	 * escuchado por los ChangeListeners registrados.
+	 * 
+	 * @param source
+	 *            la fuente del cambio
+	 */
 	private void fireChange(String source) {
 		for (ChangeListener l : listeners) {
 			l.stateChanged(new ChangeEvent(source));
 		}
 	}
-	
+
 }

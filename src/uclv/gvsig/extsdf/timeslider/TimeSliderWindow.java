@@ -84,12 +84,56 @@ public class TimeSliderWindow extends JPanel implements IWindow {
 	 */
 	private IWindow relatedWindow = null;
 
+	/**
+	 * Capa correspondiente a esta ventana de reproducción.
+	 */
 	private FLyrRasterSE layer;
+
+	/**
+	 * Dataset correspondiente a la capa.
+	 */
 	private NetCDFRasterDataset dataset = null;
 
+	/**
+	 * Controlador del archivo NetCDF correspondiente a la capa.
+	 */
 	private NetCDFController controller;
 
+	/**
+	 * Configuración del NetCDF correspondiente a la capa.
+	 */
 	private NetCDFConfiguration configuration;
+
+	private JTextField infoField;
+	private JButton optionsButton;
+	private JButton exportButton;
+	private JButton skipBackwardButton;
+	private JSlider slider;
+	private JButton skipForwardButton;
+	private JButton playPauseButton;
+
+	/**
+	 * Almacena la animación del NetCDF correspondiente a esta ventana.
+	 */
+	private NetCDFAnimation animation;
+	/**
+	 * Establece si se está reproduciendo la animación actualmente.
+	 */
+	private boolean playing;
+
+	/**
+	 * Encargado de dar formato al tiempo de acuerdo a las especificaciones de
+	 * la configuración.
+	 */
+	private SimpleDateFormat formatter;
+	/**
+	 * Tiempo actual indicado por el índice de la configuración.
+	 */
+	private Date currentDate;
+	/**
+	 * Almacena los formatos de tiempo disponibles.
+	 */
+	private DateTimeFormats formats;
 
 	public TimeSliderWindow() {
 		super();
@@ -172,6 +216,9 @@ public class TimeSliderWindow extends JPanel implements IWindow {
 		postInitialization();
 	}
 
+	/**
+	 * Método de postinicialización, cuando la capa esté disponible.
+	 */
 	private void postInitialization() {
 		getAnimationOptionsActionListener().setLayer(layer);
 
@@ -196,7 +243,8 @@ public class TimeSliderWindow extends JPanel implements IWindow {
 		slider.setValue(configuration.getVisualizemoment());
 
 		formats = new DateTimeFormats();
-		formatter = new SimpleDateFormat(formats.getDates()[configuration.getDateformat()]);
+		formatter = new SimpleDateFormat(
+				formats.getDates()[configuration.getDateformat()]);
 		updateCurrentDate();
 
 		configuration.addChangeListener(new ChangeListener() {
@@ -209,19 +257,15 @@ public class TimeSliderWindow extends JPanel implements IWindow {
 					slider.setValue(configuration.getVisualizemoment());
 					slider.updateUI();
 				} else if (e.getSource().equals("Format")) {
-					formatter.applyLocalizedPattern(formats.getDates()[configuration.getDateformat()]);
+					formatter.applyLocalizedPattern(formats.getDates()[configuration
+							.getDateformat()]);
 					updateCurrentDate();
 				}
 			}
 		});
 	}
-	
-	private SimpleDateFormat formatter;
-	private Date currentDate;
-	private DateTimeFormats formats;
-	
-	
-	private void updateCurrentDate() {	
+
+	private void updateCurrentDate() {
 		try {
 			currentDate = controller.getParameterForCoordinateSystem(
 					controller.getCoordinateSystems()[configuration
@@ -434,17 +478,6 @@ public class TimeSliderWindow extends JPanel implements IWindow {
 		return animationOptionsActionListener;
 	}
 
-	private JTextField infoField;
-	private JButton optionsButton;
-	private JButton exportButton;
-	private JButton skipBackwardButton;
-	private JSlider slider;
-	private JButton skipForwardButton;
-	private JButton playPauseButton;
-
-	private NetCDFAnimation animation;
-	private boolean playing;
-
 	private class PlayPauseButtonActionListener implements ActionListener {
 
 		public void actionPerformed(ActionEvent e) {
@@ -530,11 +563,13 @@ public class TimeSliderWindow extends JPanel implements IWindow {
 			}
 		}
 	}
+
 	private class ExportButtonActionListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
-			JFileChooser fileChooser = new JFileChooser("VIDEO_EXPORT", new File(""));
+			JFileChooser fileChooser = new JFileChooser("VIDEO_EXPORT",
+					new File(""));
 			int result = fileChooser.showSaveDialog(TimeSliderWindow.this);
-			if(result == JFileChooser.APPROVE_OPTION) {
+			if (result == JFileChooser.APPROVE_OPTION) {
 				animation.setOutputFile(fileChooser.getSelectedFile());
 				animation.setRecording(true);
 			}
