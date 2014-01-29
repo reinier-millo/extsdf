@@ -733,7 +733,7 @@ public class NetCDFPanel extends AbstractPanel {
 		// seleccionado
 		sistema_coordenado.setSelectedIndex(configuration.getSistemacoordenada());
 		variable.setModel(new DefaultComboBoxModel(variablesToString()));
-		// muestra la X_dimensión para el sistema de coordenadas seleccionado
+		// muestra la X_dimensiÃ³n para el sistema de coordenadas seleccionado
 		try {
 			x_dimension.setText(controler.getLatitudeForCoordinateSystem(
 					(CoordinateSystem) sistema_coordenado.getSelectedItem())
@@ -745,7 +745,7 @@ public class NetCDFPanel extends AbstractPanel {
 		} catch (RasterDriverException e1) {
 			logger.error(e1.getLocalizedMessage());
 		}
-		// muestra la X_dimensión para el sistema de coordenadas seleccionado
+		// muestra la X_dimensiÃ³n para el sistema de coordenadas seleccionado
 		try {
 			y_dimension.setText(controler.getLongitudeForCoordinateSystem(
 					(CoordinateSystem) sistema_coordenado.getSelectedItem())
@@ -781,7 +781,7 @@ public class NetCDFPanel extends AbstractPanel {
 		} catch (IOException e) {
 			logger.error(e.getLocalizedMessage());
 		}
-		// si se abren las propiedades después de la primera vez se carga la
+		// si se abren las propiedades despuÃ©s de la primera vez se carga la
 		// configuracion guardada
 		chHabilitarTiempo.setSelected(configuration.getEnabled());
 		if (configuration.getEnabled() && controler.hasVariableParameter()) {

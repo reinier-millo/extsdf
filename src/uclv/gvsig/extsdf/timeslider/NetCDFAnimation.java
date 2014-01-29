@@ -66,7 +66,9 @@ public class NetCDFAnimation {
 		// timer = new Timer();
 		// timerTask = new NetCDFAnimationTimerTask();
 		try {
-			n = (int) controller.getParameterForCoordinateSystem(controller.getCoordinateSystems()[controller.getCoordinateSystemIndex()]).getSize();
+			n = (int) controller.getParameterForCoordinateSystem(
+					controller.getCoordinateSystems()[controller
+							.getCoordinateSystemIndex()]).getSize();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -77,12 +79,13 @@ public class NetCDFAnimation {
 	 */
 	public void play() {
 		int period = configuration.getDelayPeriod();
-		if(timerTask != null) timerTask.cancel();
+		if (timerTask != null)
+			timerTask.cancel();
 		timerTask = new PlayTimerTask();
 		timer = new Timer();
 		timer.schedule(timerTask, period, period);
 	}
-	
+
 	private int n;
 
 	private class PlayTimerTask extends TimerTask {
@@ -96,34 +99,38 @@ public class NetCDFAnimation {
 		 */
 		@Override
 		public void run() {
-			i = controller.getParameter() + 1;
+			i = configuration.getVisualizemoment() + 1;
 			i %= n;
 			move(i);
 		}
 
 	}
-	
+
 	public void playInReverse() {
 		int period = configuration.getDelayPeriod();
-		if(timerTask != null) timerTask.cancel();
+		if (timerTask != null)
+			timerTask.cancel();
 		timerTask = new PlayBackwardsTimerTask();
 		timer = new Timer();
 		timer.schedule(timerTask, period, period);
 	}
-	
+
 	private class PlayBackwardsTimerTask extends TimerTask {
 
 		private int i;
-		/* (non-Javadoc)
+
+		/*
+		 * (non-Javadoc)
+		 * 
 		 * @see java.util.TimerTask#run()
 		 */
 		@Override
 		public void run() {
-			i = controller.getParameter() - 1;
+			i = configuration.getVisualizemoment() - 1;
 			i %= n;
 			move(i);
 		}
-		
+
 	}
 
 	/**
@@ -137,14 +144,14 @@ public class NetCDFAnimation {
 	 * Mover un paso hacia adelante a partir de de la posición actual.
 	 */
 	public void moveForward() {
-		move(controller.getParameter() + 1);
+		move(configuration.getVisualizemoment() + 1);
 	}
 
 	/**
 	 * Mover un paso hacia atrás a partir de la posición actual.
 	 */
 	public void moveBackward() {
-		move(controller.getParameter() - 1);
+		move(configuration.getVisualizemoment() - 1);
 	}
 
 	/**
@@ -156,20 +163,13 @@ public class NetCDFAnimation {
 	 *            instante de tiempo a visualizar.
 	 */
 	public void move(int position) {
-		try {
-			controller.setParameter(position);
-			fireChange();
-		} catch (IOException e) {
-			e.printStackTrace();
-		} catch (InvalidRangeException e) {
-			e.printStackTrace();
-		} catch (RasterDriverException e) {
-			e.printStackTrace();
-		}
+		configuration.setVisualizemoment(position);
+		fireChange();
 		layer.getMapContext().invalidate();
 	}
 
-	private List<AnimationListener> listeners = new ArrayList<AnimationListener>(0);
+	private List<AnimationListener> listeners = new ArrayList<AnimationListener>(
+			0);
 
 	public void addAnimationListener(AnimationListener listener) {
 		listeners.add(listener);

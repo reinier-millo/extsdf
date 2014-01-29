@@ -167,14 +167,17 @@ public class TimeSliderWindow extends JPanel implements IWindow {
 		configuration = dataset.getConfiguration();
 		getAnimationOptionsActionListener().setLayer(layer);
 		try {
-			getSlider().setMaximum((int) controller.getParameterForCoordinateSystem(controller.getCoordinateSystems()[controller.getCoordinateSystemIndex()]).getSize());
+			getSlider().setMaximum(
+					(int) controller.getParameterForCoordinateSystem(
+							controller.getCoordinateSystems()[controller
+									.getCoordinateSystemIndex()]).getSize());
 		} catch (IOException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
 		animation = new NetCDFAnimation(layer);
 		animation.addAnimationListener(new AnimationListener() {
-			
+
 			SimpleDateFormat formatter = new SimpleDateFormat(
 					new DateTimeFormats().getDates()[configuration
 							.getDateformat()]);
@@ -185,11 +188,11 @@ public class TimeSliderWindow extends JPanel implements IWindow {
 
 				try {
 					date = controller.getParameterForCoordinateSystem(
-							controller.getCoordinateSystems()[controller
-									.getCoordinateSystemIndex()]).getTimeDate(
-							controller.getParameter());
+							controller.getCoordinateSystems()[configuration
+									.getSistemacoordenada()]).getTimeDate(
+							configuration.getVisualizemoment());
 					infoField.setText(formatter.format(date));
-					getSlider().setValue(controller.getParameter());
+					getSlider().setValue(configuration.getVisualizemoment());
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -345,7 +348,8 @@ public class TimeSliderWindow extends JPanel implements IWindow {
 	private JButton getSkipBackwardButton() {
 		if (skipBackwardButton == null) {
 			skipBackwardButton = new JButton("");
-			skipBackwardButton.addActionListener(new SkipBackwardButtonActionListener());
+			skipBackwardButton
+					.addActionListener(new SkipBackwardButtonActionListener());
 			skipBackwardButton.setIcon(PluginServices.getIconTheme().get(
 					"skip-backward-icon"));
 		}
@@ -457,7 +461,7 @@ public class TimeSliderWindow extends JPanel implements IWindow {
 			}
 		}
 	}
-	
+
 	private class SkipBackwardButtonActionListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
 			animation.moveBackward();
@@ -469,33 +473,35 @@ public class TimeSliderWindow extends JPanel implements IWindow {
 			animation.moveForward();
 		}
 	}
-	
-	
+
 	private boolean dragging = false;
-	
+
 	private class SliderMouseMotionListener extends MouseMotionAdapter {
 		@Override
 		public void mouseDragged(MouseEvent e) {
 			dragging = true;
 		}
 	}
+
 	private class SliderMouseListener extends MouseAdapter {
 		@Override
 		public void mouseReleased(MouseEvent e) {
-			if(dragging) {
+			if (dragging) {
 				dragging = false;
 				animation.move(getSlider().getValue());
 			}
 		}
+
 		@Override
 		public void mousePressed(MouseEvent e) {
 			animation.move(getSlider().getValue());
 		}
-	}	
+	}
+
 	private class SliderChangeListener implements ChangeListener {
 		public void stateChanged(ChangeEvent e) {
-			if(getSlider().getValue() == getSlider().getMaximum() - 1) {
-				switch(configuration.getAnimationBehaviour()) {
+			if (getSlider().getValue() == getSlider().getMaximum() - 1) {
+				switch (configuration.getAnimationBehaviour()) {
 				case REPEAT:
 					break;
 				case REVERSE:
@@ -508,11 +514,11 @@ public class TimeSliderWindow extends JPanel implements IWindow {
 					break;
 				}
 			} else if (getSlider().getValue() == getSlider().getMinimum()) {
-				if(configuration.getAnimationBehaviour() == AnimationBehaviour.REVERSE) {
+				if (configuration.getAnimationBehaviour() == AnimationBehaviour.REVERSE) {
 					animation.play();
 				}
 			}
 		}
-	}	
-	
+	}
+
 }

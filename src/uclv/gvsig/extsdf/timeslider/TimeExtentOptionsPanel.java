@@ -33,11 +33,15 @@ import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.util.Date;
 
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 
+import org.gvsig.raster.dataset.serializer.RmfSerializerException;
+
 import ucar.nc2.dataset.CoordinateAxis1DTime;
+import uclv.gvsig.extsdf.NetCDFConfiguration;
 
 import com.iver.andami.PluginServices;
 
@@ -68,8 +72,7 @@ public class TimeExtentOptionsPanel extends NetCDFOptionsPanel {
 		gridBagLayout.rowHeights = new int[] { 0, 0, 0 };
 		gridBagLayout.columnWeights = new double[] { 0.0, 0.0, 0.0,
 				Double.MIN_VALUE };
-		gridBagLayout.rowWeights = new double[] { 0.0, 0.0,
-				Double.MIN_VALUE };
+		gridBagLayout.rowWeights = new double[] { 0.0, 0.0, Double.MIN_VALUE };
 		setLayout(gridBagLayout);
 		GridBagConstraints gbc_startTimeLabel = new GridBagConstraints();
 		gbc_startTimeLabel.insets = new Insets(5, 5, 5, 5);
@@ -180,13 +183,13 @@ public class TimeExtentOptionsPanel extends NetCDFOptionsPanel {
 
 	private class MinTimeBtnActionListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
-//			startTimeField.getModel().setValue(getMinDate());
+			// startTimeField.getModel().setValue(getMinDate());
 		}
 	}
 
 	private class MaxTimeBtnActionListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
-//			endTimeField.getModel().setValue(getMaxDate());
+			// endTimeField.getModel().setValue(getMaxDate());
 		}
 	}
 
@@ -207,8 +210,13 @@ public class TimeExtentOptionsPanel extends NetCDFOptionsPanel {
 	 */
 	@Override
 	public void apply() {
-//		configuration.setStartTime((Date) startTimeField.getValue());
-//		configuration.setEndTime((Date) endTimeField.getValue());
+		configuration.setStartTime((Date) startTimeField.getSelectedItem());
+		configuration.setEndTime((Date) endTimeField.getSelectedItem());
+		try {
+			dataset.saveObjectToRmf(NetCDFConfiguration.class, configuration);
+		} catch (RmfSerializerException e) {
+			e.printStackTrace();
+		}
 	}
 
 	/*
@@ -251,9 +259,25 @@ public class TimeExtentOptionsPanel extends NetCDFOptionsPanel {
 	 */
 	@Override
 	protected void postInitialize() {
-//		startTimeField.setModel(new SpinnerDateModel(getMinDate(),
-//				null, null, Calendar.DAY_OF_YEAR));
-//		endTimeField.setModel(new SpinnerDateModel(getMaxDate(), null,
-//				null, Calendar.DAY_OF_YEAR));
+		try {
+			startTimeField.setModel(new DefaultComboBoxModel(controller
+					.getParameterForCoordinateSystem(
+							controller.getCoordinateSystems()[controller
+									.getCoordinateSystemIndex()]).getTimeDates()));
+			startTimeField.setSelectedIndex(configuration.getVisualizemoment());
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		try {
+			endTimeField.setModel(new DefaultComboBoxModel(controller
+					.getParameterForCoordinateSystem(
+							controller.getCoordinateSystems()[controller
+									.getCoordinateSystemIndex()]).getTimeDates()));
+			endTimeField.setSelectedIndex(configuration.getVisualizemoment());
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
+	
 }
