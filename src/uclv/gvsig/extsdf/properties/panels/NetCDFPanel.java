@@ -45,11 +45,8 @@ import javax.swing.border.TitledBorder;
 import org.apache.log4j.Logger;
 import org.gvsig.fmap.raster.layers.FLyrRasterSE;
 import org.gvsig.gui.beans.panelGroup.panels.AbstractPanel;
-import org.gvsig.raster.dataset.RasterDataset;
 import org.gvsig.raster.dataset.io.RasterDriverException;
 import org.gvsig.raster.dataset.serializer.RmfSerializerException;
-import org.gvsig.raster.datastruct.ColorTable;
-import org.gvsig.raster.util.RasterToolsUtil;
 
 import ucar.ma2.InvalidRangeException;
 import ucar.nc2.Variable;
@@ -70,10 +67,6 @@ import com.iver.cit.gvsig.fmap.layers.FLayer;
  * @author dcardoso
  */
 
-/**
- * @author dcardoso
- * 
- */
 public class NetCDFPanel extends AbstractPanel {
 
 	private FLayer flayer = null;
@@ -615,57 +608,96 @@ public class NetCDFPanel extends AbstractPanel {
 	 */
 	@Override
 	public void apply() {
-		// se carga el instante de tiempo seleccionado
-		try {
-			controler.setParameter(visualize_moment.getSelectedIndex());
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (InvalidRangeException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (RasterDriverException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		
+		// Actualiza el controlador con las variables seleccionadas 
+		actualizarController();
+		
+		// se refesca la capa
 		flayer.getMapContext().invalidate();
+		
 		// se guarda el instante de tiempo a visualizar
 		configuration.setVisualizemoment(visualize_moment.getSelectedIndex());
+		
 		// se guarda el sistema de coordenada seleccionado
 		configuration.setSistemacoordenada(sistema_coordenado.getSelectedIndex());
+		
+		// se guarda la variable a renderizar seleccionada
+		configuration.setVariable(variable.getSelectedIndex());
+		
 		// se guardan las configuraciones si se habilito el tiempo
 		if (chHabilitarTiempo.isSelected() && controler.hasVariableParameter()) {
 			configuration.setEnabled(true);
 			configuration.setDateformat(field_format.getSelectedIndex());
 			configuration.setTimeformat(hour_format.getSelectedIndex());
 		} else {
+			// se guarda que el tiempo esta desabilitado
 			configuration.setEnabled(false);
-			// cierra el TimerSlider si estaba abierto y se desabilito el tiempo
-			IWindow[] allWindows = PluginServices.getMDIManager()
-					.getAllWindows();
-			for (IWindow analized : allWindows) {
-				if (analized instanceof TimeSliderWindow
-						&& ((TimeSliderWindow) analized).getDataset() == dataset) {
-					PluginServices.getMDIManager().closeWindow(analized);
-				}
-			}
+			
+			// cierra el TimerSlider si estaba abierto 
+			closedSilder();
 		}
+		
+		// se salvan las propiedades al XML
 		saveNetCDFPanel();
 	}
 	
 	/**
+	 * Cierra el TimerSlider si estaba abierto 
+	 */
+	private void closedSilder() {
+		IWindow[] allWindows = PluginServices.getMDIManager().getAllWindows();
+		for (IWindow analized : allWindows) {
+			if (analized instanceof TimeSliderWindow
+					&& ((TimeSliderWindow) analized).getDataset() == dataset) {
+				PluginServices.getMDIManager().closeWindow(analized);
+			}
+		}
+	}
+	
+	/**
+	 * Actualiza el controlador con las variables seleccionadas 
+	 */
+	private void actualizarController() {
+		// se establece la variable a renderizar en la capa raster
+		try {
+			controler
+					.setSelectedVariable(controler
+							.getVariablesForCoordinateSystem((CoordinateSystem) sistema_coordenado
+									.getSelectedItem())[variable
+							.getSelectedIndex()]);
+		} catch (IOException e1) {
+			e1.printStackTrace();
+		} catch (InvalidRangeException e1) {
+			e1.printStackTrace();
+		} catch (RasterDriverException e1) {
+			e1.printStackTrace();
+		}
+
+		// se carga el instante de tiempo seleccionado
+		try {
+			controler.setParameter(visualize_moment.getSelectedIndex());
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (InvalidRangeException e) {
+			e.printStackTrace();
+		} catch (RasterDriverException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	/**
 	 * Salva el estado del panel al fichero rmf.
-	 * @param fName
-	 * @throws IOException
+	 * 
 	 */
 	private void saveNetCDFPanel() {
 		try {
-			dataset.saveObjectToRmf(NetCDFConfiguration.class,configuration);
+			dataset.saveObjectToRmf(NetCDFConfiguration.class, configuration);
 		} catch (RmfSerializerException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -726,13 +758,75 @@ public class NetCDFPanel extends AbstractPanel {
 	 * si ya se habian habilitado y configurado
 	 */
 	private void init() {
+		
+		// inicializa el panel general
+		initGeneralPanel();
+		
+		// se inicializa el estado del tiempo
+		chHabilitarTiempo.setSelected(configuration.getEnabled());
+		
+		// si se abren las propiedades después de la primera vez se carga la
+		// configuracion guardada
+		loadTimePanel();
+	}
+	
+	/**
+	 * si se abren las propiedades después de la primera vez se carga la
+	 * configuracion guardada
+	 */
+	private void loadTimePanel() {
+		
+		if (configuration.getEnabled() && controler.hasVariableParameter()) {
+			
+			// se habilitan los label
+			Component[] componet = paPropiedadesTiempo.getComponents();
+			for (Component component : componet) {
+				if (component instanceof JLabel)
+					component.setEnabled(true);
+			}
+			
+			// se mustra que existe una dimensión tiempo
+			layer_time.setModel(new DefaultComboBoxModel(
+					new String[] { PluginServices.getText(this,
+							"layer_has_time_as_a_dimension") }));
+			
+			// se carga la dimensión
+			time_dimension.setEnabled(true);
+			try {
+				time_dimension.setModel(new DefaultComboBoxModel(
+						new String[] { controler.getSelectedParameter()
+								.getFullName() }));
+			} catch (RasterDriverException e1) {
+				logger.error(e1.getLocalizedMessage());
+			}
+			
+			//se carga el formato de fecha
+			field_format.setEnabled(true);
+			field_format.setModel(new DefaultComboBoxModel(
+					new DateTimeFormats().getTodayDatesFormat()));
+			field_format.setSelectedIndex(configuration.getDateformat());
+			
+			// se carga el formato de hora
+			hour_format.setEnabled(true);
+			hour_format.setModel(new DefaultComboBoxModel(new DateTimeFormats()
+					.getTodayHoursFormat()));
+			hour_format.setSelectedIndex(configuration.getTimeformat());
+		}
+	}
+	
+	/**
+	 * inicializa el panel general
+	 */
+	private void initGeneralPanel() {
 		// se muestra la lista de sistemas de coordenadas
 		getSistema_coordenado().setModel(
 				new DefaultComboBoxModel(controler.getCoordinateSystems()));
+		sistema_coordenado.setSelectedIndex(configuration
+				.getSistemacoordenada());
 		// muestra la lista de variable para el sistema de coordenadas
 		// seleccionado
-		sistema_coordenado.setSelectedIndex(configuration.getSistemacoordenada());
 		variable.setModel(new DefaultComboBoxModel(variablesToString()));
+		variable.setSelectedIndex(configuration.getVariable());
 		// muestra la X_dimensiÃ³n para el sistema de coordenadas seleccionado
 		try {
 			x_dimension.setText(controler.getLatitudeForCoordinateSystem(
@@ -777,38 +871,10 @@ public class NetCDFPanel extends AbstractPanel {
 					.getParameterForCoordinateSystem(
 							(CoordinateSystem) sistema_coordenado
 									.getSelectedItem()).getTimeDates()));
-			visualize_moment.setSelectedIndex(configuration.getVisualizemoment());
+			visualize_moment.setSelectedIndex(configuration
+					.getVisualizemoment());
 		} catch (IOException e) {
 			logger.error(e.getLocalizedMessage());
-		}
-		// si se abren las propiedades despuÃ©s de la primera vez se carga la
-		// configuracion guardada
-		chHabilitarTiempo.setSelected(configuration.getEnabled());
-		if (configuration.getEnabled() && controler.hasVariableParameter()) {
-			Component[] componet = paPropiedadesTiempo.getComponents();
-			for (Component component : componet) {
-				if (component instanceof JLabel)
-					component.setEnabled(true);
-			}
-			layer_time.setModel(new DefaultComboBoxModel(
-					new String[] { PluginServices.getText(this,
-							"layer_has_time_as_a_dimension") }));
-			time_dimension.setEnabled(true);
-			try {
-				time_dimension.setModel(new DefaultComboBoxModel(
-						new String[] { controler.getSelectedParameter()
-								.getFullName() }));
-			} catch (RasterDriverException e1) {
-				logger.error(e1.getLocalizedMessage());
-			}
-			field_format.setEnabled(true);
-			field_format.setModel(new DefaultComboBoxModel(
-					new DateTimeFormats().getTodayDatesFormat()));
-			field_format.setSelectedIndex(configuration.getDateformat());
-			hour_format.setEnabled(true);
-			hour_format.setModel(new DefaultComboBoxModel(new DateTimeFormats()
-					.getTodayHoursFormat()));
-			hour_format.setSelectedIndex(configuration.getTimeformat());
 		}
 	}
 
@@ -886,7 +952,6 @@ public class NetCDFPanel extends AbstractPanel {
 			} catch (IOException e1) {
 				logger.error(e1.getLocalizedMessage());
 			}
-		//	visualize_moment.setSelectedIndex(configuration.getVisualizemoment());
 		}
 	}
 
@@ -902,7 +967,10 @@ public class NetCDFPanel extends AbstractPanel {
 			if (chHabilitarTiempo.isSelected()) {
 				paPropiedadesTiempo.setEnabled(true);
 				layer_time.setEnabled(true);
+				// si tiene parametro variable
 				if (controler.hasVariableParameter()) {
+					
+					// se habilitan los componentes
 					Component[] componet = paPropiedadesTiempo.getComponents();
 					for (Component component : componet) {
 						if (component instanceof JLabel)
@@ -911,6 +979,8 @@ public class NetCDFPanel extends AbstractPanel {
 					layer_time.setModel(new DefaultComboBoxModel(
 							new String[] { PluginServices.getText(this,
 									"layer_has_time_as_a_dimension") }));
+					
+					// se muetra la dimension time
 					time_dimension.setEnabled(true);
 					try {
 						time_dimension.setModel(new DefaultComboBoxModel(
@@ -919,15 +989,22 @@ public class NetCDFPanel extends AbstractPanel {
 					} catch (RasterDriverException e1) {
 						logger.error(e1.getLocalizedMessage());
 					}
+					
+					// se muestran los formatos de fechas disponibles
 					field_format.setEnabled(true);
 					field_format.setModel(new DefaultComboBoxModel(
 							new DateTimeFormats().getTodayDatesFormat()));
-					field_format.setSelectedIndex(configuration.getDateformat());
+					field_format
+							.setSelectedIndex(configuration.getDateformat());
+					
+					// se muestran los formaros de horas disponibles
 					hour_format.setEnabled(true);
 					hour_format.setModel(new DefaultComboBoxModel(
 							new DateTimeFormats().getTodayHoursFormat()));
 					hour_format.setSelectedIndex(configuration.getTimeformat());
 				} else {
+					
+					// se informa que la capa no tiene dimensión tiempo
 					lbLayerTime.setEnabled(true);
 					layer_time.setModel(new DefaultComboBoxModel(
 							new String[] { PluginServices.getText(this,
