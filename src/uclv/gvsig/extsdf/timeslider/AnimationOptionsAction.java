@@ -79,7 +79,7 @@ public class AnimationOptionsAction extends AbstractAction  {
 			} catch (Exception e1) {
 				e1.printStackTrace();
 			}
-			optionsDialog = new PanelGroupDialog(PluginServices.getText(this, "options"), PluginServices.getText(this, "animation_options"), 550, 450, (byte) (WindowInfo.MODALDIALOG | WindowInfo.RESIZABLE | WindowInfo.MAXIMIZABLE), panelGroup); //$NON-NLS-1$ //$NON-NLS-2$
+			optionsDialog = new PanelGroupDialog(PluginServices.getText(this, "options"), PluginServices.getText(this, "animation_options"), 550, 450, (byte) (WindowInfo.MODELESSDIALOG | WindowInfo.RESIZABLE | WindowInfo.MAXIMIZABLE), panelGroup); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 		PluginServices.getMDIManager().addCentredWindow(optionsDialog);
 	}

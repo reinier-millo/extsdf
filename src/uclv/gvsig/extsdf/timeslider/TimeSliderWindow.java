@@ -165,71 +165,80 @@ public class TimeSliderWindow extends JPanel implements IWindow {
 		dataset = (NetCDFRasterDataset) layer.getDataSource().getDataset(0)[0];
 		controller = dataset.getNetCDFController();
 		configuration = dataset.getConfiguration();
-		
+
 		postInitialization();
 	}
-	
+
 	private void postInitialization() {
 		getAnimationOptionsActionListener().setLayer(layer);
-		
-		if(configuration.getEndTime() == -1) {
+
+		if (configuration.getEndTime() == -1) {
 			int endTime;
 			try {
 				endTime = (int) controller.getParameterForCoordinateSystem(
-					controller.getCoordinateSystems()[controller
-							.getCoordinateSystemIndex()]).getSize() - 1;
+						controller.getCoordinateSystems()[controller
+								.getCoordinateSystemIndex()]).getSize() - 1;
 				configuration.setEndTime(endTime);
 			} catch (IOException e) {
 				configuration.setEndTime(0);
 				e.printStackTrace();
 			}
 		}
-		
+
 		animation = new NetCDFAnimation(layer);
 		animation.addAnimationListener(new SliderAnimationListener());
-		
+
 		slider.setMinimum(configuration.getStartTime());
 		slider.setMaximum(configuration.getEndTime() + 1);
 		slider.setValue(configuration.getVisualizemoment());
-		
+
+		formats = new DateTimeFormats();
+		formatter = new SimpleDateFormat(formats.getDates()[configuration.getDateformat()]);
+		updateCurrentDate();
+
 		configuration.addChangeListener(new ChangeListener() {
-			
+
 			@Override
 			public void stateChanged(ChangeEvent e) {
-				if(e.getSource().equals("Time_Bounds")) {
+				if (e.getSource().equals("Time_Bounds")) {
 					slider.setMinimum(configuration.getStartTime());
 					slider.setMaximum(configuration.getEndTime() + 1);
 					slider.setValue(configuration.getVisualizemoment());
-					updateUI();
+					slider_needs_update = true;
+				} else if (e.getSource().equals("Format")) {
+					formatter.applyLocalizedPattern(formats.getDates()[configuration.getDateformat()]);
+					updateCurrentDate();
 				}
 			}
 		});
 	}
 	
+	private boolean slider_needs_update;
+	private SimpleDateFormat formatter;
+	private Date currentDate;
+	private DateTimeFormats formats;
+	
+	
+	private void updateCurrentDate() {	
+		try {
+			currentDate = controller.getParameterForCoordinateSystem(
+					controller.getCoordinateSystems()[configuration
+							.getSistemacoordenada()]).getTimeDate(
+					configuration.getVisualizemoment());
+			getInfoField().setText(formatter.format(currentDate));
+			getSlider().setValue(configuration.getVisualizemoment());
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
 	private class SliderAnimationListener implements AnimationListener {
 
-		SimpleDateFormat formatter = new SimpleDateFormat(
-				new DateTimeFormats().getDates()[configuration
-						.getDateformat()]);
-		Date date;
-		
-		/* (non-Javadoc)
-		 * @see uclv.gvsig.extsdf.timeslider.AnimationListener#animationStateChanged()
-		 */
 		@Override
-		public void animationStateChanged() {			
-			try {
-				date = controller.getParameterForCoordinateSystem(
-						controller.getCoordinateSystems()[configuration
-								.getSistemacoordenada()]).getTimeDate(
-						configuration.getVisualizemoment());
-				infoField.setText(formatter.format(date));
-				getSlider().setValue(configuration.getVisualizemoment());
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
+		public void animationStateChanged() {
+			updateCurrentDate();
 		}
-		
+
 	}
 
 	/**
@@ -434,8 +443,9 @@ public class TimeSliderWindow extends JPanel implements IWindow {
 	private boolean playing;
 
 	private class PlayPauseButtonActionListener implements ActionListener {
-		
+
 		public void actionPerformed(ActionEvent e) {
+			checkSliderUpdate();
 			if (playing) {
 				pause();
 			} else {
@@ -443,29 +453,38 @@ public class TimeSliderWindow extends JPanel implements IWindow {
 			}
 		}
 	}
-	
+
 	private void pause() {
 		playing = false;
-		playPauseButton.setIcon(PluginServices.getIconTheme().get(
-				"start-icon"));
+		playPauseButton
+				.setIcon(PluginServices.getIconTheme().get("start-icon"));
 		animation.pause();
 	}
-	
+
 	private void play() {
 		playing = true;
-		playPauseButton.setIcon(PluginServices.getIconTheme().get(
-				"pause-icon"));
+		playPauseButton
+				.setIcon(PluginServices.getIconTheme().get("pause-icon"));
 		animation.play();
+	}
+	
+	private void checkSliderUpdate() {
+		if(slider_needs_update) {
+			slider_needs_update = false;
+			updateUI();
+		}
 	}
 
 	private class SkipBackwardButtonActionListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
+			checkSliderUpdate();
 			animation.moveBackward();
 		}
 	}
 
 	private class SkipForwardButtonActionListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
+			checkSliderUpdate();
 			animation.moveForward();
 		}
 	}
@@ -475,6 +494,7 @@ public class TimeSliderWindow extends JPanel implements IWindow {
 	private class SliderMouseMotionListener extends MouseMotionAdapter {
 		@Override
 		public void mouseDragged(MouseEvent e) {
+			checkSliderUpdate();
 			dragging = true;
 		}
 	}
@@ -482,6 +502,7 @@ public class TimeSliderWindow extends JPanel implements IWindow {
 	private class SliderMouseListener extends MouseAdapter {
 		@Override
 		public void mouseReleased(MouseEvent e) {
+			checkSliderUpdate();
 			if (dragging) {
 				dragging = false;
 				animation.move(getSlider().getValue());
@@ -490,7 +511,8 @@ public class TimeSliderWindow extends JPanel implements IWindow {
 
 		@Override
 		public void mousePressed(MouseEvent e) {
-			if(dragging == false) {
+			checkSliderUpdate();
+			if (dragging == false) {
 				animation.move(getSlider().getValue());
 			}
 		}
@@ -498,6 +520,7 @@ public class TimeSliderWindow extends JPanel implements IWindow {
 
 	private class SliderChangeListener implements ChangeListener {
 		public void stateChanged(ChangeEvent e) {
+			checkSliderUpdate();
 			if (getSlider().getValue() == getSlider().getMaximum() - 1) {
 				switch (configuration.getAnimationBehaviour()) {
 				case REPEAT:

@@ -152,7 +152,6 @@ public class TimeExtentOptionsPanel extends NetCDFOptionsPanel {
 	public void apply() {
 		configuration.setStartTime(startTimeField.getSelectedIndex());
 		configuration.setEndTime(endTimeField.getSelectedIndex());
-		configuration.fireChange("Time_Bounds");
 		
 		try {
 			dataset.saveObjectToRmf(NetCDFConfiguration.class, configuration);

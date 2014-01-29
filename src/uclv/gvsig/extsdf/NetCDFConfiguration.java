@@ -98,6 +98,7 @@ public class NetCDFConfiguration implements Serializable{
 	 *            the dateformat to set
 	 */
 	public void setDateformat(int dateformat) {
+		fireChange("Format");
 		this.dateformat = dateformat;
 	}
 
@@ -113,6 +114,7 @@ public class NetCDFConfiguration implements Serializable{
 	 *            the timeformat to set
 	 */
 	public void setTimeformat(int timeformat) {
+		fireChange("Format");
 		this.timeformat = timeformat;
 	}
 
@@ -170,6 +172,7 @@ public class NetCDFConfiguration implements Serializable{
 	 * @param startTime the startTime to set
 	 */
 	public void setStartTime(int startTime) {
+		fireChange("Start_Time");
 		this.startTime = startTime;
 	}
 	
@@ -184,6 +187,7 @@ public class NetCDFConfiguration implements Serializable{
 	 * @param endTime the endTime to set
 	 */
 	public void setEndTime(int endTime) {
+		fireChange("Time_Bounds");
 		this.endTime = endTime;
 	}
 
@@ -240,7 +244,7 @@ public class NetCDFConfiguration implements Serializable{
 		listeners.remove(listener);
 	}
 
-	public void fireChange(String source) {
+	private void fireChange(String source) {
 		for (ChangeListener l : listeners) {
 			l.stateChanged(new ChangeEvent(source));
 		}
