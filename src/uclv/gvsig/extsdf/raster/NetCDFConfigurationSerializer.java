@@ -145,11 +145,11 @@ public class NetCDFConfigurationSerializer extends ClassSerializer{
                                                         .getAttributeValue(i)));
                                     }
                                     // Toma la variable renderizada
-                                    // TODO Completar la variable renderizada
                                     if (parser.getAttributeName(i).equals(
                                             "variable")) {
-                                        // tmpConfig.setTimeformat(Integer.parseInt((String)
-                                        // parser.getAttributeValue(i)));
+                                        tmpConfig.setVariable(Integer
+                                                .parseInt((String) parser
+                                                        .getAttributeValue(i)));
                                     }
                                 }
                                 break;
@@ -260,9 +260,8 @@ public class NetCDFConfigurationSerializer extends ClassSerializer{
                 + "\" time_format=\"" + config.getTimeformat() + "\" />\n");
 
         // Guarda el sistema de coordenadas representado
-        // TODO falta guardar la variable del sistema de coordenadas
         b.append("\t<render system=\"" + config.getSistemacoordenada()
-                + "\"  />\n");
+                + "\" variable=\""+config.getVariable()+"\" />\n");
 
         // Guarda el momento de visualización
         b.append("\t<moment value=\"" + config.getVisualizemoment()
